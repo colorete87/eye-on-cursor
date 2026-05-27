@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2024-2026 djinnalexio
+// SPDX-FileCopyrightText: 2024-2026 Djinn Alexio
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 //#region Imports

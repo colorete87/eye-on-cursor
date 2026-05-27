@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2020-2023 Eye and Mouse Extended Contributors
-// SPDX-FileCopyrightText: 2024-2026 djinnalexio
+// SPDX-FileCopyrightText: 2024-2026 Djinn Alexio
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 //#region Imports
@@ -120,7 +120,7 @@ export class TrackerManager {
         // Use desktop accent color as default tracker color (GNOME 47+)
         if (this.hasAccentColor) {
             this.themeContext = St.ThemeContext.get_for_stage(global.stage);
-            const [accent] = this.themeContext.get_accent_color(); // Cogl.Color object
+            const [accent] = this.themeContext.get_accent_color();
             this.colorAccent = `rgb(${accent['red']},${accent['green']},${accent['blue']})`;
             this.updateCacheTrackers(this.shape, [this.colorAccent])
             .catch((e) => {
