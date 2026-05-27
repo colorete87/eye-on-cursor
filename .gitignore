@@ -1,19 +1,25 @@
-# SPDX-FileCopyrightText: 2024-2026 djinnalexio
+# SPDX-FileCopyrightText: 2024-2026 Djinn Alexio
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-# Ignore Node.js dependencies
+# Dependencies
 node_modules/
 
-# Ignore workspace settings
-.idea
+# Virtual environments
+.venv/
+venv/
+
+# Editor / IDE settings
+.idea/
 .vscode/
 *.code-workspace
 
-# Ignore swap files
-*.swp
+# Swap / temporary files
+*.sw?
 
-# Ignore build output or temporary files
+# Build artifacts
 *.mo
 *.shell-extension.zip
 *gschemas.compiled
+
+# Generated localization files
 **/locale/

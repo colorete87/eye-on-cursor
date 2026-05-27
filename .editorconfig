@@ -1,0 +1,23 @@
+# SPDX-FileCopyrightText: 2026 Djinn Alexio
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+max_line_length = 100
+trim_trailing_whitespace = true
+
+[*.{json,svg,xml,yml}]
+indent_size = 2
+
+[Makefile]
+indent_style = tab
+tab_width = 4
