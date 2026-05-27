@@ -1,11 +1,31 @@
 {
-    "devDependencies": {
-        "@stylistic/eslint-plugin": "^5.10.0",
-        "eslint": "^10.3.0",
-        "eslint-config-gnome": "git+https://gitlab.gnome.org/World/javascript/eslint-config-gnome.git#c479d059e8d9ea99c3b53c2ea43abf7fdb05eb51"
-    },
-    "scripts": {
-        "lint": "eslint --fix",
-        "test": "make test"
-    }
+  "name": "eye-on-cursor",
+  "version": "2.4.1",
+  "description": "Let your desktop \"keep an eye\" on your mouse! And with the included cursor indicator, keep track of your pointer's every action!\n\nForked from Eye and Mouse Extended by Alexey Lovchikov (https://extensions.gnome.org/extension/3139/eye-extended/).",
+  "keywords": [
+    "GNOME",
+    "Shell",
+    "Extension",
+    "gnome-extension",
+    "GJS"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor.git"
+  },
+  "license": "GPL-3.0-or-later",
+  "author": "Djinn Alexio",
+  "type": "module",
+  "main": "src/extension.js",
+  "scripts": {
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "test": "make test"
+  },
+  "devDependencies": {
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "eslint": "^10.3.0",
+    "eslint-config-gnome": "git+https://gitlab.gnome.org/World/javascript/eslint-config-gnome.git#c479d059e8d9ea99c3b53c2ea43abf7fdb05eb51",
+    "eslint-formatter-junit": "^9.0.1"
+  }
 }

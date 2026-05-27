@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2024-2026 djinnalexio
+// SPDX-FileCopyrightText: 2024-2026 Djinn Alexio
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import {defineConfig} from '@eslint/config-helpers';
@@ -95,7 +95,7 @@ export default defineConfig([
             'capitalized-comments': ['warn', 'always', {ignoreConsecutiveComments: true}],
             'complexity': 'warn',
             'default-param-last': 'error',
-            'no-console': 'warn',
+            'no-console': ['warn', {allow: ['warn', 'error']}],
             'no-extend-native': 'error',
             'no-extra-label': 'error',
             'no-multi-assign': 'warn',
