@@ -1,108 +1,114 @@
-<h1 align="center">Eye on Cursor</h1>
-<p align="center">
-  <a href="https://github.com/djinnalexio/eye-on-cursor/blob/main/LICENSE">
-    <img alt="GitHub License" src="https://img.shields.io/github/license/djinnalexio/eye-on-cursor?&logo=gnu">
-  </a>
-  <a href="https://github.com/djinnalexio/eye-on-cursor/releases/latest">
-    <img alt="Latest Release" src="https://img.shields.io/github/v/release/djinnalexio/eye-on-cursor?label=Latest%20Release&logo=github&color=red">
-  </a>
-</p>
-<p align="center">
-  <a href="https://extensions.gnome.org/extension/7036/eye-on-cursor/">
-    <img alt="GNOME versions" src="https://img.shields.io/badge/GNOME_version-≤_50-green?logo=gnome">
-    <img alt="GNOME Downloads" src="https://img.shields.io/badge/dynamic/xml?label=GNOME%20extensions&url=https%3A%2F%2Fextensions.gnome.org%2Fextension%2F7036%2Feye-on-cursor%2F&query=%2Fhtml%2Fbody%2Fdiv%5B2%5D%2Fdiv%2Fdiv%5B2%5D%2Fdiv%5B1%5D%2Fspan%5B3%5D&cacheSeconds=86400&logo=gnome">
-  </a>
-</p>
-<p align="center">
-  <img alt="logo" height="100" src="./src/assets/eye-on-cursor-logo.svg">
-</p>
-<h3 align="center">Let your desktop "keep an eye" on your mouse!</h3>
+# Eye on Cursor
+
+![Logo][logo]
+
+**Let your desktop "keep an eye" on your mouse!**
+
+[![Latest Release][badge-release]][latest-release] [![License][badge-license]][license]
+[![Supported GNOME Versions: 46 to 50][badge-shell] ![EGO Downloads][badge-downloads]][ego-page]
+[![GNOME JavaScript][badge-gjs]][extensions-guide] [![Pipeline status][badge-pipeline]][pipelines]
 
 ## Overview
 
-**Eye on Cursor** is a fun and practical extension that gives your panel eyes that constantly follow
-your mouse. This quirky feature, combined with a highly customizable mouse tracker that highlights
-clicks, makes it easier than ever to monitor your mouse movements, ensuring your pointer gets all
-the attention it needs.
+**Eye on Cursor** is a fun and practical extension that gives your panel eyes that constantly follow your mouse. This quirky feature, combined with a highly customizable mouse tracker that highlights clicks, makes it easier than ever to monitor your mouse movements, ensuring your pointer gets all the attention it needs.
 
-<p align="center">
-<img alt="" height="300" src="images/tracking.gif">
-</p>
-<p align="center">
-<img alt="" height="300" src="images/biblicallyAccurate.png">
-</p>
-<p align="center">
-<img alt="" height="200" src="images/tracker.png">
-<img alt="" height="200" src="images/comic.png">
-</p>
-<p align="center">
-<img alt="" height="200" src="images/blueEyes.png">
-<img alt="" height="200" src="images/round.png">
-</p>
+### Features
 
-## Features
+- **Eyes Follow Cursor:** As many eyes as you want in the panel to follow the cursor movements, providing a fun and interactive experience.
+- **Customizable Mouse Tracker:** Highlights clicks and tracks mouse movements with customizable settings to fit your preferences.
 
-- **Eyes Follow Cursor:** As many eyes as you want in the panel to follow the cursor movements,
-  providing a fun and interactive experience.
-- **Customizable Mouse Tracker:** Highlights clicks and tracks mouse movements with customizable
-  settings to fit your preferences.
+![Tracking][tracking] ![Biblically accurate][biblical]
+
+![Tracker][tracker] ![Comic][comic] ![Blue Eyes][blue-eyes] ![Round][round]
 
 ## Installation
 
-### From the GNOME Extensions Website (recommended)
+### GNOME Extensions Website (recommended)
 
-[<img alt="EGO page" height="100" src="images/get-it-on-ego.svg">](https://extensions.gnome.org/extension/7036/eye-on-cursor/)
+[![EGO page][ego-button]][ego-page]
 
-### From GitHub
+### Manual Installation
 
-1. Run the following command to download and install the latest release:
+> [!NOTE]
+> If installed manually, the extension will not receive automatic updates from the GNOME Extensions Website. Check the [Changelog][changelog] to track changes between versions.
+
+#### Latest Release
+
+Run the following commands to download and install the latest release:
+
+```bash
+curl -LO https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/releases/permalink/latest/downloads/eye-on-cursor.shell-extension.zip
+gnome-extensions install -f eye-on-cursor.shell-extension.zip
+```
+
+#### Source
+
+1. Download or clone the repository and navigate into it:
 
     ```bash
-    curl -L https://github.com/djinnalexio/eye-on-cursor/releases/download/v2.4.1/eye-on-cursordjinnalexio.github.io.v23.shell-extension.zip \
-    -o /tmp/eye-on-cursor.zip && gnome-extensions install -f /tmp/eye-on-cursor.zip
+    curl -LO https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/archive/main/eye-on-cursor-main.zip
+    unzip eye-on-cursor-main.zip
+    cd eye-on-cursor-main
     ```
 
-2. Log out and back in, then enable the extension using Extensions Manager or by running:
+    or
 
     ```bash
-    gnome-extensions enable eye-on-cursor@djinnalexio.github.io
+    git clone https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor.git
+    cd eye-on-cursor
     ```
 
-## Acknowledgements
+2. Install the extension:
 
-This extension is forked from
-[Eye and Mouse Extended](https://extensions.gnome.org/extension/3139/eye-extended/) by
-[Alexey Lovchikov](https://github.com/alexeylovchikov).
+    ```bash
+    make install
+    ```
 
-**Eye and Mouse Extended** also has a fork for the Cinnamon Desktop,
-[Cinnamon Eyes](https://cinnamon-spices.linuxmint.com/applets/view/363), created by
-[anaximeno](https://github.com/anaximeno/).
+#### Enable
+
+After installing the package, log out and back in, then enable the extension using **Extension Manager** or by running:
+
+```bash
+gnome-extensions enable eye-on-cursor@djinnalexio.github.io
+```
 
 ## Contributing
 
-First off, thanks for taking the time to contribute! ❤️
-
-If you want to **ask a question**, **offer a suggestion**, or **report a bug**, feel free to open an
-[issue](https://github.com/djinnalexio/eye-on-cursor/issues/new).
-
-You can also submit pull requests to provide **translations**, **new tracker icons**, or
-**bug fixes**.
-
-If you have contributed in any way, feel free to add yourself to the `about.js` file in
-`settings`.
+[Click here to submit an issue][issues]. For more, see [CONTRIBUTING.md][contributing].
 
 ### Known Issues
 
-- On **Wayland**, the mouse tracker uses `globe.stage` to listen to clicks:
-  - clicks within application windows are not registered. Only clicks in the Shell (background,
-  panel, etc.) are highlighted.
+On **Wayland**, mouse clicks within application windows are not registered. Only clicks in the Shell (background, panel, etc.) are highlighted.
 
-- On **x11**, the mouse tracker uses `Atspi` listen to clicks:
-  - middle click is not registered.
+## License
 
-### Resources
+GNU General Public License v3.0 or later. See [LICENSE][license].
 
-- [GNOME Shell Extensions Guide](https://gjs.guide/extensions)
-- [GNOME Developer Documentation](https://developer.gnome.org/documentation/index.html)
-- [GNOME Shell Repository](https://gitlab.gnome.org/GNOME/gnome-shell#gnome-shell)
-- [Poedit Translation Editor](https://flathub.org/apps/net.poedit.Poedit)
+## Acknowledgements
+
+This extension is forked from [Eye and Mouse Extended][eye-and-mouse-extended] by [Alexey Lovchikov][alexey-lovchikov].
+
+[logo]: ./src/assets/eye-on-cursor-logo.svg
+[tracking]: ./images/tracking.gif
+[biblical]: ./images/biblicallyAccurate.png
+[tracker]: ./images/tracker.png
+[comic]: ./images/comic.png
+[blue-eyes]: ./images/blueEyes.png
+[round]: ./images/round.png
+[ego-button]: ./images/get-it-on-ego.svg
+[license]: ./LICENSE
+[changelog]: ./CHANGELOG.md
+[contributing]: ./CONTRIBUTING.md
+[latest-release]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/releases/permalink/latest
+[ego-page]: https://extensions.gnome.org/extension/7036/eye-on-cursor/
+[extensions-guide]: https://gjs.guide/extensions/
+[pipelines]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/pipelines?ref=main
+[badge-release]: https://img.shields.io/gitlab/v/release/39179?gitlab_url=https://gitlab.gnome.org&logo=git&label=Latest%20Release&color=e01b24
+[badge-license]: https://img.shields.io/gitlab/license/39179?gitlab_url=https://gitlab.gnome.org&logo=gnu&label=License&color=ff7800
+[badge-shell]: https://img.shields.io/badge/GNOME_Versions-45_to_50-33d17a?logo=gnome
+[badge-downloads]: https://img.shields.io/badge/dynamic/xml?label=GNOME%20Extensions&url=https://extensions.gnome.org/extension/7036/&query=/html/body/div[2]/div/div[2]/div[1]/span[3]&logo=gnome&color=3584e4
+[badge-gjs]: ./images/gjs-badge.svg
+[badge-pipeline]: https://img.shields.io/gitlab/pipeline-status/DjinnAlexio/eye-on-cursor?gitlab_url=https://gitlab.gnome.org&branch=main&label=Pipeline&logo=gitlab
+[issues]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/issues
+[eye-and-mouse-extended]: https://extensions.gnome.org/extension/3139/eye-extended/
+[alexey-lovchikov]: https://github.com/alexeylovchikov

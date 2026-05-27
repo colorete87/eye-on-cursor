@@ -1,22 +1,22 @@
+# Japanese translation for eye-on-cursor.
+# Copyright (C) 2024-2026 Djinn Alexio
+# This file is distributed under the same license as the eye-on-cursor package.
+# Djinn Alexio <djinnalexio+gnome@proton.me>, 2026.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: eye-on-cursor\n"
-"Report-Msgid-Bugs-To: https://github.com/djinnalexio/eye-on-cursor/issues\n"
+"Project-Id-Version: eye-on-cursor 2.4.1\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/"
+"issues\n"
 "POT-Creation-Date: 2026-05-10 21:32+0100\n"
 "PO-Revision-Date: 2026-05-11 00:32+0100\n"
-"Last-Translator: djinnalexio <djinnalexio@proton.me>\n"
+"Last-Translator: Djinn Alexio <djinnalexio+gnome@proton.me>\n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Crowdin-Project: eye-on-cursor\n"
-"X-Crowdin-Project-ID: 734021\n"
-"X-Crowdin-Language: ja\n"
-"X-Crowdin-File: /main/po/eye-on-cursor.pot\n"
-"X-Crowdin-File-ID: 40\n"
-"X-Generator: Poedit 3.9\n"
 
 #: src/extensionModules/eye.js:44
 msgid "Animated eye that follows the mouse"
@@ -221,7 +221,7 @@ msgstr "Eye on Cursor について"
 #: src/prefsModules/about.js:93
 msgctxt "(USER)NAME EMAIL/URL"
 msgid "translator_credits"
-msgstr "djinnalexio https://github.com/djinnalexio/"
+msgstr "Djinn Alexio https://gitlab.gnome.org/DjinnAlexio"
 
 #: src/prefsModules/about.js:99
 msgid "Extension Page"

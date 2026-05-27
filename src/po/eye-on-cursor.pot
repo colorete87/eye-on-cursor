@@ -1,13 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR djinnalexio
+# Copyright (C) YEAR Djinn Alexio
 # This file is distributed under the same license as the eye-on-cursor package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: eye-on-cursor\n"
-"Report-Msgid-Bugs-To: https://github.com/djinnalexio/eye-on-cursor/issues\n"
+"Project-Id-Version: eye-on-cursor 2.4.1\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/"
+"issues\n"
 "POT-Creation-Date: 2026-05-10 21:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"

@@ -19,32 +19,17 @@ import {
 // string located in the translation files.
 const artists = [];
 const designers = [];
-const developers = ['djinnalexio https://github.com/djinnalexio/'];
+const developers = ['Djinn Alexio https://gitlab.gnome.org/DjinnAlexio'];
 const documenters = [];
 
-const copyright = '© 2024-2026 djinnalexio';
-const developerName = 'djinnalexio';
-const issueUrl = 'https://github.com/djinnalexio/eye-on-cursor/issues/';
-// The string for `release_notes` supports <p> paragraphs, <em> emphasis, and <code> code,
-// <ol> ordered and <ul> unordered lists with <li> list items, and <code> code.
+const copyright = '© 2024-2026 Djinn Alexio';
+const developerName = 'Djinn Alexio';
+const issueUrl = 'https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/issues';
+// The string for `release_notes` supports paragraphs <p>, emphasis (italics) <em>, code <code>,
+// and ordered <ol> and unordered <ul> lists with <li> list items.
 const releaseNotes =
-    '<p>New:</p>\
-    <ul>\
-        <li>added reset settings buttons</li>\
-    </ul>\
-    <p>Fixes &amp; Improvements:</p>\
-    <ul>\
-    <li>fixed session crashing when disabling the extension on Xorg</li>\
-    <li>fixed tracker briefly appearing at out-of-date location when being re-enabled</li>\
-    <li>fixed blinking animation not ending with eyelids completely opened</li>\
-    <li>changed color setting format</li>\
-    <li>optimized tracker icons</li>\
-    <li>made optimizations to eye drawing cycle</li>\
-    <li>reduced default eye refresh rate to 24 fps</li>\
-    <li>increased max blink interval to one hour</li>\
-    </ul>\
-    ';
-// Const supportUrl = 'https://github.com/djinnalexio/eye-on-cursor/discussions/categories/q-a';
+    '';
+const supportUrl = '';
 //#endregion
 
 //#region About row
@@ -80,7 +65,7 @@ class EyeAboutRow extends Adw.ActionRow {
             license_type: Gtk.License.GPL_3_0,
             release_notes: releaseNotes,
             release_notes_version: metadata['version-name'],
-            // Support_url: supportUrl,
+            support_url: supportUrl,
             translator_credits: pgettext('(USER)NAME EMAIL/URL', 'translator_credits'),
             version: metadata['version-name'],
             website: metadata.url,
@@ -90,14 +75,10 @@ class EyeAboutRow extends Adw.ActionRow {
             _('Extension Page'),
             'https://extensions.gnome.org/extension/7036/eye-on-cursor/'
         );
-        this.aboutWindow.add_link(_('Donate'), 'https://github.com/sponsors/djinnalexio');
+        this.aboutWindow.add_link(_('Donate'), 'https://www.paypal.com/paypalme/djinnalexio');
         this.aboutWindow.add_acknowledgement_section(
             _('Forked from'),
             ['Eye and Mouse Extended https://extensions.gnome.org/extension/3139/eye-extended/']
-        );
-        this.aboutWindow.add_acknowledgement_section(
-            _('Cinnamon Fork'),
-            ['Cinnamon Eyes https://cinnamon-spices.linuxmint.com/applets/view/363']
         );
         //#endregion
 
