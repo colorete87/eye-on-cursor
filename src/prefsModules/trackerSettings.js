@@ -18,21 +18,21 @@ import {newColorPicker, EyeKeybindingRow, EyeResetRow} from './prefsWidgets.js';
 /**
  * A page displaying the tracker settings.
  *
- * @param {EyeOnCursorExtension} extension - The extension instance.
+ * @param {Gio.Settings} settings - The settings object for this extension.
+ * @param {ExtensionMetadata} metadata - The metadata object from metadata.json.
+ * @param {string} path - The filesystem path to the extension directory.
  */
 export const TrackerPage = GObject.registerClass(
 class TrackerPage extends Adw.PreferencesPage {
-    constructor(extension) {
+    constructor(settings, metadata, path) {
         super({
             title: _('Mouse Tracker'),
             icon_name: 'mouse-click-symbolic',
         });
-
-        this.settings = extension.getSettings();
-        this.resetFunctions = [];
+        const resetFunctions = [];
 
         // Check if accent color variable exists (GNOME 47+)
-        this.hasAccentColor = new Gio.Settings({schema_id: 'org.gnome.desktop.interface'})
+        const hasAccentColor = new Gio.Settings({schema_id: 'org.gnome.desktop.interface'})
             .list_keys()
             .includes('accent-color');
 
@@ -43,7 +43,7 @@ class TrackerPage extends Adw.PreferencesPage {
         //#region Tracker shape
         // Get list of shapes
         const shapeList = [];
-        const shapeDirPath = GLib.build_filenamev([extension.path, 'assets', 'trackers']);
+        const shapeDirPath = GLib.build_filenamev([path, 'assets', 'trackers']);
         const shapeDir = Gio.file_new_for_path(shapeDirPath);
         const enumFiles = shapeDir.enumerate_children(
             'standard::name',
@@ -69,7 +69,7 @@ class TrackerPage extends Adw.PreferencesPage {
         });
 
         const shapeRowLabel = new Gtk.Label({
-            label: this.settings.get_string('tracker-shape').replaceAll('_', ' '),
+            label: settings.get_string('tracker-shape').replaceAll('_', ' '),
             valign: Gtk.Align.CENTER,
         });
         shapeRow.add_suffix(shapeRowLabel);
@@ -127,7 +127,7 @@ class TrackerPage extends Adw.PreferencesPage {
 
         shapePicker.connect('child-activated', (flowBox, flowBoxChild) => {
             shapeRowLabel.set_label(flowBoxChild.name);
-            this.settings.set_string('tracker-shape', flowBoxChild.shape);
+            settings.set_string('tracker-shape', flowBoxChild.shape);
             shapeWindow.close();
         });
 
@@ -137,9 +137,9 @@ class TrackerPage extends Adw.PreferencesPage {
 
         shapeRow.connect('activated', () => shapeWindow.present(this));
 
-        this.resetFunctions.push(() => {
+        resetFunctions.push(() => {
             shapeRowLabel.set_label(
-                this.settings.get_default_value('tracker-shape').deep_unpack().replaceAll('_', ' ')
+                settings.get_default_value('tracker-shape').deep_unpack().replaceAll('_', ' ')
             );
         });
 
@@ -155,14 +155,14 @@ class TrackerPage extends Adw.PreferencesPage {
                 upper: 1024,
                 step_increment: 16,
             }),
-            value: this.settings.get_int('tracker-size'),
+            value: settings.get_int('tracker-size'),
         });
         sizeRow.adjustment.connect('value-changed', (widget) =>
-            this.settings.set_int('tracker-size', widget.value)
+            settings.set_int('tracker-size', widget.value)
         );
 
-        this.resetFunctions.push(
-            () => sizeRow.set_value(this.settings.get_default_value('tracker-size').deep_unpack())
+        resetFunctions.push(
+            () => sizeRow.set_value(settings.get_default_value('tracker-size').deep_unpack())
         );
         drawingGroup.add(sizeRow);
         //#endregion
@@ -173,33 +173,35 @@ class TrackerPage extends Adw.PreferencesPage {
             subtitle: _('Custom color for the tracker'),
         });
 
-        const colorMainPicker = newColorPicker(this.settings, 'tracker-color-main');
+        const colorMainPicker = newColorPicker(settings, 'tracker-color-main');
 
-        this.resetFunctions.push(() => {
+        resetFunctions.push(() => {
             const currentColor = colorMainPicker.get_rgba();
-            currentColor.parse(this.settings.get_default_value('tracker-color-main').deep_unpack());
+            currentColor.parse(
+                settings.get_default_value('tracker-color-main').deep_unpack()
+            );
             colorMainPicker.set_rgba(currentColor);
         });
 
         const colorMainBox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL});
 
         // Tracker Main Color Toggle (GNOME 47+)
-        if (this.hasAccentColor) {
+        if (hasAccentColor) {
             const trackerColorToggle = new Gtk.CheckButton({
-                active: this.settings.get_boolean('tracker-color-main-enabled'),
+                active: settings.get_boolean('tracker-color-main-enabled'),
                 margin_end: 8,
                 valign: Gtk.Align.CENTER,
             });
             trackerColorToggle.connect('toggled', (widget) => {
-                this.settings.set_boolean('tracker-color-main-enabled', widget.active);
+                settings.set_boolean('tracker-color-main-enabled', widget.active);
                 colorMainPicker.set_sensitive(widget.active);
             });
             colorMainPicker.set_sensitive(trackerColorToggle.active);
 
-            this.resetFunctions.push(
+            resetFunctions.push(
                 () =>
                     trackerColorToggle.set_active(
-                        this.settings.get_default_value('tracker-color-main-enabled').deep_unpack()
+                        settings.get_default_value('tracker-color-main-enabled').deep_unpack()
                     )
             );
             colorMainBox.append(trackerColorToggle);
@@ -226,11 +228,11 @@ class TrackerPage extends Adw.PreferencesPage {
 
         const colorClickBox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL});
         ['tracker-color-left', 'tracker-color-middle', 'tracker-color-right'].forEach((key) => {
-            const colorPicker = newColorPicker(this.settings, key);
+            const colorPicker = newColorPicker(settings, key);
 
-            this.resetFunctions.push(() => {
+            resetFunctions.push(() => {
                 const currentColor = colorPicker.get_rgba();
-                currentColor.parse(this.settings.get_default_value(key).deep_unpack());
+                currentColor.parse(settings.get_default_value(key).deep_unpack());
                 colorPicker.set_rgba(currentColor);
             });
 
@@ -250,15 +252,15 @@ class TrackerPage extends Adw.PreferencesPage {
                 upper: 100,
                 step_increment: 10,
             }),
-            value: this.settings.get_int('tracker-opacity'),
+            value: settings.get_int('tracker-opacity'),
         });
         opacityRow.adjustment.connect('value-changed', (widget) =>
-            this.settings.set_int('tracker-opacity', widget.value)
+            settings.set_int('tracker-opacity', widget.value)
         );
 
-        this.resetFunctions.push(
+        resetFunctions.push(
             () => opacityRow.set_value(
-                this.settings.get_default_value('tracker-opacity').deep_unpack()
+                settings.get_default_value('tracker-opacity').deep_unpack()
             )
         );
         drawingGroup.add(opacityRow);
@@ -273,15 +275,15 @@ class TrackerPage extends Adw.PreferencesPage {
                 upper: 144,
                 step_increment: 1,
             }),
-            value: this.settings.get_int('tracker-refresh-rate'),
+            value: settings.get_int('tracker-refresh-rate'),
         });
         refreshRow.adjustment.connect('value-changed', (widget) =>
-            this.settings.set_int('tracker-refresh-rate', widget.value)
+            settings.set_int('tracker-refresh-rate', widget.value)
         );
 
-        this.resetFunctions.push(
+        resetFunctions.push(
             () => refreshRow.set_value(
-                this.settings.get_default_value('tracker-refresh-rate').deep_unpack()
+                settings.get_default_value('tracker-refresh-rate').deep_unpack()
             )
         );
         drawingGroup.add(refreshRow);
@@ -293,13 +295,13 @@ class TrackerPage extends Adw.PreferencesPage {
         this.add(keybindingGroup);
 
         const keybindingRow = new EyeKeybindingRow(
-            this.settings,
+            settings,
             'tracker-keybinding',
             _('Toggle Tracker')
         );
         keybindingGroup.set_header_suffix(keybindingRow.resetButton);
 
-        this.resetFunctions.push(() => keybindingRow.resetKeybinding());
+        resetFunctions.push(() => keybindingRow.resetKeybinding());
         keybindingGroup.add(keybindingRow);
         //#endregion
 
@@ -309,9 +311,9 @@ class TrackerPage extends Adw.PreferencesPage {
 
         const resetRow = new EyeResetRow(
             'tracker',
-            this.settings,
+            settings,
             _('Reset all tracker settings?'),
-            this.resetFunctions
+            resetFunctions
         );
         resetGroup.add(resetRow);
         //#endregion
@@ -320,7 +322,7 @@ class TrackerPage extends Adw.PreferencesPage {
         const aboutGroup = new Adw.PreferencesGroup({title: _('Information')});
         this.add(aboutGroup);
 
-        const aboutRow = new EyeAboutRow(extension.metadata);
+        const aboutRow = new EyeAboutRow(metadata);
         aboutGroup.add(aboutRow);
         //#endregion
     }

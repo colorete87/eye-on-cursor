@@ -51,7 +51,7 @@ class EyeAboutRow extends Adw.ActionRow {
         this.add_suffix(new Gtk.Image({icon_name: 'go-next-symbolic'}));
 
         //#region About dialog
-        this.aboutWindow = new Adw.AboutDialog({
+        const aboutWindow = new Adw.AboutDialog({
             application_icon: 'eye-on-cursor-logo',
             application_name: metadata.name,
             artists,
@@ -71,18 +71,18 @@ class EyeAboutRow extends Adw.ActionRow {
             website: metadata.url,
         });
 
-        this.aboutWindow.add_link(
+        aboutWindow.add_link(
             _('Extension Page'),
             'https://extensions.gnome.org/extension/7036/eye-on-cursor/'
         );
-        this.aboutWindow.add_link(_('Donate'), 'https://www.paypal.com/paypalme/djinnalexio');
-        this.aboutWindow.add_acknowledgement_section(
+        aboutWindow.add_link(_('Donate'), 'https://www.paypal.com/paypalme/djinnalexio');
+        aboutWindow.add_acknowledgement_section(
             _('Forked from'),
             ['Eye and Mouse Extended https://extensions.gnome.org/extension/3139/eye-extended/']
         );
         //#endregion
 
-        this.connect('activated', () => this.aboutWindow.present(this));
+        this.connect('activated', () => aboutWindow.present(this));
     }
 });
 //#endregion

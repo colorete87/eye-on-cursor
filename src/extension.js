@@ -13,6 +13,8 @@ import {TrackerManager} from './extensionModules/trackerManager.js';
  * The **Eye on Cursor** GNOME Shell extension.
  */
 export default class EyeOnCursorExtension extends Extension {
+    #blinkController;
+
     // DO NOT create objects, connect signals or add main loop sources here
     // constructor(metadata) {
     //     super(metadata);
@@ -25,8 +27,59 @@ export default class EyeOnCursorExtension extends Extension {
     enable() {
         this.settings = this.getSettings();
 
-        // 28-apr-26: transition from hex code (v2.3.1 and earlier) to rgb values for color settings
-        // convert user custom colors so that they fit the new expected format
+        this.#convertHexCodeToRGBModel();
+
+        // Create the tracker
+        this.mouseTracker = new TrackerManager(this.settings, this.metadata, this.path);
+
+        // Create eyes based on starting settings
+        this.eyeArray = [];
+        spawnEyes(this);
+
+        // Create the Blink controller
+        this.#blinkController = new BlinkController(this.settings, this.eyeArray);
+
+        // Connect eye placement settings
+        [
+            'eye-active',
+            'eye-position',
+            'eye-index',
+            'eye-count',
+        ].forEach((key) =>
+            this.settings.connectObject(
+                `changed::${key}`,
+                spawnEyes.bind(this, this),
+                this
+            )
+        );
+    }
+    //#endregion
+
+    //#region Disable
+    /**
+     * Disables the extension.
+     */
+    disable() {
+        this.settings.disconnectObject(this);
+        this.settings = null;
+
+        this.#blinkController?.destroy();
+        this.#blinkController = null;
+
+        destroyEyes(this.eyeArray);
+        this.eyeArray = null;
+
+        this.mouseTracker?.destroy();
+        this.mouseTracker = null;
+    }
+    //#endregion
+
+    //#region Helpers
+    /**
+     * (v2.3.1 - 28-apr-26) transition from hex code to rgb values for color settings.
+     * Convert user's custom colors so that they fit the new expected format
+     */
+    #convertHexCodeToRGBModel() {
         [
             'eye-color-iris',
             'eye-color-eyelid',
@@ -42,50 +95,6 @@ export default class EyeOnCursorExtension extends Extension {
                 this.settings.set_string(key, rgbValue);
             }
         });
-
-        // Create the tracker
-        this.mouseTracker = new TrackerManager(this);
-
-        // Create eyes based on starting settings
-        this.eyeArray = [];
-        spawnEyes(this, this.eyeArray, this.mouseTracker);
-
-        // Create the Blink controller
-        this.blinkController = new BlinkController(this, this.eyeArray);
-
-        // Connect eye placement settings
-        this.placementSettingHandlers = [
-            'eye-active',
-            'eye-position',
-            'eye-index',
-            'eye-count',
-        ].map((key) =>
-            this.settings.connect(
-                `changed::${key}`,
-                spawnEyes.bind(this, this, this.eyeArray, this.mouseTracker)
-            )
-        );
-    }
-    //#endregion
-
-    //#region Disable
-    /**
-     * Disables the extension.
-     */
-    disable() {
-        this.placementSettingHandlers.forEach((connection) => this.settings.disconnect(connection));
-        this.placementSettingHandlers = null;
-
-        this.blinkController.destroy();
-        this.blinkController = null;
-
-        destroyEyes(this.eyeArray);
-        this.eyeArray = null;
-
-        this.mouseTracker.destroy();
-        this.mouseTracker = null;
-
-        this.settings = null;
     }
     //#endregion
 }

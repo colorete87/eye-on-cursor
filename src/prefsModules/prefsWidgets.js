@@ -50,7 +50,9 @@ export function newColorPicker(settings, key) {
  */
 export const EyeKeybindingRow = GObject.registerClass(
 class EyeKeybindingRow extends Adw.ActionRow {
-    //#region Keybinding constructor
+    #label;
+    #captureWindow;
+
     constructor(settings, key, shortcutName) {
         super({
             title: shortcutName,
@@ -59,14 +61,14 @@ class EyeKeybindingRow extends Adw.ActionRow {
         });
 
         // Display current keybinding
-        this.label = new Gtk.ShortcutLabel({
+        this.#label = new Gtk.ShortcutLabel({
             disabled_text: _('New shortcut…'),
             valign: Gtk.Align.CENTER,
             accelerator: settings.get_strv(key)[0],
         });
-        this.box = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL});
-        this.box.append(this.label);
-        this.add_suffix(this.box);
+        const box = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL});
+        box.append(this.#label);
+        this.add_suffix(box);
 
         // Button to reset keybinding
         this.resetButton = new Gtk.Button({
@@ -76,15 +78,14 @@ class EyeKeybindingRow extends Adw.ActionRow {
         this.resetButton.connect('clicked', this.resetKeybinding.bind(this));
 
         // Hide reset button if no shortcut is set
-        if (!this.label.accelerator)
+        if (!this.#label.accelerator)
             this.resetButton.visible = false;
 
         // Connect row activation to open capture window
-        this.captureWindow = null;
-        this.connect('activated', this.openCaptureWindow.bind(this));
+        this.connect('activated', this.#openCaptureWindow.bind(this));
 
         // Connect change in accelerator to setting update
-        this.label.connect('notify::accelerator', (widget) =>
+        this.#label.connect('notify::accelerator', (widget) =>
             settings.set_strv(key, [widget.accelerator])
             // Main.wm.addKeybinding takes string arrays, not strings
         );
@@ -93,11 +94,11 @@ class EyeKeybindingRow extends Adw.ActionRow {
 
     //#region Keybinding methods
     resetKeybinding() {
-        this.label.accelerator = '';
+        this.#label.accelerator = '';
         this.resetButton.visible = false;
     }
 
-    openCaptureWindow() {
+    #openCaptureWindow() {
         const controller = new Gtk.EventControllerKey();
 
         const content = new Adw.StatusPage({
@@ -106,7 +107,7 @@ class EyeKeybindingRow extends Adw.ActionRow {
             icon_name: 'preferences-desktop-keyboard-shortcuts-symbolic',
         });
 
-        this.captureWindow = new Adw.Window({
+        this.#captureWindow = new Adw.Window({
             modal: true,
             transient_for: this.get_root(),
             width_request: 480,
@@ -114,12 +115,12 @@ class EyeKeybindingRow extends Adw.ActionRow {
             content,
         });
 
-        this.captureWindow.add_controller(controller);
-        controller.connect('key-pressed', this.registerKey.bind(this));
-        this.captureWindow.present();
+        this.#captureWindow.add_controller(controller);
+        controller.connect('key-pressed', this.#registerKey.bind(this));
+        this.#captureWindow.present();
     }
 
-    registerKey(widget, keyval, keycode, state) {
+    #registerKey(widget, keyval, keycode, state) {
         // Get default modifier mask (keys) that are currently pressed
         let mask = state & Gtk.accelerator_get_default_mod_mask();
         // Filter out CAPS LOCK
@@ -127,51 +128,51 @@ class EyeKeybindingRow extends Adw.ActionRow {
 
         // If Esc is pressed without modifiers, close capture window
         if (!mask && keyval === Gdk.KEY_Escape) {
-            this.captureWindow.destroy();
+            this.#captureWindow.destroy();
             return Gdk.EVENT_STOP;
         }
 
         // If Backspace is pressed, reset keybinding
         if (keyval === Gdk.KEY_BackSpace) {
             this.resetKeybinding();
-            this.captureWindow.destroy();
+            this.#captureWindow.destroy();
             return Gdk.EVENT_STOP;
         }
 
         // If the key combination is not acceptable, ignore it
-        if (!this.isValidBinding(mask, keycode, keyval) || !this.isValidAccel(mask, keyval))
+        if (!this.#isValidBinding(mask, keycode, keyval) || !this.#isValidAccel(mask, keyval))
             return Gdk.EVENT_STOP;
 
-        this.label.accelerator = Gtk.accelerator_name_with_keycode(null, keyval, keycode, mask);
+        this.#label.accelerator = Gtk.accelerator_name_with_keycode(null, keyval, keycode, mask);
         this.resetButton.visible = true;
-        this.captureWindow.destroy();
+        this.#captureWindow.destroy();
         return Gdk.EVENT_STOP;
     }
 
     //#region Keybinding validation
     // See https://gitlab.gnome.org/GNOME/gnome-control-center/-/blob/main/panels/keyboard/keyboard-shortcuts.c
-    isValidBinding(mask, keycode, keyval) {
+    #isValidBinding(mask, keycode, keyval) {
         if ((mask === 0 || mask === Gdk.ModifierType.SHIFT_MASK) && keycode !== 0) {
             if (
-                this.isKeyInRange(keyval, Gdk.KEY_a, Gdk.KEY_z) ||
-                this.isKeyInRange(keyval, Gdk.KEY_A, Gdk.KEY_Z) ||
-                this.isKeyInRange(keyval, Gdk.KEY_0, Gdk.KEY_9) ||
-                this.isKeyInRange(keyval, Gdk.KEY_kana_fullstop, Gdk.KEY_semivoicedsound) ||
-                this.isKeyInRange(keyval, Gdk.KEY_Arabic_comma, Gdk.KEY_Arabic_sukun) ||
-                this.isKeyInRange(keyval, Gdk.KEY_Serbian_dje, Gdk.KEY_Cyrillic_HARDSIGN) ||
-                this.isKeyInRange(keyval, Gdk.KEY_Greek_ALPHAaccent, Gdk.KEY_Greek_omega) ||
-                this.isKeyInRange(keyval, Gdk.KEY_hebrew_doublelowline, Gdk.KEY_hebrew_taf) ||
-                this.isKeyInRange(keyval, Gdk.KEY_Thai_kokai, Gdk.KEY_Thai_lekkao) ||
-                this.isKeyInRange(keyval, Gdk.KEY_Hangul_Kiyeog, Gdk.KEY_Hangul_J_YeorinHieuh) ||
+                this.#isKeyInRange(keyval, Gdk.KEY_a, Gdk.KEY_z) ||
+                this.#isKeyInRange(keyval, Gdk.KEY_A, Gdk.KEY_Z) ||
+                this.#isKeyInRange(keyval, Gdk.KEY_0, Gdk.KEY_9) ||
+                this.#isKeyInRange(keyval, Gdk.KEY_kana_fullstop, Gdk.KEY_semivoicedsound) ||
+                this.#isKeyInRange(keyval, Gdk.KEY_Arabic_comma, Gdk.KEY_Arabic_sukun) ||
+                this.#isKeyInRange(keyval, Gdk.KEY_Serbian_dje, Gdk.KEY_Cyrillic_HARDSIGN) ||
+                this.#isKeyInRange(keyval, Gdk.KEY_Greek_ALPHAaccent, Gdk.KEY_Greek_omega) ||
+                this.#isKeyInRange(keyval, Gdk.KEY_hebrew_doublelowline, Gdk.KEY_hebrew_taf) ||
+                this.#isKeyInRange(keyval, Gdk.KEY_Thai_kokai, Gdk.KEY_Thai_lekkao) ||
+                this.#isKeyInRange(keyval, Gdk.KEY_Hangul_Kiyeog, Gdk.KEY_Hangul_J_YeorinHieuh) ||
                 (keyval === Gdk.KEY_space && mask === 0) ||
-                this.isKeyvalForbidden(keyval)
+                this.#isKeyvalForbidden(keyval)
             )
                 return false;
         }
         return true;
     }
 
-    isKeyvalForbidden(keyval) {
+    #isKeyvalForbidden(keyval) {
         return [
             // Navigation keys
             Gdk.KEY_Home,
@@ -192,14 +193,13 @@ class EyeKeybindingRow extends Adw.ActionRow {
         ].includes(keyval);
     }
 
-    isKeyInRange(keyval, start, end) {
+    #isKeyInRange(keyval, start, end) {
         return keyval >= start && keyval <= end;
     }
 
-    isValidAccel(mask, keyval) {
+    #isValidAccel(mask, keyval) {
         return Gtk.accelerator_valid(keyval, mask) || (keyval === Gdk.KEY_Tab && mask !== 0);
     }
-    //#endregion
     //#endregion
 });
 //#endregion

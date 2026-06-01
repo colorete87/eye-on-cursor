@@ -20,13 +20,15 @@ export default class EyeOnCursorPreferences extends ExtensionPreferences {
         window.default_width = 460;
         window.default_height = 800;
 
+        const settings = this.getSettings();
+
         // Add path for custom icons
         const iconTheme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default());
         const iconThemePath = GLib.build_filenamev([this.path, 'assets']);
         if (!iconTheme.get_search_path().includes(iconThemePath))
             iconTheme.add_search_path(iconThemePath);
 
-        window.add(new EyePage(this));
-        window.add(new TrackerPage(this));
+        window.add(new EyePage(settings));
+        window.add(new TrackerPage(settings, this.metadata, this.path));
     }
 }
