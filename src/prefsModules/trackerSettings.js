@@ -299,7 +299,6 @@ class TrackerPage extends Adw.PreferencesPage {
             'tracker-keybinding',
             _('Toggle Tracker')
         );
-        keybindingGroup.set_header_suffix(keybindingRow.resetButton);
 
         resetFunctions.push(() => keybindingRow.resetKeybinding());
         keybindingGroup.add(keybindingRow);

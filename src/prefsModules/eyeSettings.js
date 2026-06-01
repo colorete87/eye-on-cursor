@@ -352,7 +352,6 @@ class EyePage extends Adw.PreferencesPage {
             'eye-blink-keybinding',
             _('Manual Blink')
         );
-        blinkGroup.set_header_suffix(blinkKeybindingRow.resetButton);
 
         resetFunctions.push(() => blinkKeybindingRow.resetKeybinding());
         blinkGroup.add(blinkKeybindingRow);

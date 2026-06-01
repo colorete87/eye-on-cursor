@@ -51,6 +51,8 @@ export function newColorPicker(settings, key) {
 export const EyeKeybindingRow = GObject.registerClass(
 class EyeKeybindingRow extends Adw.ActionRow {
     #label;
+    #box;
+    #resetButton;
     #captureWindow;
 
     constructor(settings, key, shortcutName) {
@@ -66,20 +68,22 @@ class EyeKeybindingRow extends Adw.ActionRow {
             valign: Gtk.Align.CENTER,
             accelerator: settings.get_strv(key)[0],
         });
-        const box = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL});
-        box.append(this.#label);
-        this.add_suffix(box);
+        this.#box = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL});
+        this.#box.append(this.#label);
+        this.add_suffix(this.#box);
 
         // Button to reset keybinding
-        this.resetButton = new Gtk.Button({
+        this.#resetButton = new Gtk.Button({
             icon_name: 'edit-delete-symbolic',
             css_classes: ['destructive-action'],
+            valign: Gtk.Align.CENTER,
         });
-        this.resetButton.connect('clicked', this.resetKeybinding.bind(this));
+        this.#resetButton.connect('clicked', this.resetKeybinding.bind(this));
+        this.add_suffix(this.#resetButton);
 
         // Hide reset button if no shortcut is set
         if (!this.#label.accelerator)
-            this.resetButton.visible = false;
+            this.#resetButton.visible = false;
 
         // Connect row activation to open capture window
         this.connect('activated', this.#openCaptureWindow.bind(this));
@@ -95,7 +99,7 @@ class EyeKeybindingRow extends Adw.ActionRow {
     //#region Keybinding methods
     resetKeybinding() {
         this.#label.accelerator = '';
-        this.resetButton.visible = false;
+        this.#resetButton.visible = false;
     }
 
     #openCaptureWindow() {
@@ -144,7 +148,7 @@ class EyeKeybindingRow extends Adw.ActionRow {
             return Gdk.EVENT_STOP;
 
         this.#label.accelerator = Gtk.accelerator_name_with_keycode(null, keyval, keycode, mask);
-        this.resetButton.visible = true;
+        this.#resetButton.visible = true;
         this.#captureWindow.destroy();
         return Gdk.EVENT_STOP;
     }
