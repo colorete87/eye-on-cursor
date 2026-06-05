@@ -193,7 +193,7 @@ class EyePage extends Adw.PreferencesPage {
             subtitle: _('Higher refresh rates may impact performance.'),
             adjustment: new Gtk.Adjustment({
                 lower: 1,
-                upper: 144,
+                upper: 360,
                 step_increment: 1,
             }),
         });
