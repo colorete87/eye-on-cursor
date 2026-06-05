@@ -140,13 +140,13 @@
     <!-- Tracker Drawing Settings -->
 
     <key name='tracker-shape' type='s'>
-      <default>'Circle'</default>
+      <default>'Full_C'</default>
       <summary>Shape of the tracker</summary>
       <description>Sets the filename of the image to be used as the tracker shape.</description>
     </key>
 
     <key name='tracker-size' type='i'>
-      <default>256</default>
+      <default>64</default>
       <summary>Size of the tracker</summary>
       <description>Sets the size of the tracker element in pixels.</description>
     </key>
