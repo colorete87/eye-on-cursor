@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="135" height="20" role="img" aria-label="GNOME: JavaScript">
-  <title>GNOME: JavaScript</title>
+<svg xmlns="http://www.w3.org/2000/svg" width="145" height="20" role="img" aria-label="language: JavaScript">
+  <title>language: JavaScript</title>
   <filter id="blur">
     <feGaussianBlur in="SourceGraphic" stdDeviation="16"/>
   </filter>
@@ -8,23 +8,23 @@
     <stop offset="1" stop-opacity=".1"/>
   </linearGradient>
   <clipPath id="r">
-    <rect width="135" height="20" rx="3" fill="#fff"/>
+    <rect width="145" height="20" rx="3" fill="#fff"/>
   </clipPath>
   <g clip-path="url(#r)">
-    <rect width="68" height="20" fill="#555"/>
-    <rect x="68" width="67" height="20" fill="#3584e4"/>
-    <rect width="135" height="20" fill="url(#s)"/>
+    <rect width="78" height="20" fill="#555"/>
+    <rect x="78" width="67" height="20" fill="#3584e4"/>
+    <rect width="145" height="20" fill="url(#s)"/>
   </g>
   <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110">
-    <g transform="translate(5 3) scale(0.1084 0.1195)">
+    <g transform="translate(4.6 2.65) scale(0.115 0.127)">
       <path d="M-183.612 8.734c10.753 0 19.609-4.301 24.796-9.614v-35.707h-25.843v8.729h16.102v22.423C-171.72-2.399-177.16-.5-182.98-.5c-16.32 0-25.555-13.157-25.555-34.03 0-20.621 10.247-33.525 25.808-33.525 7.97 0 12.904 3.289 16.952 7.59l5.946-6.705c-4.681-4.933-11.892-10.12-22.898-10.12-21.507 0-36.814 16.193-36.814 43.012 0 27.073 15.054 43.013 35.928 43.013" style="font-style:normal;font-weight:400;font-size:medium;line-height:1.25;font-family:sans-serif;letter-spacing:0;word-spacing:0;fill:#4a86cf;fill-opacity:1;stroke:none;stroke-width:1.94125974;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0" transform="translate(222.186 79.937)"/>
-      <path d="M-122.39-52.24c-9.07 0-16.547 3.685-20.86 9.555V-51.4h-41.409v8.856h31.809V4.264c0 13.663-4.86 19.734-15.732 19.734-5.899 0-12.028-3.542-16.308-11.006l-6.015 6.452c5.205 9.488 14.112 13.79 22.556 13.79 9.906 0 16.328-3.495 20.196-9.049 6.56 5.92 15.123 9.598 24.838 9.598 16.656 0 26.835-10.5 26.835-23.656 0-12.272-7.402-17.964-16.77-22.138l-10.643-5.06c-6.477-2.91-13.532-5.82-13.532-13.79 0-7.464 5.898-12.145 14.688-12.145 7.865 0 13.65 3.036 18.623 7.843l5.088-6.831a31.7 31.7 0 0 0-23.364-10.247m-20.86 34.4c3.263 4.322 8.028 7.1 12.417 8.99l10.873 5.187c7.75 3.669 13.65 6.2 13.65 15.056 0 7.717-6.131 13.155-16.541 13.155-8.29 0-15.836-3.816-21.436-9.564.7-3.07 1.037-6.375 1.037-9.835z" style="font-style:normal;font-variant:normal;font-weight:400;font-stretch:normal;font-size:medium;line-height:1.25;font-family:&quot;Source Code Pro&quot;;-inkscape-font-specification:&quot;Source Code Pro&quot;;letter-spacing:0;word-spacing:0;fill:#e4e4e4;fill-opacity:1;stroke:none;stroke-width:1.55300784;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(222.186 79.937)"/>
+      <path d="M-122.39-52.24c-9.07 0-16.547 3.685-20.86 9.555V-51.4h-41.409v8.856h31.809V4.264c0 13.663-4.86 19.734-15.732 19.734-5.899 0-12.028-3.542-16.308-11.006l-6.015 6.452c5.205 9.488 14.112 13.79 22.556 13.79 9.906 0 16.328-3.495 20.196-9.049 6.56 5.92 15.123 9.598 24.838 9.598 16.656 0 26.835-10.5 26.835-23.656 0-12.272-7.402-17.964-16.77-22.138l-10.643-5.06c-6.477-2.91-13.532-5.82-13.532-13.79 0-7.464 5.898-12.145 14.688-12.145 7.865 0 13.65 3.036 18.623 7.843l5.088-6.831a31.7 31.7 0 0 0-23.364-10.247m-20.86 34.4c3.263 4.322 8.028 7.1 12.417 8.99l10.873 5.187c7.75 3.669 13.65 6.2 13.65 15.056 0 7.717-6.131 13.155-16.541 13.155-8.29 0-15.836-3.816-21.436-9.564.7-3.07 1.037-6.375 1.037-9.835z" style="font-style:normal;font-variant:normal;font-weight:400;font-stretch:normal;font-size:medium;line-height:1.25;font-family:&quot;Source Code Pro&quot;;-inkscape-font-specification:&quot;Source Code Pro&quot;;letter-spacing:0;word-spacing:0;fill:#f5f5f5;fill-opacity:1;stroke:none;stroke-width:1.55300784;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(222.186 79.937)"/>
     </g>
-    <text aria-hidden="true" x="435" y="150" fill="#010101" fill-opacity=".80" filter="url(#blur)" transform="scale(.1)" textLength="410">language</text>
-    <text aria-hidden="true" x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="410">language</text>
-    <text x="435" y="140" transform="scale(.1)" fill="#fff" textLength="410">language</text>
-    <text aria-hidden="true" x="1005" y="150" fill="#010101" fill-opacity=".80" filter="url(#blur)" transform="scale(.1)" textLength="570">JavaScript</text>
-    <text aria-hidden="true" x="1005" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="570">JavaScript</text>
-    <text x="1005" y="140" transform="scale(.1)" fill="#fff" textLength="570">JavaScript</text>
+    <text aria-hidden="true" x="485" y="150" fill="#010101" fill-opacity=".80" filter="url(#blur)" transform="scale(.1)" textLength="510">language</text>
+    <text aria-hidden="true" x="485" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="510">language</text>
+    <text x="485" y="140" transform="scale(.1)" fill="#fff" textLength="510">language</text>
+    <text aria-hidden="true" x="1105" y="150" fill="#010101" fill-opacity=".80" filter="url(#blur)" transform="scale(.1)" textLength="570">JavaScript</text>
+    <text aria-hidden="true" x="1105" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="570">JavaScript</text>
+    <text x="1105" y="140" transform="scale(.1)" fill="#fff" textLength="570">JavaScript</text>
   </g>
 </svg>
