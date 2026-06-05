@@ -12,7 +12,7 @@ import Gtk from 'gi://Gtk';
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {EyeAboutRow} from './about.js';
-import {newColorPicker, EyeKeybindingRow, EyeResetRow} from './prefsWidgets.js';
+import {EyeColorPicker, EyeKeybindingRow, EyeResetRow} from './prefsWidgets.js';
 //#endregion
 
 /**
@@ -30,11 +30,6 @@ class TrackerPage extends Adw.PreferencesPage {
             icon_name: 'mouse-click-symbolic',
         });
         const resetFunctions = [];
-
-        // Check if accent color variable exists (GNOME 47+)
-        const hasAccentColor = new Gio.Settings({schema_id: 'org.gnome.desktop.interface'})
-            .list_keys()
-            .includes('accent-color');
 
         //#region Tracker drawing group
         const drawingGroup = new Adw.PreferencesGroup({title: _('Appearance')});
@@ -137,13 +132,13 @@ class TrackerPage extends Adw.PreferencesPage {
 
         shapeRow.connect('activated', () => shapeWindow.present(this));
 
+        drawingGroup.add(shapeRow);
+
         resetFunctions.push(() => {
             shapeRowLabel.set_label(
                 settings.get_default_value('tracker-shape').deep_unpack().replaceAll('_', ' ')
             );
         });
-
-        drawingGroup.add(shapeRow);
         //#endregion
 
         //#region Tracker size
@@ -155,15 +150,8 @@ class TrackerPage extends Adw.PreferencesPage {
                 upper: 1024,
                 step_increment: 16,
             }),
-            value: settings.get_int('tracker-size'),
         });
-        sizeRow.adjustment.connect('value-changed', (widget) =>
-            settings.set_int('tracker-size', widget.value)
-        );
-
-        resetFunctions.push(
-            () => sizeRow.set_value(settings.get_default_value('tracker-size').deep_unpack())
-        );
+        settings.bind('tracker-size', sizeRow, 'value', Gio.SettingsBindFlags.DEFAULT);
         drawingGroup.add(sizeRow);
         //#endregion
 
@@ -172,45 +160,15 @@ class TrackerPage extends Adw.PreferencesPage {
             title: _('Color'),
             subtitle: _('Custom color for the tracker'),
         });
-
-        const colorMainPicker = newColorPicker(settings, 'tracker-color-main');
-
-        resetFunctions.push(() => {
-            const currentColor = colorMainPicker.get_rgba();
-            currentColor.parse(
-                settings.get_default_value('tracker-color-main').deep_unpack()
-            );
-            colorMainPicker.set_rgba(currentColor);
-        });
-
-        const colorMainBox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL});
-
-        // Tracker Main Color Toggle (GNOME 47+)
-        if (hasAccentColor) {
-            const trackerColorToggle = new Gtk.CheckButton({
-                active: settings.get_boolean('tracker-color-main-enabled'),
-                margin_end: 8,
-                valign: Gtk.Align.CENTER,
-            });
-            trackerColorToggle.connect('toggled', (widget) => {
-                settings.set_boolean('tracker-color-main-enabled', widget.active);
-                colorMainPicker.set_sensitive(widget.active);
-            });
-            colorMainPicker.set_sensitive(trackerColorToggle.active);
-
-            resetFunctions.push(
-                () =>
-                    trackerColorToggle.set_active(
-                        settings.get_default_value('tracker-color-main-enabled').deep_unpack()
-                    )
-            );
-            colorMainBox.append(trackerColorToggle);
-        }
-
-        colorMainBox.append(colorMainPicker);
-
-        colorMainRow.add_suffix(colorMainBox);
+        const colorMainPicker = new EyeColorPicker(
+            settings,
+            'tracker-color-main',
+            'tracker-color-main-enabled'
+        );
+        colorMainRow.add_suffix(colorMainPicker);
         drawingGroup.add(colorMainRow);
+
+        resetFunctions.push(() => colorMainPicker.reset());
         //#endregion
 
         //#region Tracker click colors
@@ -219,6 +177,15 @@ class TrackerPage extends Adw.PreferencesPage {
             subtitle: _('Colors when left, middle, and right-clicking'),
         });
 
+        const colorClickPickers =
+            ['tracker-color-left', 'tracker-color-middle', 'tracker-color-right'].map((key) => {
+                const colorPicker = new EyeColorPicker(settings, key);
+                colorClickRow.add_suffix(colorPicker);
+                resetFunctions.push(() => colorPicker.reset());
+                return colorPicker;
+            });
+        colorClickPickers.slice(0, -1).forEach((colorPicker) => colorPicker.set_margin_end(0));
+
         const isWayland = Gdk.Display.get_default().constructor.name.includes('Wayland');
         if (isWayland) {
             colorClickRow.set_tooltip_text(
@@ -226,20 +193,6 @@ class TrackerPage extends Adw.PreferencesPage {
             );
         }
 
-        const colorClickBox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL});
-        ['tracker-color-left', 'tracker-color-middle', 'tracker-color-right'].forEach((key) => {
-            const colorPicker = newColorPicker(settings, key);
-
-            resetFunctions.push(() => {
-                const currentColor = colorPicker.get_rgba();
-                currentColor.parse(settings.get_default_value(key).deep_unpack());
-                colorPicker.set_rgba(currentColor);
-            });
-
-            colorClickBox.append(colorPicker);
-        });
-
-        colorClickRow.add_suffix(colorClickBox);
         drawingGroup.add(colorClickRow);
         //#endregion
 
@@ -252,17 +205,8 @@ class TrackerPage extends Adw.PreferencesPage {
                 upper: 100,
                 step_increment: 10,
             }),
-            value: settings.get_int('tracker-opacity'),
         });
-        opacityRow.adjustment.connect('value-changed', (widget) =>
-            settings.set_int('tracker-opacity', widget.value)
-        );
-
-        resetFunctions.push(
-            () => opacityRow.set_value(
-                settings.get_default_value('tracker-opacity').deep_unpack()
-            )
-        );
+        settings.bind('tracker-opacity', opacityRow, 'value', Gio.SettingsBindFlags.DEFAULT);
         drawingGroup.add(opacityRow);
         //#endregion
 
@@ -275,17 +219,8 @@ class TrackerPage extends Adw.PreferencesPage {
                 upper: 144,
                 step_increment: 1,
             }),
-            value: settings.get_int('tracker-refresh-rate'),
         });
-        refreshRow.adjustment.connect('value-changed', (widget) =>
-            settings.set_int('tracker-refresh-rate', widget.value)
-        );
-
-        resetFunctions.push(
-            () => refreshRow.set_value(
-                settings.get_default_value('tracker-refresh-rate').deep_unpack()
-            )
-        );
+        settings.bind('tracker-refresh-rate', refreshRow, 'value', Gio.SettingsBindFlags.DEFAULT);
         drawingGroup.add(refreshRow);
         //#endregion
         //#endregion
@@ -299,9 +234,9 @@ class TrackerPage extends Adw.PreferencesPage {
             'tracker-keybinding',
             _('Toggle Tracker')
         );
+        keybindingGroup.add(keybindingRow);
 
         resetFunctions.push(() => keybindingRow.resetKeybinding());
-        keybindingGroup.add(keybindingRow);
         //#endregion
 
         //#region Reset group

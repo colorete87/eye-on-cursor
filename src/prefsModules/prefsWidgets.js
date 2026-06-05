@@ -4,40 +4,87 @@
 //#region Imports
 import Adw from 'gi://Adw';
 import Gdk from 'gi://Gdk';
+import Gio from 'gi://Gio';
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 //#endregion
 
-//#region Color picker
+//#region Color picker widget
 /**
- * Returns a `Gtk.ColorDialogButton` connected to a provided color key.
+ * A widget that contains a `Gtk.ColorDialogButton` connected to a provided color key and an
+ * optional `Gtk.CheckButton` toggle if accent color is supported, allowing the user to override it
+ * with a custom color.
  *
  * @param {Gio.Settings} settings - The settings object for this extension.
- * @param {string} key - The schema key in the settings object for this color setting.
- * @returns {Gtk.ColorDialogButton} The color picker button connected to the provided color setting.
+ * @param {string} colorKey - The settings key for this setting color string.
+ * @param {string|null} enabledKey [enabledKey=null] - The settings key for the boolean that toggles
+ * overriding the accent color with this user-set color.
  */
-export function newColorPicker(settings, key) {
-    const colorPicker = new Gtk.ColorDialogButton({
-        dialog: new Gtk.ColorDialog({
-            modal: true,
-            with_alpha: false,
-        }),
-        margin_end: 8,
-        valign: Gtk.Align.CENTER,
-    });
-    const currentColor = colorPicker.get_rgba();// Or new Gdk.RGBA();
-    currentColor.parse(settings.get_string(key));
-    colorPicker.set_rgba(currentColor);
+export const EyeColorPicker = GObject.registerClass(
+class EyeColorPicker extends Gtk.Box {
+    #settings;
+    #key;
+    #colorPicker;
+    #rgba;
 
-    colorPicker.connect(
-        'notify::rgba',
-        (widget) => settings.set_string(key, widget.get_rgba().to_string())
-    );
+    constructor(settings, colorKey, enabledKey = null) {
+        super({
+            orientation: Gtk.Orientation.HORIZONTAL,
+            margin_end: 8,
+        });
+        this.#settings = settings;
+        this.#key = colorKey;
 
-    return colorPicker;
-}
+        this.#colorPicker = new Gtk.ColorDialogButton({
+            dialog: new Gtk.ColorDialog({
+                modal: true,
+                with_alpha: false,
+            }),
+            valign: Gtk.Align.CENTER,
+        });
+        this.#rgba = new Gdk.RGBA();
+
+        this.#rgba.parse(this.#settings.get_string(this.#key));
+        this.#colorPicker.set_rgba(this.#rgba);
+
+        this.#colorPicker.connect(
+            'notify::rgba',
+            (widget) => this.#settings.set_string(this.#key, widget.get_rgba().to_string())
+        );
+
+        // Check if accent color variable exists (GNOME 47+)
+        const hasAccentColor = new Gio.Settings({schema_id: 'org.gnome.desktop.interface'})
+                .list_keys()
+                .includes('accent-color');
+        if (hasAccentColor && enabledKey !== null) {
+            const colorToggle = new Gtk.CheckButton({
+                margin_end: 8,
+                valign: Gtk.Align.CENTER,
+            });
+            this.#settings.bind(
+                enabledKey,
+                colorToggle,
+                'active',
+                Gio.SettingsBindFlags.DEFAULT
+            );
+            this.#settings.bind(
+                enabledKey,
+                this.#colorPicker,
+                'sensitive',
+                Gio.SettingsBindFlags.DEFAULT
+            );
+            this.append(colorToggle);
+        }
+        this.append(this.#colorPicker);
+    }
+
+    reset() {
+        this.#rgba.parse(this.#settings.get_default_value(this.#key).deep_unpack());
+        this.#colorPicker.set_rgba(this.#rgba);
+    }
+});
 //#endregion
 
 //#region Keybinding row
@@ -45,7 +92,7 @@ export function newColorPicker(settings, key) {
  * A row that allows users to set a keyboard shortcut.
  *
  * @param {Gio.Settings} settings - The settings object for this extension.
- * @param {string} key - The schema key in the settings object for this keybinding.
+ * @param {string} key -  The settings key for this color setting.
  * @param {string} shortcutName - The name of the shortcut and title of the row.
  */
 export const EyeKeybindingRow = GObject.registerClass(

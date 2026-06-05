@@ -10,7 +10,7 @@ import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {newColorPicker, EyeKeybindingRow, EyeResetRow} from './prefsWidgets.js';
+import {EyeColorPicker, EyeKeybindingRow, EyeResetRow} from './prefsWidgets.js';
 //#endregion
 
 /**
@@ -27,11 +27,6 @@ class EyePage extends Adw.PreferencesPage {
         });
         const resetFunctions = [];
 
-        // Check if accent color variable exists (GNOME 47+)
-        const hasAccentColor = new Gio.Settings({schema_id: 'org.gnome.desktop.interface'})
-            .list_keys()
-            .includes('accent-color');
-
         //#region Eye placement group
         const placementGroup = new Adw.PreferencesGroup({title: _('Layout')});
         this.add(placementGroup);
@@ -40,15 +35,8 @@ class EyePage extends Adw.PreferencesPage {
         const activeRow = new Adw.SwitchRow({
             title: _('Active'),
             subtitle: _('Enable the eyes'),
-            active: settings.get_boolean('eye-active'),
         });
-        activeRow.connect('notify::active', (widget) =>
-            settings.set_boolean('eye-active', widget.active)
-        );
-
-        resetFunctions.push(
-            () => activeRow.set_active(settings.get_default_value('eye-active').deep_unpack())
-        );
+        settings.bind('eye-active', activeRow, 'active', Gio.SettingsBindFlags.DEFAULT);
         placementGroup.add(activeRow);
         //#endregion
 
@@ -61,17 +49,9 @@ class EyePage extends Adw.PreferencesPage {
                 upper: 100,
                 step_increment: 1,
             }),
-            value: settings.get_int('eye-count'),
         });
-        countRow.adjustment.connect('value-changed', (widget) =>
-            settings.set_int('eye-count', widget.value)
-        );
+        settings.bind('eye-count', countRow, 'value', Gio.SettingsBindFlags.DEFAULT);
         countRow.set_tooltip_text(_('Displaying more eyes may reduce performance.'));
-
-        resetFunctions.push(
-            () => countRow.set_value(settings.get_default_value('eye-count').deep_unpack())
-
-        );
         placementGroup.add(countRow);
         //#endregion
 
@@ -89,6 +69,7 @@ class EyePage extends Adw.PreferencesPage {
         positionRow.connect('notify::selected', (widget) =>
             settings.set_enum('eye-position', widget.selected)
         );
+        placementGroup.add(positionRow);
 
         resetFunctions.push(
             () => {
@@ -97,7 +78,6 @@ class EyePage extends Adw.PreferencesPage {
                 positionRow.set_selected(values.indexOf(defValue));
             }
         );
-        placementGroup.add(positionRow);
         //#endregion
 
         //#region Eye index
@@ -109,15 +89,8 @@ class EyePage extends Adw.PreferencesPage {
                 upper: 100,
                 step_increment: 1,
             }),
-            value: settings.get_int('eye-index'),
         });
-        indexRow.adjustment.connect('value-changed', (widget) =>
-            settings.set_int('eye-index', widget.value)
-        );
-
-        resetFunctions.push(
-            () => indexRow.set_value(settings.get_default_value('eye-index').deep_unpack())
-        );
+        settings.bind('eye-index', indexRow, 'value', Gio.SettingsBindFlags.DEFAULT);
         placementGroup.add(indexRow);
         //#endregion
 
@@ -130,15 +103,8 @@ class EyePage extends Adw.PreferencesPage {
                 upper: 1000,
                 step_increment: 1,
             }),
-            value: settings.get_int('eye-width'),
         });
-        widthRow.adjustment.connect('value-changed', (widget) =>
-            settings.set_int('eye-width', widget.value)
-        );
-
-        resetFunctions.push(
-            () => widthRow.set_value(settings.get_default_value('eye-width').deep_unpack())
-        );
+        settings.bind('eye-width', widthRow, 'value', Gio.SettingsBindFlags.DEFAULT);
         placementGroup.add(widthRow);
         //#endregion
 
@@ -146,17 +112,8 @@ class EyePage extends Adw.PreferencesPage {
         const reactiveRow = new Adw.SwitchRow({
             title: _('Menu'),
             subtitle: _('Enable the eye menu'),
-            active: settings.get_boolean('eye-reactive'),
         });
-        reactiveRow.connect('notify::active', (widget) =>
-            settings.set_boolean('eye-reactive', widget.active)
-        );
-
-        resetFunctions.push(
-            () => reactiveRow.set_active(
-                settings.get_default_value('eye-reactive').deep_unpack()
-            )
-        );
+        settings.bind('eye-reactive', reactiveRow, 'active', Gio.SettingsBindFlags.DEFAULT);
         placementGroup.add(reactiveRow);
         //#endregion
         //#endregion
@@ -178,6 +135,7 @@ class EyePage extends Adw.PreferencesPage {
         shapeRow.connect('notify::selected', (widget) =>
             settings.set_enum('eye-shape', widget.selected)
         );
+        drawingGroup.add(shapeRow);
 
         resetFunctions.push(
             () => {
@@ -186,24 +144,14 @@ class EyePage extends Adw.PreferencesPage {
                 shapeRow.set_selected(values.indexOf(defValue));
             }
         );
-        drawingGroup.add(shapeRow);
         //#endregion
 
         //#region Eye outline mode
         const lineModeRow = new Adw.SwitchRow({
             title: _('Sketch Mode'),
             subtitle: _('Only draw the outline'),
-            active: settings.get_boolean('eye-line-mode'),
         });
-        lineModeRow.connect('notify::active', (widget) =>
-            settings.set_boolean('eye-line-mode', widget.active)
-        );
-
-        resetFunctions.push(
-            () => lineModeRow.set_active(
-                settings.get_default_value('eye-line-mode').deep_unpack()
-            )
-        );
+        settings.bind('eye-line-mode', lineModeRow, 'active', Gio.SettingsBindFlags.DEFAULT);
         drawingGroup.add(lineModeRow);
         //#endregion
 
@@ -216,64 +164,28 @@ class EyePage extends Adw.PreferencesPage {
                 upper: 50,
                 step_increment: 1,
             }),
-            value: settings.get_int('eye-line-width'),
         });
-        lineWidthRow.adjustment.connect('value-changed', (widget) =>
-            settings.set_int('eye-line-width', widget.value)
-        );
-
-        resetFunctions.push(
-            () => lineWidthRow.set_value(
-                settings.get_default_value('eye-line-width').deep_unpack()
-            )
-        );
+        settings.bind('eye-line-width', lineWidthRow, 'value', Gio.SettingsBindFlags.DEFAULT);
+        lineWidthRow.set_tooltip_text(_('Displaying more eyes may reduce performance.'));
         drawingGroup.add(lineWidthRow);
         //#endregion
 
         //#region Eye iris color
-        const colorRow = new Adw.ActionRow({
+        const colorRow = new Adw.ActionRow({ // TODO rename variables
             title: _('Iris Color'),
             subtitle: _('Custom color for the iris'),
         });
-
-        const irisColorPicker = newColorPicker(settings, 'eye-color-iris');
-
-        resetFunctions.push(() => {
-            const currentColor = irisColorPicker.get_rgba();
-            currentColor.parse(settings.get_default_value('eye-color-iris').deep_unpack());
-            irisColorPicker.set_rgba(currentColor);
-        });
-
-        const colorBox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL});
-
-        // Iris Color Toggle (GNOME 47+)
-        if (hasAccentColor) {
-            const irisColorToggle = new Gtk.CheckButton({
-                active: settings.get_boolean('eye-color-iris-enabled'),
-                margin_end: 8,
-                valign: Gtk.Align.CENTER,
-            });
-            irisColorToggle.connect('toggled', (widget) => {
-                settings.set_boolean('eye-color-iris-enabled', widget.active);
-                irisColorPicker.set_sensitive(widget.active);
-            });
-            irisColorPicker.set_sensitive(irisColorToggle.active);
-
-            resetFunctions.push(
-                () =>
-                    irisColorToggle.set_active(
-                        settings.get_default_value('eye-color-iris-enabled').deep_unpack()
-                    )
-            );
-            colorBox.append(irisColorToggle);
-        }
-
-        colorBox.append(irisColorPicker);
-
-        colorRow.add_suffix(colorBox);
+        const irisColorPicker = new EyeColorPicker(
+            settings,
+            'eye-color-iris',
+            'eye-color-iris-enabled'
+        );
+        colorRow.add_suffix(irisColorPicker);
         drawingGroup.add(colorRow);
-        //#endregion
+
+        resetFunctions.push(() => irisColorPicker.reset());
         // TODO Make sclera and pupil color into settings
+        //#endregion
 
         //#region Eye refresh rate
         const refreshRow = new Adw.SpinRow({
@@ -284,18 +196,8 @@ class EyePage extends Adw.PreferencesPage {
                 upper: 144,
                 step_increment: 1,
             }),
-            value: settings.get_int('eye-refresh-rate'),
         });
-        refreshRow.adjustment.connect('value-changed', (widget) =>
-            settings.set_int('eye-refresh-rate', widget.value)
-        );
-
-        resetFunctions.push(
-            () => refreshRow.set_value(
-                settings.get_default_value('eye-refresh-rate').deep_unpack()
-            )
-        );
-
+        settings.bind('eye-refresh-rate', refreshRow, 'value', Gio.SettingsBindFlags.DEFAULT);
         drawingGroup.add(refreshRow);
         //#endregion
         //#endregion
@@ -305,21 +207,15 @@ class EyePage extends Adw.PreferencesPage {
         this.add(blinkGroup);
 
         //#region Eyelid color
-        const colorEyelidRow = new Adw.ActionRow({title: _('Eyelid Color')});
-
-        const eyelidColorPicker = newColorPicker(settings, 'eye-color-eyelid');
-
-        resetFunctions.push(() => {
-            const currentColor = eyelidColorPicker.get_rgba();
-            currentColor.parse(settings.get_default_value('eye-color-eyelid').deep_unpack());
-            eyelidColorPicker.set_rgba(currentColor);
+        const colorEyelidRow = new Adw.ActionRow({
+            title: _('Eyelid Color'),
+            subtitle: _('Custom color for the eyelid'),
         });
-
-        const colorEyelidBox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL});
-        colorEyelidBox.append(eyelidColorPicker);
-
-        colorEyelidRow.add_suffix(colorEyelidBox);
+        const eyelidColorPicker = new EyeColorPicker(settings, 'eye-color-eyelid');
+        colorEyelidRow.add_suffix(eyelidColorPicker);
         blinkGroup.add(colorEyelidRow);
+
+        resetFunctions.push(() => () => eyelidColorPicker.reset());
         //#endregion
 
         //#region Blink mode
@@ -335,6 +231,7 @@ class EyePage extends Adw.PreferencesPage {
         blinkModeRow.connect('notify::selected', (widget) =>
             settings.set_enum('eye-blink-mode', widget.selected)
         );
+        blinkGroup.add(blinkModeRow);
 
         resetFunctions.push(
             () => {
@@ -343,7 +240,6 @@ class EyePage extends Adw.PreferencesPage {
                 blinkModeRow.set_selected(values.indexOf(defValue));
             }
         );
-        blinkGroup.add(blinkModeRow);
         //#endregion
 
         //#region Blink keybinding
@@ -352,9 +248,9 @@ class EyePage extends Adw.PreferencesPage {
             'eye-blink-keybinding',
             _('Manual Blink')
         );
+        blinkGroup.add(blinkKeybindingRow);
 
         resetFunctions.push(() => blinkKeybindingRow.resetKeybinding());
-        blinkGroup.add(blinkKeybindingRow);
         //#endregion
 
         //#region Blink interval
@@ -367,21 +263,17 @@ class EyePage extends Adw.PreferencesPage {
                 step_increment: 0.1,
             }),
             digits: 1,
-            value: settings.get_double('eye-blink-interval'),
         });
-        blinkIntervalRow.adjustment.connect('value-changed', (widget) =>
-            settings.set_double('eye-blink-interval', widget.value)
-        );
-
-        resetFunctions.push(
-            () => blinkIntervalRow.set_value(
-                settings.get_default_value('eye-blink-interval').deep_unpack()
-            )
+        settings.bind(
+            'eye-blink-interval',
+            blinkIntervalRow,
+            'value',
+            Gio.SettingsBindFlags.DEFAULT
         );
         blinkGroup.add(blinkIntervalRow);
         //#endregion
 
-        //#region Blink interval range
+        //#region Blink random interval range
         const blinkIntervalRangeRow = new Adw.ActionRow({
             title: _('Random Blink Interval'),
             subtitle: _('Range of durations in seconds between random blinks'),
@@ -436,15 +328,6 @@ class EyePage extends Adw.PreferencesPage {
                 );
             });
 
-        resetFunctions.push(() => {
-            const [min, max] =
-                settings.get_default_value('eye-blink-interval-range').deep_unpack();
-            minIntervalButton.adjustment.set_upper(max - MIN_GAP);
-            maxIntervalButton.adjustment.set_lower(min + MIN_GAP);
-            minIntervalButton.set_value(min);
-            maxIntervalButton.set_value(max);
-        });
-
         const box = new Gtk.Box({
             orientation: Gtk.Orientation.VERTICAL,
             spacing: 4,
@@ -457,6 +340,15 @@ class EyePage extends Adw.PreferencesPage {
 
         blinkIntervalRangeRow.add_suffix(box);
         blinkGroup.add(blinkIntervalRangeRow);
+
+        resetFunctions.push(() => {
+            const [min, max] =
+                settings.get_default_value('eye-blink-interval-range').deep_unpack();
+            minIntervalButton.adjustment.set_upper(max - MIN_GAP);
+            maxIntervalButton.adjustment.set_lower(min + MIN_GAP);
+            minIntervalButton.set_value(min);
+            maxIntervalButton.set_value(max);
+        });
         //#endregion
         //#endregion
 
