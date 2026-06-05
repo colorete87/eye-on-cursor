@@ -259,7 +259,7 @@ class EyePage extends Adw.PreferencesPage {
             subtitle: _('Duration in seconds between blinks'),
             adjustment: new Gtk.Adjustment({
                 lower: 0.1,
-                upper: 3600,
+                upper: 86400,
                 step_increment: 0.1,
             }),
             digits: 1,
@@ -296,7 +296,7 @@ class EyePage extends Adw.PreferencesPage {
         const maxIntervalButton = new Gtk.SpinButton({
             adjustment: new Gtk.Adjustment({
                 lower: blinkIntervalRange[0] + MIN_GAP,
-                upper: 3600,
+                upper: 86400,
                 step_increment: 0.1,
             }),
             digits: 1,

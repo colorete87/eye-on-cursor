@@ -132,7 +132,7 @@
     </key>
 
     <key name='eye-blink-interval-range' type='ad'>
-      <default>[2.0, 10.0]</default>
+      <default>[3.0, 6.0]</default>
       <summary>Range for unsynced blink intervals</summary>
       <description>Sets the range of intervals in seconds between blinks when in unsynced mode.</description>
     </key>
