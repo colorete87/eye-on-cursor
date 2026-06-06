@@ -79,6 +79,8 @@ class Eye extends PanelMenu.Button {
 
         // Attach mouse tracker
         this.#mouseTracker = extension.mouseTracker;
+        // Blink when toggling tracker
+        this.#mouseTracker.connectObject('toggled', () => this.blink(), this);
 
         // Initialize settings values
         this.reactive = this.#settings.get_boolean('eye-reactive');
@@ -349,6 +351,7 @@ class Eye extends PanelMenu.Button {
         this.#menuItems.length = 0;
 
         // Drop tracker
+        this.#mouseTracker.disconnectObject(this);
         this.#mouseTracker = null;
 
         // Destroy the button

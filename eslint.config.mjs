@@ -143,7 +143,7 @@ export default defineConfig([
                     ignoredNodes:
                     [
                         'CallExpression[callee.object.name=GObject]' +
-                        '[callee.property.name=registerClass] > ClassExpression:first-child',
+                        '[callee.property.name=registerClass] > ClassExpression',
                     ],
                     // Allow dedenting chained member expressions
                     MemberExpression: 'off',

@@ -7,6 +7,7 @@ import Atspi from 'gi://Atspi';
 import Clutter from 'gi://Clutter';
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
+import GObject from 'gi://GObject';
 import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
@@ -44,7 +45,9 @@ Gio._promisify(Gio.File.prototype, 'replace_contents_async');
  * @param {ExtensionMetadata} metadata - The metadata object from metadata.json.
  * @param {string} path - The filesystem path to the extension directory.
  */
-export class TrackerManager {
+export const TrackerManager = GObject.registerClass(
+    {Signals: {toggled: {}}},
+class TrackerManager extends GObject.Object {
     enabled = false;
     currentColor;
     #settings;
@@ -80,6 +83,8 @@ export class TrackerManager {
 
     //#region Constructor
     constructor(settings, metadata, path) {
+        super();
+
         // Get extension object properties
         this.#settings = settings;
         this.#trackersDir = GLib.build_filenamev([path, 'assets', 'trackers']);
@@ -270,6 +275,7 @@ export class TrackerManager {
     //#region Tracker toggle
     toggleTracker() {
         this.enabled ? this.#disableTracker() : this.#enableTracker();
+        this.emit('toggled');
     }
 
     #enableTracker() {
@@ -546,4 +552,4 @@ export class TrackerManager {
         this.#tracker = null;
     }
     //#endregion
-}
+});
