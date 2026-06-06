@@ -46,13 +46,17 @@ Gio._promisify(Gio.File.prototype, 'replace_contents_async');
  * @param {string} path - The filesystem path to the extension directory.
  */
 export const TrackerManager = GObject.registerClass(
-    {Signals: {toggled: {}}},
+    {
+        Signals: {
+            toggled: {},
+            click: {},
+        },
+    },
 class TrackerManager extends GObject.Object {
     enabled = false;
     currentColor;
     #settings;
     #trackersDir;
-    #isWayland;
     #hasAccentColor;
     #mouseX = 0;
     #mouseY = 0;
@@ -93,9 +97,6 @@ class TrackerManager extends GObject.Object {
         this.#hasAccentColor = new Gio.Settings({schema_id: 'org.gnome.desktop.interface'})
             .list_keys()
             .includes('accent-color');
-
-        // Check if running on wayland (GNOME 50+ is Wayland only)
-        this.#isWayland = Meta.is_wayland_compositor ? Meta.is_wayland_compositor() : true;
 
         // Initialize settings values
         this.#shape = this.#settings.get_string('tracker-shape');
@@ -192,9 +193,20 @@ class TrackerManager extends GObject.Object {
             this.toggleTracker.bind(this)
         );
 
-        // If on X11, use `Atspi` as the event listener
-        if (!this.#isWayland)
+        // Check if running on wayland (GNOME 50+ is Wayland only)
+        const isWayland = Meta.is_wayland_compositor ? Meta.is_wayland_compositor() : true;
+
+        // Connect mouse click events
+        if (isWayland) {
+            this.#capturedEvent = global.stage.connect(
+                'captured-event',
+                this.#onStageMouseEvent.bind(this)
+            );
+        } else {
             Atspi.init();
+            this.#mouseListener = Atspi.EventListener.new(this.#onAtspiMouseEvent.bind(this));
+            this.#mouseListener.register('mouse');
+        }
     }
     //#endregion
 
@@ -274,8 +286,8 @@ class TrackerManager extends GObject.Object {
 
     //#region Tracker toggle
     toggleTracker() {
-        this.enabled ? this.#disableTracker() : this.#enableTracker();
         this.emit('toggled');
+        this.enabled ? this.#disableTracker() : this.#enableTracker();
     }
 
     #enableTracker() {
@@ -293,17 +305,6 @@ class TrackerManager extends GObject.Object {
         this.#colorCustomEnabled
             ? this.#updateTrackerIcon(this.#shape, this.#colorMain)
             : this.#updateTrackerIcon(this.#shape, this.#colorAccent);
-
-        // Connect mouse click events
-        if (this.#isWayland) {
-            this.#capturedEvent = global.stage.connect(
-                'captured-event',
-                this.#onStageMouseEvent.bind(this)
-            );
-        } else {
-            this.#mouseListener = Atspi.EventListener.new(this.#onAtspiMouseEvent.bind(this));
-            this.#mouseListener.register('mouse');
-        }
     }
 
     #disableTracker() {
@@ -313,16 +314,6 @@ class TrackerManager extends GObject.Object {
         this.#clickMaxTimeout = clearTimeout(this.#clickMaxTimeout);
         this.#clickReleaseTimeout = clearTimeout(this.#clickReleaseTimeout);
         this.#trackerRaiseTimeout = clearTimeout(this.#trackerRaiseTimeout);
-
-        // Disconnect mouse click events
-        if (this.#capturedEvent) {
-            global.stage.disconnect(this.#capturedEvent);
-            this.#capturedEvent = null;
-        }
-        if (this.#mouseListener) {
-            this.#mouseListener.deregister('mouse');
-            this.#mouseListener = null;
-        }
 
         // Remove tracker from desktop
         if (this.#tracker && this.#tracker.get_parent() === Main.uiGroup)
@@ -380,6 +371,11 @@ class TrackerManager extends GObject.Object {
 
     //#region Click highlighting
     #handleClick(button, color) {
+        this.emit('click');
+
+        if (!this.enabled)
+            return;
+
         // Set the active button
         this.#activeClick = button;
         this.#clickResetPending = false;
@@ -537,6 +533,16 @@ class TrackerManager extends GObject.Object {
     destroy() {
         // Disable tracker if active
         this.#disableTracker();
+
+        // Disconnect mouse click events
+        if (this.#capturedEvent) {
+            global.stage.disconnect(this.#capturedEvent);
+            this.#capturedEvent = null;
+        }
+        if (this.#mouseListener) {
+            this.#mouseListener.deregister('mouse');
+            this.#mouseListener = null;
+        }
 
         // Disconnect settings
         this.#settings.disconnectObject(this);

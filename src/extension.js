@@ -37,7 +37,8 @@ export default class EyeOnCursorExtension extends Extension {
         spawnEyes(this);
 
         // Create the Blink controller
-        this.#blinkController = new BlinkController(this.settings, this.eyeArray);
+        this.#blinkController =
+            new BlinkController(this.settings, this.eyeArray, this.mouseTracker);
 
         // Connect eye placement settings
         [

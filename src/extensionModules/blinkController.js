@@ -1,13 +1,6 @@
 // SPDX-FileCopyrightText: 2024-2026 Djinn Alexio
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-//#region Imports
-import Meta from 'gi://Meta';
-import Shell from 'gi://Shell';
-
-import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-//#endregion
-
 const BLINK_CHANGE_DELAY = 100; // Make sure the eyeArray is created before starting blink routine
 const EYE_ARRAY_SETTINGS = [
     'eye-active',
@@ -22,24 +15,26 @@ const EYE_ARRAY_SETTINGS = [
  *
  * @param {EyeOnCursorExtension} extension - The extension instance.
  * @param {Eye[]} eyeArray - The array that stores created Eye instances.
+ * @param {TrackerManager} mouseTracker - The object that controls an icon that follows and reacts
+ * to the cursor.
  */
 export class BlinkController {
     #settings;
     #eyeArray;
+    #mouseTracker;
 
     #syncedRoutine;
     #blinkChangeDelay;
-    #keybindingConnected = false;
     #blinkMode;
     #blinkInterval;
     #blinkIntervalRange;
 
     //#region Constructor
-    constructor(settings, eyeArray) {
+    constructor(settings, eyeArray, mouseTracker) {
+        // Get extension object properties
         this.#settings = settings;
-
-        // Attach eye array
         this.#eyeArray = eyeArray;
+        this.#mouseTracker = mouseTracker;
 
         // Initialize settings values
         this.#blinkMode = this.#settings.get_string('eye-blink-mode');
@@ -119,16 +114,15 @@ export class BlinkController {
 
         if (this.#eyeArray.length > 0) {
             switch (this.#blinkMode) {
-                case 'synced':
-                    this.#startSyncedBlink();
+                case 'click':
+                    this.#startClickBlink();
                     break;
                 case 'unsynced':
                     this.#startUnsyncedBlink();
                     break;
-                case 'manual':
-                    this.#connectBlinkKeybinding();
-                    break;
+                case 'synced':
                 default:
+                    this.#startSyncedBlink();
                     break;
             }
         }
@@ -138,14 +132,14 @@ export class BlinkController {
     //#region Stop
     #stopCurrentMode() {
         switch (this.#blinkMode) {
+            case 'click':
+                this.#stopClickBlink();
+                break;
             case 'synced':
                 this.#stopSyncedBlink();
                 break;
             case 'unsynced':
                 this.#stopUnsyncedBlink();
-                break;
-            case 'manual':
-                this.#disconnectKeybinding();
                 break;
             default:
                 break;
@@ -153,7 +147,17 @@ export class BlinkController {
     }
     //#endregion
 
-    //#region Synced
+    //#region Click mode
+    #startClickBlink() {
+        this.#mouseTracker.connectObject('click', this.#blinkAll.bind(this), this);
+    }
+
+    #stopClickBlink() {
+        this.#mouseTracker.disconnectObject(this);
+    }
+    //#endregion
+
+    //#region Synced mode
     #startSyncedBlink() {
         this.#syncedRoutine = setInterval(
             this.#blinkAll.bind(this),
@@ -166,7 +170,7 @@ export class BlinkController {
     }
     //#endregion
 
-    //#region Unsynced
+    //#region Unsynced mode
     #startUnsyncedBlink() {
         this.#eyeArray.forEach((eye) => this.#scheduleNextBlink(eye));
     }
@@ -175,27 +179,6 @@ export class BlinkController {
         this.#eyeArray.forEach((eye) => {
             eye.randomBlinkTimeout = clearTimeout(eye.randomBlinkTimeout);
         });
-    }
-    //#endregion
-
-    //#region Manual
-    #connectBlinkKeybinding() {
-        Main.wm.addKeybinding(
-            'eye-blink-keybinding',
-            this.#settings,
-            Meta.KeyBindingFlags.NONE,
-            Shell.ActionMode.ALL,
-            this.#blinkAll.bind(this)
-        );
-
-        this.#keybindingConnected = true;
-    }
-
-    #disconnectKeybinding() {
-        if (this.#keybindingConnected) {
-            Main.wm.removeKeybinding('eye-blink-keybinding');
-            this.#keybindingConnected = false;
-        }
     }
     //#endregion
     //#endregion

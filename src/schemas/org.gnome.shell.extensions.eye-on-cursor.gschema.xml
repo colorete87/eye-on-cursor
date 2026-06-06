@@ -20,7 +20,7 @@
   </enum>
 
   <enum id='org.gnome.shell.extensions.eye-on-cursor.eye-blink-mode'>
-    <value value='0' nick='manual' />
+    <value value='0' nick='click' />
     <value value='1' nick='synced' />
     <value value='2' nick='unsynced' />
   </enum>
@@ -116,13 +116,7 @@
     <key name='eye-blink-mode' enum='org.gnome.shell.extensions.eye-on-cursor.eye-blink-mode'>
       <default>'synced'</default>
       <summary>Method of eye blinking</summary>
-      <description>Sets the blinking mode: 'manual', 'synced', or 'unsynced'.</description>
-    </key>
-
-    <key name='eye-blink-keybinding' type='as'>
-      <default><![CDATA[['']]]></default>
-      <summary>Keyboard shortcut for blinking</summary>
-      <description>Sets the keyboard shortcut that makes the eyes blink.</description>
+      <description>Sets the blinking mode: 'click', 'synced', or 'unsynced'.</description>
     </key>
 
     <key name='eye-blink-interval' type='d'>

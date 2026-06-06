@@ -10,7 +10,7 @@ import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {EyeColorPicker, EyeKeybindingRow, EyeResetRow} from './prefsWidgets.js';
+import {EyeColorPicker, EyeResetRow} from './prefsWidgets.js';
 //#endregion
 
 /**
@@ -220,7 +220,7 @@ class EyePage extends Adw.PreferencesPage {
 
         //#region Blink mode
         const blinkModeList = new Gtk.StringList();
-        [_('Manual'), _('Fixed'), _('Random')].forEach((mode) => blinkModeList.append(mode));
+        [_('Click'), _('Fixed'), _('Random')].forEach((mode) => blinkModeList.append(mode));
         // Each option enables the corresponding row
         const blinkModeRow = new Adw.ComboRow({
             title: _('Blink Mode'),
@@ -236,21 +236,10 @@ class EyePage extends Adw.PreferencesPage {
         resetFunctions.push(
             () => {
                 const defValue = settings.get_default_value('eye-blink-mode').deep_unpack();
-                const values = ['manual', 'synced', 'unsynced'];// Values from eye-blink-mode enum in schema
+                const values = ['click', 'synced', 'unsynced'];// Values from eye-blink-mode enum in schema
                 blinkModeRow.set_selected(values.indexOf(defValue));
             }
         );
-        //#endregion
-
-        //#region Blink keybinding
-        const blinkKeybindingRow = new EyeKeybindingRow(
-            settings,
-            'eye-blink-keybinding',
-            _('Manual Blink')
-        );
-        blinkGroup.add(blinkKeybindingRow);
-
-        resetFunctions.push(() => blinkKeybindingRow.resetKeybinding());
         //#endregion
 
         //#region Blink interval
