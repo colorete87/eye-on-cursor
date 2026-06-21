@@ -507,13 +507,15 @@ class TrackerManager extends GObject.Object {
         }
 
         // Update refresh rate if changed
-        if (this.#refreshRate !== newRefreshRate && this.#trackerPositionUpdater) {
-            this.#trackerPositionUpdater = clearInterval(this.#trackerPositionUpdater);
-            this.#trackerPositionUpdater = setInterval(
-                this.#updateTrackerPosition.bind(this),
-                1000 / newRefreshRate
-            );
+        if (this.#refreshRate !== newRefreshRate) {
             this.#refreshRate = newRefreshRate;
+            if (this.#trackerPositionUpdater) { // Restart position updater if currently running
+                this.#trackerPositionUpdater = clearInterval(this.#trackerPositionUpdater);
+                this.#trackerPositionUpdater = setInterval(
+                    this.#updateTrackerPosition.bind(this),
+                    1000 / this.#refreshRate
+                );
+            }
         }
     }
     //#endregion
