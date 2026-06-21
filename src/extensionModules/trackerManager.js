@@ -113,14 +113,10 @@ class TrackerManager extends GObject.Object {
         this.#refreshRate = this.#settings.get_int('tracker-refresh-rate');
 
         // Connect change in settings to update method
-        TRACKER_SETTINGS.forEach((key) =>
-            this.#settings.connectObject(
+        TRACKER_SETTINGS.forEach(
+            (key) => this.#settings.connectObject(
                 `changed::${key}`,
-                () =>
-                    this.#updateTrackerProperties()
-                        .catch((e) => {
-                            throw new Error(`Failed to update tracker properties: ${e.message}`);
-                        }),
+                this.#updateTrackerProperties.bind(this),
                 this
             )
         );
@@ -159,10 +155,7 @@ class TrackerManager extends GObject.Object {
             this.#themeContext = St.ThemeContext.get_for_stage(global.stage);
             const [accent] = this.#themeContext.get_accent_color();
             this.#color.accent = `rgb(${accent['red']},${accent['green']},${accent['blue']})`;
-            this.#updateCacheTrackers(this.#shape, [this.#color.accent])
-            .catch((e) => {
-                throw new Error(`Failed to create cache tracker for accent color: ${e.message}`);
-            });
+            this.#updateCacheTrackers(this.#shape, [this.#color.accent]);
 
             // Connect change in accent color to tracker redraw
             this.#themeContext.connectObject(
@@ -219,36 +212,33 @@ class TrackerManager extends GObject.Object {
             const cacheIconPath =
                 GLib.build_filenamev([this.#cacheDir, `${shape}_${colorTag}.svg`]);
             const cacheIcon = Gio.File.new_for_path(cacheIconPath);
-            try {
-                // Get template shape
-                const templatePath = GLib.build_filenamev([this.#trackersDir, `${shape}.svg`]);
-                const template = Gio.File.new_for_path(templatePath);
 
-                // Load contents of the template
-                const [contents, etag_] = await template.load_contents_async(null);
+            // Get template shape
+            const templatePath = GLib.build_filenamev([this.#trackersDir, `${shape}.svg`]);
+            const template = Gio.File.new_for_path(templatePath);
 
-                // Decode SVG contents
-                const decoder = new TextDecoder();
-                let decodedContents = decoder.decode(contents);
+            // Load template contents
+            const [contents, etag_] = await template.load_contents_async(null);
 
-                // Replace color in SVG contents
-                decodedContents = decodedContents.replace('#000', color);
+            // Decode SVG contents
+            const decoder = new TextDecoder();
+            let decodedContents = decoder.decode(contents);
 
-                // Encode SVG contents back into bytes
-                const encoder = new TextEncoder();
-                const encodedContents = encoder.encode(decodedContents);
+            // Replace color in SVG contents
+            decodedContents = decodedContents.replace('#000', color);
 
-                // Fill cached icon file with modified contents
-                await cacheIcon.replace_contents_async(
-                    encodedContents,
-                    null,
-                    false,
-                    Gio.FileCreateFlags.REPLACE_DESTINATION,
-                    null
-                );
-            } catch (e) {
-                throw new Error(`Failed to create cache tracker ${cacheIconPath}: ${e.message}`);
-            }
+            // Encode SVG contents back into bytes
+            const encoder = new TextEncoder();
+            const encodedContents = encoder.encode(decodedContents);
+
+            // Fill cached icon file with modified contents
+            await cacheIcon.replace_contents_async(
+                encodedContents,
+                null,
+                false,
+                Gio.FileCreateFlags.REPLACE_DESTINATION,
+                null
+            );
         });
         await Promise.all(tasks);
     }
