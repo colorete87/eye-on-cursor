@@ -135,13 +135,12 @@ export class BlinkController {
             case 'click':
                 this.#stopClickBlink();
                 break;
-            case 'synced':
-                this.#stopSyncedBlink();
-                break;
             case 'unsynced':
                 this.#stopUnsyncedBlink();
                 break;
+            case 'synced':
             default:
+                this.#stopSyncedBlink();
                 break;
         }
     }
