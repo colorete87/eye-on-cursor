@@ -45,7 +45,6 @@ class EyeColorPicker extends Gtk.Box {
             valign: Gtk.Align.CENTER,
         });
         this.#rgba = new Gdk.RGBA();
-
         this.#rgba.parse(this.#settings.get_string(this.#key));
         this.#colorPicker.set_rgba(this.#rgba);
 
@@ -141,9 +140,8 @@ class EyeKeybindingRow extends Adw.ActionRow {
             // Main.wm.addKeybinding takes string arrays, not strings
         );
     }
-    //#endregion
 
-    //#region Keybinding methods
+    //#region Keybinding row methods
     resetKeybinding() {
         this.#label.accelerator = '';
         this.#resetButton.visible = false;
@@ -199,6 +197,7 @@ class EyeKeybindingRow extends Adw.ActionRow {
         this.#captureWindow.destroy();
         return Gdk.EVENT_STOP;
     }
+    //#endregion
 
     //#region Keybinding validation
     // See https://gitlab.gnome.org/GNOME/gnome-control-center/-/blob/main/panels/keyboard/keyboard-shortcuts.c

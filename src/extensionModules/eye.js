@@ -82,7 +82,7 @@ class Eye extends PanelMenu.Button {
         // Attach mouse tracker
         this.#mouseTracker = extension.mouseTracker;
         // Blink when toggling tracker
-        this.#mouseTracker.connectObject('toggled', () => this.blink(), this);
+        this.#mouseTracker.connectObject('toggled', this.blink.bind(this), this);
 
         // Initialize settings values
         this.reactive = this.#settings.get_boolean('eye-reactive');
@@ -138,12 +138,12 @@ class Eye extends PanelMenu.Button {
             this.#createPopupMenuItem( // TODO replace with PopupSwitchMenuItem
                 _('Toggle Tracker'),
                 Gio.icon_new_for_string(trackerIconPath),
-                this.#mouseTracker.toggleTracker.bind(this.#mouseTracker)
+                () => this.#mouseTracker.toggleTracker()
             ),
             this.#createPopupMenuItem(
                 _('Settings'),
                 'org.gnome.Settings-symbolic',
-                extension.openPreferences.bind(extension)
+                () => extension.openPreferences()
             ),
         ];
         this.#menuItems.forEach((popup) => this.menu.addMenuItem(popup));
@@ -256,8 +256,8 @@ class Eye extends PanelMenu.Button {
 
         // Update width
         if (this.#width !== newWidth) {
-            this.#area?.set_width(newWidth);
             this.#width = newWidth;
+            this.#area?.set_width(this.#width);
         }
 
         // Update iris color
@@ -276,44 +276,42 @@ class Eye extends PanelMenu.Button {
             this.#area?.queue_repaint();
         }
 
-        // Update refresh rate
-        if (this.#area && this.#refreshRate !== newRefreshRate) {
+        // Update refresh rate if changed
+        if (this.#refreshRate !== newRefreshRate) {
+            this.#refreshRate = newRefreshRate;
             this.#eyeRedrawInterval = clearInterval(this.#eyeRedrawInterval);
             this.#eyeRedrawInterval = setInterval(
                 this.#updateEyeFrame.bind(this),
-                1000 / newRefreshRate
+                1000 / this.#refreshRate
             );
-            this.#refreshRate = newRefreshRate;
         }
     }
     //#endregion
 
     //#region Blink method
-    blink() { // TODO blink when toggling tracker
-        const blinkInterval = 1000 / this.#refreshRate;
+    blink() {
         const totalFrames = Math.ceil(this.#refreshRate * (BLINK_DURATION / 1000));
         const halfFrames = totalFrames / 2;
 
         this.#eyelidLevelInterval = clearInterval(this.#eyelidLevelInterval);
         this.#blinking = true;
-
         let currentFrame = 0;
         this.#eyelidLevelInterval = setInterval(() => {
             currentFrame++;
-            const eyelidLevel = currentFrame <= halfFrames
+
+            // Compute eyelid level
+            this.#eyelidLevel = currentFrame <= halfFrames
                 ? currentFrame / halfFrames // Closing
                 : 1 - ((currentFrame - halfFrames) / halfFrames); // Opening
 
-            this.#eyelidLevel = eyelidLevel;
-
             // Finishing
-            if (currentFrame > totalFrames) {
+            if (currentFrame >= totalFrames) {
                 this.#eyelidLevel = 0;
                 this.#blinking = false;
                 this.#area.queue_repaint(); // Ensure that blinking animation ends with eyelid completely opened
                 this.#eyelidLevelInterval = clearInterval(this.#eyelidLevelInterval);
             }
-        }, blinkInterval);
+        }, 1000 / this.#refreshRate);
     }
     //#endregion
 

@@ -506,18 +506,17 @@ class TrackerManager extends GObject.Object {
 
         // Update size if changed
         if (this.#size !== newSize) {
-            this.#tracker.icon_size = newSize;
             this.#size = newSize;
+            this.#tracker.icon_size = this.#size;
         }
 
         // Update opacity if changed
         if (this.#opacity !== newOpacity) {
-            this.#tracker.opacity = Math.ceil(newOpacity * 2.55);
             this.#opacity = newOpacity;
+            this.#tracker.opacity = Math.ceil(this.#opacity * 2.55);
         }
 
-        // If the position updater is currently running, stop it and start a new one with
-        // the updated refresh rate
+        // Update refresh rate if changed
         if (this.#refreshRate !== newRefreshRate && this.#trackerPositionUpdater) {
             this.#trackerPositionUpdater = clearInterval(this.#trackerPositionUpdater);
             this.#trackerPositionUpdater = setInterval(

@@ -76,28 +76,28 @@ function drawNaturalEye(area, options) {
 
     const cr = area.get_context();
 
+    const drawEyelidShape = () => {
+        cr.moveTo(-eyeRadius, 0);
+        cr.curveTo(
+            offsetX - irisRadius,
+            offsetY + (eyeRadius * TOP_LID_SCALE),
+            offsetX + irisRadius,
+            offsetY + (eyeRadius * TOP_LID_SCALE),
+            eyeRadius,
+            0
+        );
+
+        cr.curveTo(
+            offsetX + irisRadius,
+            offsetY - (eyeRadius * BOTTOM_LID_SCALE),
+            offsetX - irisRadius,
+            offsetY - (eyeRadius * BOTTOM_LID_SCALE),
+            -eyeRadius,
+            0
+        );
+    };
+
     try {
-        const drawEyelidShape = () => {
-            cr.moveTo(-eyeRadius, 0);
-            cr.curveTo(
-                offsetX - irisRadius,
-                offsetY + (eyeRadius * TOP_LID_SCALE),
-                offsetX + irisRadius,
-                offsetY + (eyeRadius * TOP_LID_SCALE),
-                eyeRadius,
-                0
-            );
-
-            cr.curveTo(
-                offsetX + irisRadius,
-                offsetY - (eyeRadius * BOTTOM_LID_SCALE),
-                offsetX - irisRadius,
-                offsetY - (eyeRadius * BOTTOM_LID_SCALE),
-                -eyeRadius,
-                0
-            );
-        };
-
         // Drawing the base of the eye
         cr.translate(areaWidth * 0.5, areaHeight * 0.5);
 

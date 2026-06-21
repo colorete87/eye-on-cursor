@@ -47,7 +47,7 @@ export class BlinkController {
             this.#settings.connectObject(
                 `changed::${key}`,
                 () => {
-                // Delay reset so that the eye array gets updated before blink routine
+                // Delay reset so that the blink routine gets updated after the eye array
                     this.#blinkChangeDelay = clearTimeout(this.#blinkChangeDelay);
                     this.#blinkChangeDelay = setTimeout(
                         this.#startBlinkMode.bind(this),
@@ -84,7 +84,7 @@ export class BlinkController {
 
     //#region Blink methods
     #blinkAll() {
-        if (this.#eyeArray.length > 0) // Only trigger if there are eyes
+        if (this.#eyeArray.length > 0)
             this.#eyeArray.forEach((eye) => eye.blink());
     }
 
@@ -158,10 +158,7 @@ export class BlinkController {
 
     //#region Synced mode
     #startSyncedBlink() {
-        this.#syncedRoutine = setInterval(
-            this.#blinkAll.bind(this),
-            1000 * this.#blinkInterval
-        );
+        this.#syncedRoutine = setInterval(this.#blinkAll.bind(this), 1000 * this.#blinkInterval);
     }
 
     #stopSyncedBlink() {

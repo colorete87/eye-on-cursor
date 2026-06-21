@@ -47,11 +47,7 @@ export default class EyeOnCursorExtension extends Extension {
             'eye-index',
             'eye-count',
         ].forEach((key) =>
-            this.settings.connectObject(
-                `changed::${key}`,
-                spawnEyes.bind(this, this),
-                this
-            )
+            this.settings.connectObject(`changed::${key}`, () => spawnEyes(this), this)
         );
     }
     //#endregion
