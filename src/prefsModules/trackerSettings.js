@@ -59,7 +59,7 @@ class TrackerPage extends Adw.PreferencesPage {
 
         const shapeRow = new Adw.ActionRow({
             title: _('Shape'),
-            subtitle: _('Shape of the tracker'),
+            subtitle: _('Icon used for the tracker'),
             activatable: true,
         });
 
@@ -144,7 +144,7 @@ class TrackerPage extends Adw.PreferencesPage {
         //#region Tracker size
         const sizeRow = new Adw.SpinRow({
             title: _('Size'),
-            subtitle: _('Size of the tracker'),
+            subtitle: _('Diameter of the tracker in pixels'),
             adjustment: new Gtk.Adjustment({
                 lower: 16,
                 upper: 1024,
@@ -174,7 +174,7 @@ class TrackerPage extends Adw.PreferencesPage {
         //#region Tracker click colors
         const colorClickRow = new Adw.ActionRow({
             title: _('Colors on Click'),
-            subtitle: _('Colors when left, middle, and right-clicking'),
+            subtitle: _('Per-button click colors: left, middle, right'),
         });
 
         const colorClickPickers =
@@ -187,11 +187,8 @@ class TrackerPage extends Adw.PreferencesPage {
         colorClickPickers.slice(0, -1).forEach((colorPicker) => colorPicker.set_margin_end(0));
 
         const isWayland = Gdk.Display.get_default().constructor.name.includes('Wayland');
-        if (isWayland) {
-            colorClickRow.set_tooltip_text(
-                _('Click highlighting does not work in windows.')
-            );
-        }
+        if (isWayland)
+            colorClickRow.set_tooltip_text(_('Click highlighting does not work in windows.'));
 
         drawingGroup.add(colorClickRow);
         //#endregion
@@ -199,7 +196,7 @@ class TrackerPage extends Adw.PreferencesPage {
         //#region Tracker opacity
         const opacityRow = new Adw.SpinRow({
             title: _('Opacity'),
-            subtitle: _('Opacity of the tracker'),
+            subtitle: _('How transparent the tracker is'),
             adjustment: new Gtk.Adjustment({
                 lower: 0,
                 upper: 100,
@@ -213,7 +210,7 @@ class TrackerPage extends Adw.PreferencesPage {
         //#region Tracker refresh rate
         const refreshRow = new Adw.SpinRow({
             title: _('Refresh Rate (Hz)'),
-            subtitle: _('Higher refresh rates may impact performance.'),
+            subtitle: _('Frames per second'),
             adjustment: new Gtk.Adjustment({
                 lower: 1,
                 upper: 360,
@@ -221,6 +218,7 @@ class TrackerPage extends Adw.PreferencesPage {
             }),
         });
         settings.bind('tracker-refresh-rate', refreshRow, 'value', Gio.SettingsBindFlags.DEFAULT);
+        refreshRow.set_tooltip_text(_('Higher refresh rates may impact performance.'));
         drawingGroup.add(refreshRow);
         //#endregion
         //#endregion

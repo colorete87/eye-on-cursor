@@ -104,7 +104,7 @@ class EyeKeybindingRow extends Adw.ActionRow {
     constructor(settings, key, shortcutName) {
         super({
             title: shortcutName,
-            subtitle: _('Set a shortcut'),
+            subtitle: _('Set shortcut'),
             activatable: true,
         });
 
@@ -151,8 +151,8 @@ class EyeKeybindingRow extends Adw.ActionRow {
         const controller = new Gtk.EventControllerKey();
 
         const content = new Adw.StatusPage({
-            title: _('Set a shortcut'),
-            description: _('Press Esc to cancel or Backspace to disable the shortcut'),
+            title: _('Set shortcut'),
+            description: _('Press Esc to cancel or Backspace to disable the keyboard shortcut'),
             icon_name: 'preferences-desktop-keyboard-shortcuts-symbolic',
         });
 
