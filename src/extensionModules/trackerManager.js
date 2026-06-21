@@ -69,14 +69,16 @@ class TrackerManager extends GObject.Object {
 
     #shape;
     #size;
-    #colorCustomEnabled;
-    #colorMain;
-    #colorLeft;
-    #colorMiddle;
-    #colorRight;
-    #colorAccent;
     #opacity;
     #refreshRate;
+    #color = {
+        useCustomMain: null,
+        accent: null,
+        main: null,
+        left: null,
+        middle: null,
+        right: null,
+    };
 
     #tracker;
     #cacheDir;
@@ -101,12 +103,12 @@ class TrackerManager extends GObject.Object {
         // Initialize settings values
         this.#shape = this.#settings.get_string('tracker-shape');
         this.#size = this.#settings.get_int('tracker-size');
-        this.#colorCustomEnabled = this.#hasAccentColor
+        this.#color.useCustomMain = this.#hasAccentColor
             ? this.#settings.get_boolean('tracker-color-main-enabled') : true;
-        this.#colorMain = this.#settings.get_string('tracker-color-main');
-        this.#colorLeft = this.#settings.get_string('tracker-color-left');
-        this.#colorMiddle = this.#settings.get_string('tracker-color-middle');
-        this.#colorRight = this.#settings.get_string('tracker-color-right');
+        this.#color.main = this.#settings.get_string('tracker-color-main');
+        this.#color.left = this.#settings.get_string('tracker-color-left');
+        this.#color.middle = this.#settings.get_string('tracker-color-middle');
+        this.#color.right = this.#settings.get_string('tracker-color-right');
         this.#opacity = this.#settings.get_int('tracker-opacity');
         this.#refreshRate = this.#settings.get_int('tracker-refresh-rate');
 
@@ -146,20 +148,18 @@ class TrackerManager extends GObject.Object {
 
         // Create tracker icons files in cache based on the initial settings
         this.#updateCacheTrackers(this.#shape, [
-            this.#colorMain,
-            this.#colorLeft,
-            this.#colorMiddle,
-            this.#colorRight,
-        ]).catch((e) => {
-            throw new Error(`Failed to create cache trackers: ${e.message}`);
-        });
+            this.#color.main,
+            this.#color.left,
+            this.#color.middle,
+            this.#color.right,
+        ]);
 
         // Use desktop accent color as default tracker color (GNOME 47+)
         if (this.#hasAccentColor) {
             this.#themeContext = St.ThemeContext.get_for_stage(global.stage);
             const [accent] = this.#themeContext.get_accent_color();
-            this.#colorAccent = `rgb(${accent['red']},${accent['green']},${accent['blue']})`;
-            this.#updateCacheTrackers(this.#shape, [this.#colorAccent])
+            this.#color.accent = `rgb(${accent['red']},${accent['green']},${accent['blue']})`;
+            this.#updateCacheTrackers(this.#shape, [this.#color.accent])
             .catch((e) => {
                 throw new Error(`Failed to create cache tracker for accent color: ${e.message}`);
             });
@@ -169,20 +169,20 @@ class TrackerManager extends GObject.Object {
                 'changed',
                 async () => {
                     const [accent] = this.#themeContext.get_accent_color();
-                    this.#colorAccent =
+                    this.#color.accent =
                         `rgb(${accent['red']},${accent['green']},${accent['blue']})`;
-                    await this.#updateCacheTrackers(this.#shape, [this.#colorAccent]);
-                    this.#colorCustomEnabled
-                        ? this.#updateTrackerIcon(this.#shape, this.#colorMain)
-                        : this.#updateTrackerIcon(this.#shape, this.#colorAccent);
+                    await this.#updateCacheTrackers(this.#shape, [this.#color.accent]);
+                    this.#color.useCustomMain
+                        ? this.#updateTrackerIcon(this.#shape, this.#color.main)
+                        : this.#updateTrackerIcon(this.#shape, this.#color.accent);
                 },
                 this
             );
         }
 
-        this.#colorCustomEnabled
-            ? this.currentColor = this.#colorMain
-            : this.currentColor = this.#colorAccent;
+        this.#color.useCustomMain
+            ? this.currentColor = this.#color.main
+            : this.currentColor = this.#color.accent;
 
         // Connect toggle tracker shortcut
         Main.wm.addKeybinding(
@@ -302,9 +302,9 @@ class TrackerManager extends GObject.Object {
         // Add tracker to desktop
         Main.uiGroup.add_child(this.#tracker);
         this.#updateTrackerPosition(); // Needs tracker to be part of uiGroup
-        this.#colorCustomEnabled
-            ? this.#updateTrackerIcon(this.#shape, this.#colorMain)
-            : this.#updateTrackerIcon(this.#shape, this.#colorAccent);
+        this.#color.useCustomMain
+            ? this.#updateTrackerIcon(this.#shape, this.#color.main)
+            : this.#updateTrackerIcon(this.#shape, this.#color.accent);
     }
 
     #disableTracker() {
@@ -332,13 +332,13 @@ class TrackerManager extends GObject.Object {
         switch (button) {
             // Button presses
             case 1:
-                this.#handleClick(button, this.#colorLeft);
+                this.#handleClick(button, this.#color.left);
                 break;
             case 2:
-                this.#handleClick(button, this.#colorMiddle);
+                this.#handleClick(button, this.#color.middle);
                 break;
             case 3:
-                this.#handleClick(button, this.#colorRight);
+                this.#handleClick(button, this.#color.right);
                 break;
             default:
         }
@@ -448,9 +448,9 @@ class TrackerManager extends GObject.Object {
 
     #resetColor() {
         // Reset the tracker icon to the main color
-        this.#colorCustomEnabled
-            ? this.#updateTrackerIcon(this.#shape, this.#colorMain)
-            : this.#updateTrackerIcon(this.#shape, this.#colorAccent);
+        this.#color.useCustomMain
+            ? this.#updateTrackerIcon(this.#shape, this.#color.main)
+            : this.#updateTrackerIcon(this.#shape, this.#color.accent);
         this.#activeClick = null;
         this.#clickResetPending = false;
 
@@ -465,7 +465,7 @@ class TrackerManager extends GObject.Object {
         // Get new settings
         const newShape = this.#settings.get_string('tracker-shape');
         const newSize = this.#settings.get_int('tracker-size');
-        const newColorCustomEnabled = this.#hasAccentColor
+        const newColorUseCustomMain = this.#hasAccentColor
             ? this.#settings.get_boolean('tracker-color-main-enabled') : true;
         const newColorMain = this.#settings.get_string('tracker-color-main');
         const newColorLeft = this.#settings.get_string('tracker-color-left');
@@ -477,31 +477,31 @@ class TrackerManager extends GObject.Object {
         // Update tracker if shape or any color has changed
         if (
             this.#shape !== newShape ||
-            this.#colorCustomEnabled !== newColorCustomEnabled ||
-            this.#colorMain !== newColorMain ||
-            this.#colorLeft !== newColorLeft ||
-            this.#colorMiddle !== newColorMiddle ||
-            this.#colorRight !== newColorRight
+            this.#color.useCustomMain !== newColorUseCustomMain ||
+            this.#color.main !== newColorMain ||
+            this.#color.left !== newColorLeft ||
+            this.#color.middle !== newColorMiddle ||
+            this.#color.right !== newColorRight
         ) {
-            await this.#updateCacheTrackers(newShape, [
-                newColorMain,
-                newColorLeft,
-                newColorMiddle,
-                newColorRight,
+            this.#shape = newShape;
+            this.#color.useCustomMain = newColorUseCustomMain;
+            this.#color.main = newColorMain;
+            this.#color.left = newColorLeft;
+            this.#color.middle = newColorMiddle;
+            this.#color.right = newColorRight;
+
+            await this.#updateCacheTrackers(this.#shape, [
+                this.#color.main,
+                this.#color.left,
+                this.#color.middle,
+                this.#color.right,
             ]);
             if (this.#hasAccentColor)
-                await this.#updateCacheTrackers(newShape, [this.#colorAccent]);
+                await this.#updateCacheTrackers(this.#shape, [this.#color.accent]);
 
-            newColorCustomEnabled
-                ? this.#updateTrackerIcon(newShape, newColorMain)
-                : this.#updateTrackerIcon(newShape, this.#colorAccent);
-
-            this.#shape = newShape;
-            this.#colorCustomEnabled = newColorCustomEnabled;
-            this.#colorMain = newColorMain;
-            this.#colorLeft = newColorLeft;
-            this.#colorMiddle = newColorMiddle;
-            this.#colorRight = newColorRight;
+            this.#color.useCustomMain
+                ? this.#updateTrackerIcon(this.#shape, this.#color.main)
+                : this.#updateTrackerIcon(this.#shape, this.#color.accent);
         }
 
         // Update size if changed

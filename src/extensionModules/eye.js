@@ -54,11 +54,13 @@ class Eye extends PanelMenu.Button {
     #lineMode;
     #lineWidth;
     #width;
-    #irisCustomColorEnabled;
-    #irisColor;
     #refreshRate;
-    #eyelidColor;
-    #trackerColor;
+    #color = {
+        useCustomIris: null,
+        accent: null,
+        iris: null,
+        eyelid: null,
+    };
 
     #area;
     #menuItems;
@@ -88,12 +90,11 @@ class Eye extends PanelMenu.Button {
         this.#lineMode = this.#settings.get_boolean('eye-line-mode');
         this.#lineWidth = this.#settings.get_int('eye-line-width') / 10;
         this.#width = this.#settings.get_int('eye-width');
-        this.#irisCustomColorEnabled =
+        this.#color.useCustomIris =
             this.#hasAccentColor ? this.#settings.get_boolean('eye-color-iris-enabled') : true;
-        this.#irisColor = parseRGB(this.#settings.get_string('eye-color-iris'));
+        this.#color.iris = parseRGB(this.#settings.get_string('eye-color-iris'));
+        this.#color.eyelid = parseRGB(this.#settings.get_string('eye-color-eyelid'));
         this.#refreshRate = this.#settings.get_int('eye-refresh-rate');
-        this.#eyelidColor = parseRGB(this.#settings.get_string('eye-color-eyelid'));
-        this.#trackerColor = this.#mouseTracker.currentColor;
         // TODO use foreground color as default eyelid to match it with contour
 
         // Connect change in settings to update method
@@ -109,7 +110,7 @@ class Eye extends PanelMenu.Button {
         if (this.#hasAccentColor) {
             this.#themeContext = St.ThemeContext.get_for_stage(global.stage);
             const [accent] = this.#themeContext.get_accent_color();
-            this.accentColor = {
+            this.#color.accent = {
                 red: accent.get_red(),
                 green: accent.get_green(),
                 blue: accent.get_blue(),
@@ -118,7 +119,7 @@ class Eye extends PanelMenu.Button {
                 'changed',
                 () => {
                     const [accent] = this.#themeContext.get_accent_color();
-                    this.accentColor = {
+                    this.#color.accent = {
                         red: accent.get_red(),
                         green: accent.get_green(),
                         blue: accent.get_blue(),
@@ -171,19 +172,11 @@ class Eye extends PanelMenu.Button {
     //#endregion
 
     //#region Drawing methods
-    // Update and redraw the eye frame if the mouse has moved
     #updateEyeFrame() {
         const [mouseX, mouseY] = global.get_pointer();
-
-        // If mouse has moved, tracker color has changed, or eye is blinking, redraw eye
-        if (
-            this.#mouseX !== mouseX ||
-                this.#mouseY !== mouseY ||
-                this.#trackerColor !== this.#mouseTracker.currentColor ||
-                this.#blinking
-        ) {
+        // Redraw the eye if the mouse has moved or if blinking
+        if (this.#mouseX !== mouseX || this.#mouseY !== mouseY || this.#blinking) {
             [this.#mouseX, this.#mouseY] = [mouseX, mouseY];
-            this.#trackerColor = this.#mouseTracker.currentColor;
             this.#area.queue_repaint();
         }
     }
@@ -202,11 +195,11 @@ class Eye extends PanelMenu.Button {
         // Get iris color
         let irisColor;
         if (this.#mouseTracker.enabled)
-            irisColor = parseRGB(this.#trackerColor);
-        else if (this.#irisCustomColorEnabled)
-            irisColor = this.#irisColor;
+            irisColor = parseRGB(this.#mouseTracker.currentColor);
+        else if (this.#color.useCustomIris)
+            irisColor = this.#color.iris;
         else
-            irisColor = this.accentColor;
+            irisColor = this.#color.accent;
 
         const options = {
             shape: this.#shape,
@@ -220,7 +213,7 @@ class Eye extends PanelMenu.Button {
             irisColor,
             pupilColor: PUPIL_COLOR,
             eyelidLevel: this.#eyelidLevel,
-            eyelidColor: this.#eyelidColor,
+            eyelidColor: this.#color.eyelid,
         };
         drawEye(area, options);
     }
@@ -233,10 +226,10 @@ class Eye extends PanelMenu.Button {
         const newLineMode = this.#settings.get_boolean('eye-line-mode');
         const newLineWidth = this.#settings.get_int('eye-line-width');
         const newWidth = this.#settings.get_int('eye-width');
-        const newIrisCustomColorEnabled =
+        const newColorUseCustomIris =
             this.#hasAccentColor ? this.#settings.get_boolean('eye-color-iris-enabled') : true;
-        const newIrisColor = parseRGB(this.#settings.get_string('eye-color-iris'));
-        const newEyelidColor = parseRGB(this.#settings.get_string('eye-color-eyelid'));
+        const newColorIris = parseRGB(this.#settings.get_string('eye-color-iris'));
+        const newColorEyelid = parseRGB(this.#settings.get_string('eye-color-eyelid'));
         const newRefreshRate = this.#settings.get_int('eye-refresh-rate');
 
         // Update reactive property
@@ -269,17 +262,17 @@ class Eye extends PanelMenu.Button {
 
         // Update iris color
         if (
-            this.#irisCustomColorEnabled !== newIrisCustomColorEnabled ||
-            JSON.stringify(this.#irisColor) !== JSON.stringify(newIrisColor)
+            this.#color.useCustomIris !== newColorUseCustomIris ||
+            JSON.stringify(this.#color.iris) !== JSON.stringify(newColorIris)
         ) {
-            this.#irisCustomColorEnabled = newIrisCustomColorEnabled;
-            this.#irisColor = newIrisColor;
+            this.#color.useCustomIris = newColorUseCustomIris;
+            this.#color.iris = newColorIris;
             this.#area?.queue_repaint();
         }
 
         // Update eyelid color
-        if (!JSON.stringify(this.#eyelidColor) !== JSON.stringify(newEyelidColor)) {
-            this.#eyelidColor = newEyelidColor;
+        if (JSON.stringify(this.#color.eyelid) !== JSON.stringify(newColorEyelid)) {
+            this.#color.eyelid = newColorEyelid;
             this.#area?.queue_repaint();
         }
 
