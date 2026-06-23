@@ -7,8 +7,10 @@
 **Let your desktop "keep an eye" on your mouse!**
 
 [![Latest Release][badge-release]][latest-release]
-[![Supported GNOME Versions: 46 to 50][badge-shell] ![EGO Downloads][badge-downloads]][ego-page]
-[![GNOME JavaScript][badge-gjs]][charts] [![Pipeline status][badge-pipeline]][pipelines]
+[![Supported GNOME Versions: 45 to 50][badge-shell]][ego-page]
+[![EGO Downloads][badge-downloads]][ego-page]
+[![GNOME JavaScript][badge-gjs]][charts]
+[![Pipeline status][badge-pipeline]][pipelines]
 </div>
 
 ## Overview
