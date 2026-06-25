@@ -41,9 +41,7 @@ Gio._promisify(Gio.File.prototype, 'replace_contents_async');
 /**
  * An object that controls an icon that follows and reacts to the cursor.
  *
- * @param {Gio.Settings} settings - The settings object for this extension.
- * @param {ExtensionMetadata} metadata - The metadata object from metadata.json.
- * @param {string} path - The filesystem path to the extension directory.
+ * @param {EyeOnCursorExtension} extension - The extension instance.
  */
 export const TrackerManager = GObject.registerClass(
     {
@@ -57,7 +55,6 @@ class TrackerManager extends GObject.Object {
     currentColor;
     #settings;
     #trackersDir;
-    #hasAccentColor;
     #mouseX = 0;
     #mouseY = 0;
     #activeClick;
@@ -73,38 +70,30 @@ class TrackerManager extends GObject.Object {
     #refreshRate;
     #color = {
         useCustomMain: null,
-        accent: null,
         main: null,
         left: null,
         middle: null,
         right: null,
+        theme: null,
     };
 
     #tracker;
     #cacheDir;
-    #themeContext;
 
     #capturedEvent;
     #mouseListener;
 
     //#region Constructor
-    constructor(settings, metadata, path) {
+    constructor(extension) {
         super();
 
-        // Get extension object properties
-        this.#settings = settings;
-        this.#trackersDir = GLib.build_filenamev([path, 'assets', 'trackers']);
-
-        // Check if accent color variable exists (GNOME 47+)
-        this.#hasAccentColor = new Gio.Settings({schema_id: 'org.gnome.desktop.interface'})
-            .list_keys()
-            .includes('accent-color');
+        this.#settings = extension.settings;
+        this.#trackersDir = GLib.build_filenamev([extension.path, 'assets', 'trackers']);
 
         // Initialize settings values
         this.#shape = this.#settings.get_string('tracker-shape');
         this.#size = this.#settings.get_int('tracker-size');
-        this.#color.useCustomMain = this.#hasAccentColor
-            ? this.#settings.get_boolean('tracker-color-main-enabled') : true;
+        this.#color.useCustomMain = this.#settings.get_boolean('tracker-color-main-enabled');
         this.#color.main = this.#settings.get_string('tracker-color-main');
         this.#color.left = this.#settings.get_string('tracker-color-left');
         this.#color.middle = this.#settings.get_string('tracker-color-middle');
@@ -131,7 +120,7 @@ class TrackerManager extends GObject.Object {
         this.#tracker.opacity = Math.ceil(this.#opacity * 2.55); // Convert from 0-100 to 0-255 range
 
         // Get the cache directory for colored trackers
-        const gettextDomain = metadata['gettext-domain'];
+        const gettextDomain = extension.metadata['gettext-domain'];
         this.#cacheDir =
             GLib.build_filenamev([GLib.get_user_cache_dir(), gettextDomain, 'trackers']);
         // Create the cache directory if it doesn't exist
@@ -150,32 +139,7 @@ class TrackerManager extends GObject.Object {
             this.#color.right,
         ]);
 
-        // Use desktop accent color as default tracker color (GNOME 47+)
-        if (this.#hasAccentColor) {
-            this.#themeContext = St.ThemeContext.get_for_stage(global.stage);
-            const [accent] = this.#themeContext.get_accent_color();
-            this.#color.accent = `rgb(${accent['red']},${accent['green']},${accent['blue']})`;
-            this.#updateCacheTrackers(this.#shape, [this.#color.accent]);
-
-            // Connect change in accent color to tracker redraw
-            this.#themeContext.connectObject(
-                'changed',
-                async () => {
-                    const [accent] = this.#themeContext.get_accent_color();
-                    this.#color.accent =
-                        `rgb(${accent['red']},${accent['green']},${accent['blue']})`;
-                    await this.#updateCacheTrackers(this.#shape, [this.#color.accent]);
-                    this.#color.useCustomMain
-                        ? this.#updateTrackerIcon(this.#shape, this.#color.main)
-                        : this.#updateTrackerIcon(this.#shape, this.#color.accent);
-                },
-                this
-            );
-        }
-
-        this.#color.useCustomMain
-            ? this.currentColor = this.#color.main
-            : this.currentColor = this.#color.accent;
+        this.onThemeChanged(extension.themeColor);
 
         // Connect toggle tracker shortcut
         Main.wm.addKeybinding(
@@ -200,6 +164,16 @@ class TrackerManager extends GObject.Object {
             this.#mouseListener = Atspi.EventListener.new(this.#onAtspiMouseEvent.bind(this));
             this.#mouseListener.register('mouse');
         }
+    }
+
+    onThemeChanged(themeColor) {
+        if (themeColor)
+            this.#color.theme = `rgb(${themeColor.red},${themeColor.green},${themeColor.blue})`;
+        else
+            this.#color.theme = null;
+
+        this.#updateCacheTrackers(this.#shape, [this.#color.theme]);
+        this.#updateTrackerIcon(this.#shape, this.#resolveMainColor());
     }
     //#endregion
 
@@ -250,6 +224,12 @@ class TrackerManager extends GObject.Object {
         this.#tracker.gicon = Gio.icon_new_for_string(trackerIconPath);
         this.currentColor = color;
     }
+
+    #resolveMainColor() {
+        return !this.#color.useCustomMain && this.#color.theme !== null
+            ? this.#color.theme
+            : this.#color.main;
+    }
     //#endregion
 
     //#region Position updater
@@ -292,9 +272,7 @@ class TrackerManager extends GObject.Object {
         // Add tracker to desktop
         Main.uiGroup.add_child(this.#tracker);
         this.#updateTrackerPosition(); // Needs tracker to be part of uiGroup
-        this.#color.useCustomMain
-            ? this.#updateTrackerIcon(this.#shape, this.#color.main)
-            : this.#updateTrackerIcon(this.#shape, this.#color.accent);
+        this.#updateTrackerIcon(this.#shape, this.#resolveMainColor());
     }
 
     #disableTracker() {
@@ -438,9 +416,7 @@ class TrackerManager extends GObject.Object {
 
     #resetColor() {
         // Reset the tracker icon to the main color
-        this.#color.useCustomMain
-            ? this.#updateTrackerIcon(this.#shape, this.#color.main)
-            : this.#updateTrackerIcon(this.#shape, this.#color.accent);
+        this.#updateTrackerIcon(this.#shape, this.#resolveMainColor());
         this.#activeClick = null;
         this.#clickResetPending = false;
 
@@ -455,8 +431,7 @@ class TrackerManager extends GObject.Object {
         // Get new settings
         const newShape = this.#settings.get_string('tracker-shape');
         const newSize = this.#settings.get_int('tracker-size');
-        const newColorUseCustomMain = this.#hasAccentColor
-            ? this.#settings.get_boolean('tracker-color-main-enabled') : true;
+        const newColorUseCustomMain = this.#settings.get_boolean('tracker-color-main-enabled');
         const newColorMain = this.#settings.get_string('tracker-color-main');
         const newColorLeft = this.#settings.get_string('tracker-color-left');
         const newColorMiddle = this.#settings.get_string('tracker-color-middle');
@@ -485,13 +460,10 @@ class TrackerManager extends GObject.Object {
                 this.#color.left,
                 this.#color.middle,
                 this.#color.right,
+                this.#color.theme,
             ]);
-            if (this.#hasAccentColor)
-                await this.#updateCacheTrackers(this.#shape, [this.#color.accent]);
 
-            this.#color.useCustomMain
-                ? this.#updateTrackerIcon(this.#shape, this.#color.main)
-                : this.#updateTrackerIcon(this.#shape, this.#color.accent);
+            this.#updateTrackerIcon(this.#shape, this.#resolveMainColor());
         }
 
         // Update size if changed
@@ -538,8 +510,6 @@ class TrackerManager extends GObject.Object {
         // Disconnect settings
         this.#settings.disconnectObject(this);
         this.#settings = null;
-        this.#themeContext?.disconnectObject(this);
-        this.#themeContext = null;
 
         // Disconnect keybinding
         Main.wm.removeKeybinding('tracker-keybinding');

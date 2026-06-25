@@ -2,9 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 //#region Imports
+import St from 'gi://St';
+
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {BlinkController} from './extensionModules/blinkController.js';
+import {getThemeColor} from './extensionModules/utils.js';
 import {spawnEyes, destroyEyes} from './extensionModules/eye.js';
 import {TrackerManager} from './extensionModules/trackerManager.js';
 //#endregion
@@ -13,6 +16,7 @@ import {TrackerManager} from './extensionModules/trackerManager.js';
  * The **Eye on Cursor** GNOME Shell extension.
  */
 export default class EyeOnCursorExtension extends Extension {
+    #themeContext;
     #blinkController;
 
     // DO NOT create objects, connect signals or add main loop sources here
@@ -26,9 +30,11 @@ export default class EyeOnCursorExtension extends Extension {
      */
     enable() {
         this.settings = this.getSettings();
+        this.#themeContext = St.ThemeContext.get_for_stage(global.stage);
+        this.themeColor = getThemeColor();
 
         // Create the tracker
-        this.mouseTracker = new TrackerManager(this.settings, this.metadata, this.path);
+        this.mouseTracker = new TrackerManager(this);
 
         // Create eyes based on starting settings
         this.eyeArray = [];
@@ -47,6 +53,17 @@ export default class EyeOnCursorExtension extends Extension {
         ].forEach((key) =>
             this.settings.connectObject(`changed::${key}`, () => spawnEyes(this), this)
         );
+
+        // Connect theme color getter
+        this.#themeContext.connectObject(
+            'changed',
+            () => {
+                this.themeColor = getThemeColor();
+                this.eyeArray.forEach((eye) => eye.onThemeChanged(this.themeColor));
+                this.mouseTracker.onThemeChanged(this.themeColor);
+            },
+            this
+        );
     }
     //#endregion
 
@@ -57,6 +74,9 @@ export default class EyeOnCursorExtension extends Extension {
     disable() {
         this.settings.disconnectObject(this);
         this.settings = null;
+
+        this.#themeContext?.disconnectObject(this);
+        this.#themeContext = null;
 
         this.#blinkController?.destroy();
         this.#blinkController = null;

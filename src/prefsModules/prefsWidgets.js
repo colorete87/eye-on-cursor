@@ -14,13 +14,13 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 //#region Color picker widget
 /**
  * A widget that contains a `Gtk.ColorDialogButton` connected to a provided color key and an
- * optional `Gtk.CheckButton` toggle if accent color is supported, allowing the user to override it
+ * optional `Gtk.CheckButton` toggle if theme color is supported, allowing the user to override it
  * with a custom color.
  *
  * @param {Gio.Settings} settings - The settings object for this extension.
  * @param {string} colorKey - The settings key for this setting color string.
  * @param {string|null} enabledKey [enabledKey=null] - The settings key for the boolean that toggles
- * overriding the accent color with this user-set color.
+ * overriding the theme color with this user-set color.
  */
 export const EyeColorPicker = GObject.registerClass(
 class EyeColorPicker extends Gtk.Box {
@@ -53,11 +53,7 @@ class EyeColorPicker extends Gtk.Box {
             (widget) => this.#settings.set_string(this.#key, widget.get_rgba().to_string())
         );
 
-        // Check if accent color variable exists (GNOME 47+)
-        const hasAccentColor = new Gio.Settings({schema_id: 'org.gnome.desktop.interface'})
-                .list_keys()
-                .includes('accent-color');
-        if (hasAccentColor && enabledKey !== null) {
+        if (enabledKey !== null) {
             const colorToggle = new Gtk.CheckButton({
                 margin_end: 8,
                 valign: Gtk.Align.CENTER,

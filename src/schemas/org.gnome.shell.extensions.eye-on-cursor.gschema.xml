@@ -148,7 +148,7 @@
     <key name='tracker-color-main-enabled' type='b'>
       <default>false</default>
       <summary>Whether the custom tracker color is used</summary>
-      <description>Determines if the tracker uses the custom color instead of the accent color.</description>
+      <description>Determines if the tracker uses the custom color instead of the theme color.</description>
     </key>
 
     <key name='tracker-color-main' type='s'>

@@ -40,7 +40,6 @@ const PUPIL_COLOR = parseRGB('rgb(0,0,0)');
 export const Eye = GObject.registerClass(
 class Eye extends PanelMenu.Button {
     #settings;
-    #hasAccentColor;
     #mouseTracker;
 
     #mouseX = 0;
@@ -57,16 +56,15 @@ class Eye extends PanelMenu.Button {
     #refreshRate;
     #color = {
         useCustomIris: null,
-        accent: null,
         iris: null,
         eyelid: null,
+        theme: null,
     };
 
     #area;
     #menuItems;
     #repaintHandler;
     #eyeRedrawInterval;
-    #themeContext;
 
     //#region Constructor
     constructor(extension) {
@@ -74,14 +72,8 @@ class Eye extends PanelMenu.Button {
 
         this.#settings = extension.settings;
 
-        // Check if accent color variable exists (GNOME 47+)
-        this.#hasAccentColor = new Gio.Settings({schema_id: 'org.gnome.desktop.interface'})
-            .list_keys()
-            .includes('accent-color');
-
         // Attach mouse tracker
         this.#mouseTracker = extension.mouseTracker;
-        // Blink when toggling tracker
         this.#mouseTracker.connectObject('toggled', this.blink.bind(this), this);
 
         // Initialize settings values
@@ -90,12 +82,13 @@ class Eye extends PanelMenu.Button {
         this.#lineMode = this.#settings.get_boolean('eye-line-mode');
         this.#lineWidth = this.#settings.get_int('eye-line-width') / 10;
         this.#width = this.#settings.get_int('eye-width');
-        this.#color.useCustomIris =
-            this.#hasAccentColor ? this.#settings.get_boolean('eye-color-iris-enabled') : true;
+        this.#color.useCustomIris = this.#settings.get_boolean('eye-color-iris-enabled');
         this.#color.iris = parseRGB(this.#settings.get_string('eye-color-iris'));
         this.#color.eyelid = parseRGB(this.#settings.get_string('eye-color-eyelid'));
         this.#refreshRate = this.#settings.get_int('eye-refresh-rate');
         // TODO use foreground color as default eyelid to match it with contour
+
+        this.onThemeChanged(extension.themeColor);
 
         // Connect change in settings to update method
         EYE_SETTINGS.forEach((key) =>
@@ -105,30 +98,6 @@ class Eye extends PanelMenu.Button {
                 this
             )
         );
-
-        // Use desktop accent color as default eye color (GNOME 47+)
-        if (this.#hasAccentColor) {
-            this.#themeContext = St.ThemeContext.get_for_stage(global.stage);
-            const [accent] = this.#themeContext.get_accent_color();
-            this.#color.accent = {
-                red: accent.get_red(),
-                green: accent.get_green(),
-                blue: accent.get_blue(),
-            };
-            this.#themeContext.connectObject(
-                'changed',
-                () => {
-                    const [accent] = this.#themeContext.get_accent_color();
-                    this.#color.accent = {
-                        red: accent.get_red(),
-                        green: accent.get_green(),
-                        blue: accent.get_blue(),
-                    };
-                    this.#area.queue_repaint();
-                },
-                this
-            );
-        }
 
         // Add popups
         const trackerIconPath =
@@ -163,11 +132,19 @@ class Eye extends PanelMenu.Button {
         );
     }
 
-    // Create Popup method
     #createPopupMenuItem(label, icon, callback) {
         const item = new PopupMenu.PopupImageMenuItem(label, icon);
         item.connect('activate', callback);
         return item;
+    }
+
+    onThemeChanged(themeColor) {
+        this.#color.theme = {
+            red: themeColor.red / 255,
+            green: themeColor.green / 255,
+            blue: themeColor.blue / 255,
+        };
+        this.#area?.queue_repaint();
     }
     //#endregion
 
@@ -181,7 +158,6 @@ class Eye extends PanelMenu.Button {
         }
     }
 
-    // Draw method
     #onRepaint(area) {
         // Get the coordinates of the eye
         const [originX, originY] = area.get_transformed_position();
@@ -189,17 +165,21 @@ class Eye extends PanelMenu.Button {
             return; // Don't draw if the surface isn't placed yet
 
         // Use foreground color from the theme for the white of the eye
-        const themeNode = this.#area.get_theme_node();
-        const scleraColor = themeNode.get_foreground_color();
+        const fg = this.#area.get_theme_node().get_foreground_color();
+        const scleraColor = {
+            red: fg.red / 255,
+            green: fg.green / 255,
+            blue: fg.blue / 255,
+        };
 
         // Get iris color
         let irisColor;
         if (this.#mouseTracker.enabled)
             irisColor = parseRGB(this.#mouseTracker.currentColor);
-        else if (this.#color.useCustomIris)
-            irisColor = this.#color.iris;
+        else if (!this.#color.useCustomIris && this.#color.theme !== null)
+            irisColor = this.#color.theme;
         else
-            irisColor = this.#color.accent;
+            irisColor = this.#color.iris;
 
         const options = {
             shape: this.#shape,
@@ -226,8 +206,7 @@ class Eye extends PanelMenu.Button {
         const newLineMode = this.#settings.get_boolean('eye-line-mode');
         const newLineWidth = this.#settings.get_int('eye-line-width');
         const newWidth = this.#settings.get_int('eye-width');
-        const newColorUseCustomIris =
-            this.#hasAccentColor ? this.#settings.get_boolean('eye-color-iris-enabled') : true;
+        const newColorUseCustomIris = this.#settings.get_boolean('eye-color-iris-enabled');
         const newColorIris = parseRGB(this.#settings.get_string('eye-color-iris'));
         const newColorEyelid = parseRGB(this.#settings.get_string('eye-color-eyelid'));
         const newRefreshRate = this.#settings.get_int('eye-refresh-rate');
@@ -334,8 +313,6 @@ class Eye extends PanelMenu.Button {
         // Disconnect settings
         this.#settings.disconnectObject(this);
         this.#settings = null;
-        this.#themeContext?.disconnectObject(this);
-        this.#themeContext = null;
 
         // Destroy popups
         this.#menuItems.forEach((menuItem) => menuItem.destroy());
@@ -391,10 +368,10 @@ export function destroyEyes(eyeArray) {
 
 //#region Helper functions
 /**
- * Parses an `rgb(r, g, b)` color string and returns an object with 'red', 'green', and 'blue' properties.
+ * Parses an `rgb(r, g, b)` color string and returns an object containing RGB components.
  *
  * @param {string} rgbString - The color string (color value 0-255).
- * @returns {object} The object with 'red', 'green', and 'blue' properties.
+ * @returns {object} The object containing the 'red', 'green', and 'blue' values (0–1)
  */
 function parseRGB(rgbString) {
     const [red, green, blue] = rgbString.match(/[\d.]+/g).map((value) => value / 255);
