@@ -24,7 +24,7 @@
       <default>1</default>
       <range min='-1' max='100'/>
       <summary>Index of this eye in its panel section</summary>
-      <description>Specifies the order priority of this eye within its panel section.</description>
+      <description>Specifies the order priority of this eye within its panel section (-1 places it at the rightmost).</description>
     </key>
     <key name='width' type='i'>
       <default>32</default>
