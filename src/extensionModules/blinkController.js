@@ -17,7 +17,7 @@ export class BlinkController {
     #eyeArray;
     #mouseTracker;
 
-    #syncedRoutine;
+    #fixedRoutine;
     #blinkChangeDelay;
     #blinkMode;
     #blinkInterval;
@@ -163,17 +163,17 @@ export class BlinkController {
     }
     //#endregion
 
-    //#region Synced mode
+    //#region Fixed mode
     #startFixedBlink() {
-        this.#syncedRoutine = setInterval(this.#blinkAll.bind(this), 1000 * this.#blinkInterval);
+        this.#fixedRoutine = setInterval(this.#blinkAll.bind(this), 1000 * this.#blinkInterval);
     }
 
     #stopFixedBlink() {
-        this.#syncedRoutine = clearInterval(this.#syncedRoutine);
+        this.#fixedRoutine = clearInterval(this.#fixedRoutine);
     }
     //#endregion
 
-    //#region Unsynced mode
+    //#region Random mode
     #startRandomBlink() {
         this.#eyeArray.forEach((eye) => this.#scheduleNextBlink(eye));
     }
