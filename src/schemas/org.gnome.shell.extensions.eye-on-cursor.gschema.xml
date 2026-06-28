@@ -10,7 +10,7 @@
   </enum>
   <!-- Global Settings -->
   <schema id='org.gnome.shell.extensions.eye-on-cursor' path='/org/gnome/shell/extensions/eye-on-cursor/'>
-    <!-- Eye Global Settings A -->
+    <!-- Eye Global Settings A: changes require `SpawnEyes()`  -->
     <key name='eye-enabled' type='b'>
       <default>true</default>
       <summary>Enabled state of the eyes</summary>
@@ -22,7 +22,7 @@
       <summary>Number of eyes</summary>
       <description>Specifies how many eye instances are displayed on the panel.</description>
     </key>
-    <!-- Eye Global Settings B -->
+    <!-- Eye Global Settings B: changes to current array -->
     <key name='eye-reactive' type='b'>
       <default>true</default>
       <summary>Interactive state of the eyes</summary>
