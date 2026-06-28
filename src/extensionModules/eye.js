@@ -91,7 +91,7 @@ class Eye extends PanelMenu.Button {
 
         this.#shape = this.settings.get_string('shape');
         this.#lineMode = this.settings.get_boolean('outline-mode');
-        this.#lineWidth = this.settings.get_int('line-width') / 10;
+        this.#lineWidth = this.settings.get_double('line-width');
         this.#width = this.settings.get_int('width');
         this.#color.useCustomIris = this.settings.get_boolean('color-iris-enabled');
         this.#color.iris = this.#parseRGB(this.settings.get_string('color-iris'));
@@ -239,7 +239,7 @@ class Eye extends PanelMenu.Button {
 
         const newShape = this.settings.get_string('shape');
         const newLineMode = this.settings.get_boolean('outline-mode');
-        const newLineWidth = this.settings.get_int('line-width');
+        const newLineWidth = this.settings.get_double('line-width');
         const newWidth = this.settings.get_int('width');
         const newColorUseCustomIris = this.settings.get_boolean('color-iris-enabled');
         const newColorIris = this.#parseRGB(this.settings.get_string('color-iris'));
@@ -263,7 +263,7 @@ class Eye extends PanelMenu.Button {
 
         // Update line thickness
         if (this.#lineWidth !== newLineWidth) {
-            this.#lineWidth = newLineWidth / 10; // TODO remove the division step
+            this.#lineWidth = newLineWidth;
             this.#area.queue_repaint();
         }
 

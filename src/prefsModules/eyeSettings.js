@@ -189,9 +189,10 @@ class EyePage extends Adw.PreferencesPage {
                 subtitle: _('Thickness of the strokes in sketch mode'),
                 adjustment: new Gtk.Adjustment({
                     lower: 0,
-                    upper: 50,
-                    step_increment: 1,
+                    upper: 5,
+                    step_increment: 0.1,
                 }),
+                digits: 1,
             });
             eyeSettings.bind('line-width', lineWidthRow, 'value', Gio.SettingsBindFlags.DEFAULT);
             eyeSettings

@@ -42,9 +42,9 @@
       <summary>Outline drawing state of this eye</summary>
       <description>Indicates whether this eye is drawn as an outline or filled.</description>
     </key>
-    <key name='line-width' type='i'>
-      <default>20</default>
-      <range min='0' max='50'/>
+    <key name='line-width' type='d'>
+      <default>2.0</default>
+      <range min='0' max='5'/>
       <summary>Line width of this eye's drawing</summary>
       <description>Specifies the thickness of the lines used to draw this eye.</description>
     </key>
