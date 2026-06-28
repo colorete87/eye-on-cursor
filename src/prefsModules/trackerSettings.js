@@ -26,16 +26,19 @@ export const TrackerPage = GObject.registerClass(
 class TrackerPage extends Adw.PreferencesPage {
     constructor(settings, metadata, path) {
         super({
-            title: _('Mouse Tracker'),
             icon_name: 'mouse-click-symbolic',
+            name: 'tracker',
+            title: _('Tracker'),
         });
+        const trackerKeys = [];
         const resetFunctions = [];
 
-        //#region Tracker drawing group
+        //#region Tracker drawing
         const drawingGroup = new Adw.PreferencesGroup({title: _('Appearance')});
         this.add(drawingGroup);
 
         //#region Tracker shape
+        trackerKeys.push('tracker-shape');
         // Get list of shapes
         const shapeList = [];
         const shapeDirPath = GLib.build_filenamev([path, 'assets', 'trackers']);
@@ -142,6 +145,7 @@ class TrackerPage extends Adw.PreferencesPage {
         //#endregion
 
         //#region Tracker size
+        trackerKeys.push('tracker-size');
         const sizeRow = new Adw.SpinRow({
             title: _('Size'),
             subtitle: _('Diameter of the tracker in pixels'),
@@ -156,6 +160,8 @@ class TrackerPage extends Adw.PreferencesPage {
         //#endregion
 
         //#region Tracker main color
+        ['tracker-color-main', 'tracker-color-main-enabled']
+            .forEach((key) => trackerKeys.push(key));
         const colorMainRow = new Adw.ActionRow({
             title: _('Color'),
             subtitle: _('Custom color for the tracker'),
@@ -179,6 +185,7 @@ class TrackerPage extends Adw.PreferencesPage {
 
         const colorClickPickers =
             ['tracker-color-left', 'tracker-color-middle', 'tracker-color-right'].map((key) => {
+                trackerKeys.push(key);
                 const colorPicker = new EyeColorPicker(settings, key);
                 colorClickRow.add_suffix(colorPicker);
                 resetFunctions.push(() => colorPicker.reset());
@@ -194,6 +201,7 @@ class TrackerPage extends Adw.PreferencesPage {
         //#endregion
 
         //#region Tracker opacity
+        trackerKeys.push('tracker-opacity');
         const opacityRow = new Adw.SpinRow({
             title: _('Opacity'),
             subtitle: _('How transparent the tracker is'),
@@ -208,6 +216,7 @@ class TrackerPage extends Adw.PreferencesPage {
         //#endregion
 
         //#region Tracker refresh rate
+        trackerKeys.push('tracker-refresh-rate');
         const refreshRow = new Adw.SpinRow({
             title: _('Refresh Rate (Hz)'),
             subtitle: _('Frames per second'),
@@ -224,6 +233,7 @@ class TrackerPage extends Adw.PreferencesPage {
         //#endregion
 
         //#region Tracker keybinding
+        trackerKeys.push('tracker-keybinding');
         const keybindingGroup = new Adw.PreferencesGroup({title: _('Keybinding')});
         this.add(keybindingGroup);
 
@@ -237,20 +247,20 @@ class TrackerPage extends Adw.PreferencesPage {
         resetFunctions.push(() => keybindingRow.resetKeybinding());
         //#endregion
 
-        //#region Reset group
-        const resetGroup = new Adw.PreferencesGroup();
+        //#region Reset
+        const resetGroup = new Adw.PreferencesGroup({title: _('Reset')});
         this.add(resetGroup);
 
         const resetRow = new EyeResetRow(
-            'tracker',
+            _('Reset tracker settings?'),
             settings,
-            _('Reset all tracker settings?'),
+            trackerKeys,
             resetFunctions
         );
         resetGroup.add(resetRow);
         //#endregion
 
-        //#region About group
+        //#region About
         const aboutGroup = new Adw.PreferencesGroup({title: _('Information')});
         this.add(aboutGroup);
 

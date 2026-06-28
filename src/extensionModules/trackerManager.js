@@ -343,7 +343,7 @@ class TrackerManager extends GObject.Object {
 
     //#region Click highlighting
     #handleClick(button, color) {
-        this.emit('click');
+        this.emit('clicked');
 
         if (!this.enabled)
             return;

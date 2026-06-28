@@ -2,13 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 const BLINK_CHANGE_DELAY = 100; // Make sure the eyeArray is created before starting blink routine
-const EYE_ARRAY_SETTINGS = [
-    'eye-active',
-    'eye-count',
-    'eye-index',
-    'eye-position',
-    'eye-blink-mode',
-];
+const EYE_ARRAY_SETTINGS = ['eye-enabled', 'eye-count', 'eye-blink-mode'];
 
 /**
  * An object that controls blinking actions for the Eye instances.
@@ -157,7 +151,7 @@ export class BlinkController {
 
     //#region Click mode
     #startClickBlink() {
-        this.#mouseTracker.connectObject('click', this.#blinkAll.bind(this), this);
+        this.#mouseTracker.connectObject('clicked', this.#blinkAll.bind(this), this);
     }
 
     #stopClickBlink() {

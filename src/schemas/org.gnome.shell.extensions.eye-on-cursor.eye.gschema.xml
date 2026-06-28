@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-FileCopyrightText: 2024-2026 Djinn Alexio -->
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<schemalist gettext-domain='eye-on-cursor'>
+  <!-- Enumerators -->
+  <enum id='org.gnome.shell.extensions.eye-on-cursor.eye.position'>
+    <value value='0' nick='left' />
+    <value value='1' nick='center' />
+    <value value='2' nick='right' />
+  </enum>
+  <enum id='org.gnome.shell.extensions.eye-on-cursor.eye.shape'>
+    <value value='0' nick='natural' />
+    <value value='1' nick='round' />
+    <value value='2' nick='comic' />
+  </enum>
+  <!-- Per-Eye Settings -->
+  <schema id='org.gnome.shell.extensions.eye-on-cursor.eye'>
+    <key name='position' enum='org.gnome.shell.extensions.eye-on-cursor.eye.position'>
+      <default>'center'</default>
+      <summary>Panel position of this eye</summary>
+      <description>Specifies the position of this eye on the panel: 'left', 'center', or 'right'.</description>
+    </key>
+    <key name='index' type='i'>
+      <default>1</default>
+      <range min='-1' max='100'/>
+      <summary>Index of this eye in its panel section</summary>
+      <description>Specifies the order priority of this eye within its panel section.</description>
+    </key>
+    <key name='width' type='i'>
+      <default>32</default>
+      <range min='20' max='200'/>
+      <summary>Width of this eye's button</summary>
+      <description>Specifies the width in pixels of this eye's button, affecting drawing space and padding.</description>
+    </key>
+    <key name='shape' enum='org.gnome.shell.extensions.eye-on-cursor.eye.shape'>
+      <default>'natural'</default>
+      <summary>Shape of this eye</summary>
+      <description>Specifies the shape of this eye: 'natural', 'round', or 'comic'.</description>
+    </key>
+    <key name='outline-mode' type='b'>
+      <default>false</default>
+      <summary>Outline drawing state of this eye</summary>
+      <description>Indicates whether this eye is drawn as an outline or filled.</description>
+    </key>
+    <key name='line-width' type='i'>
+      <default>20</default>
+      <range min='0' max='50'/>
+      <summary>Line width of this eye's drawing</summary>
+      <description>Specifies the thickness of the lines used to draw this eye.</description>
+    </key>
+    <key name='color-iris-enabled' type='b'>
+      <default>false</default>
+      <summary>Custom iris color state</summary>
+      <description>Indicates whether this eye's iris uses a custom color instead of the foreground color.</description>
+    </key>
+    <key name='color-iris' type='s'>
+      <default>'rgb(0,255,255)'</default>
+      <summary>Iris color of this eye</summary>
+      <description>Specifies the color of this eye's iris.</description>
+    </key>
+    <key name='color-eyelid' type='s'>
+      <default>'rgb(0,0,0)'</default>
+      <summary>Eyelid color of this eye</summary>
+      <description>Specifies the color of this eye's eyelid.</description>
+    </key>
+  </schema>
+</schemalist>

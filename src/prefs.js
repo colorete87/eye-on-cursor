@@ -8,7 +8,8 @@ import Gtk from 'gi://Gtk';
 
 import {ExtensionPreferences} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {EyePage} from './prefsModules/eyeSettings.js';
+import {EyeGlobalPage} from './prefsModules/eyeGlobalSettings.js';
+import {EyesPage} from './prefsModules/eyeSettings.js';
 import {TrackerPage} from './prefsModules/trackerSettings.js';
 //#endregion
 
@@ -28,7 +29,10 @@ export default class EyeOnCursorPreferences extends ExtensionPreferences {
         if (!iconTheme.get_search_path().includes(iconThemePath))
             iconTheme.add_search_path(iconThemePath);
 
-        window.add(new EyePage(settings));
+        window.add(new EyeGlobalPage(settings));
+        window.add(new EyesPage(settings, this.dir));
         window.add(new TrackerPage(settings, this.metadata, this.path));
+
+        window.set_visible_page_name('eyes');
     }
 }

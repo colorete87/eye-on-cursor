@@ -53,7 +53,7 @@ class EyeColorPicker extends Gtk.Box {
             (widget) => this.#settings.set_string(this.#key, widget.get_rgba().to_string())
         );
 
-        if (enabledKey !== null) {
+        if (enabledKey) {
             const colorToggle = new Gtk.CheckButton({
                 margin_end: 8,
                 valign: Gtk.Align.CENTER,
@@ -254,15 +254,15 @@ class EyeKeybindingRow extends Adw.ActionRow {
 /**
  * A row that allows users to reset all the settings on a page.
  *
- * @param {string} keyPrefix - The prefix of the keys to reset.
- * @param {Gio.Settings} settings - The settings object for this extension.
  * @param {string} heading - The heading of the alert dialog.
+ * @param {Gio.Settings} settings - The settings object for this group of keys.
+ * @param {string[]} keys - The array of keys to reset.
  * @param {Function[]} resetFunctions - The array of functions that update widget values with
  * current key values.
  */
 export const EyeResetRow = GObject.registerClass(
 class EyeResetRow extends Adw.ActionRow {
-    constructor(keyPrefix, settings, heading, resetFunctions) {
+    constructor(heading, settings, keys, resetFunctions) {
         super({
             title: _('Reset Settings'),
             activatable: true,
@@ -285,10 +285,7 @@ class EyeResetRow extends Adw.ActionRow {
 
         resetAlert.connect('response::reset', () => {
             resetFunctions.forEach((func) => func());
-            settings.list_keys().forEach((key) => {
-                if (key.startsWith(keyPrefix))
-                    settings.reset(key);
-            });
+            keys.forEach((key) => settings.reset(key));
         });
 
         this.connect('activated', () => resetAlert.present(this));

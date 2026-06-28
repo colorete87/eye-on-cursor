@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 //#region Imports
+import Clutter from 'gi://Clutter';
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
@@ -18,28 +19,33 @@ import {drawEye} from './eyeRenderer.js';
 
 //#region Constants
 const BLINK_DURATION = 250; // TODO turn blink duration into a setting 0.2-2s
-const EYE_SETTINGS = [
-    'eye-reactive',
-    'eye-shape',
-    'eye-line-mode',
-    'eye-line-width',
-    'eye-width',
-    'eye-color-iris',
-    'eye-color-iris-enabled',
-    'eye-refresh-rate',
-    'eye-color-eyelid',
+const EYE_CHILD_SETTINGS = [
+    'shape',
+    'outline-mode',
+    'line-width',
+    'width',
+    'color-iris',
+    'color-iris-enabled',
+    'color-eyelid',
 ];
-const PUPIL_COLOR = parseRGB('rgb(0,0,0)');
+const EYE_CHILD_SCHEMA_ID = 'org.gnome.shell.extensions.eye-on-cursor.eye';
+const EYE_CHILD_SETTINGS_PATH_ROOT = '/org/gnome/shell/extensions/eye-on-cursor/eyes';
+const EYE_GLOBAL_SETTINGS = ['eye-reactive', 'eye-refresh-rate'];
+const EYE_PANEL_SETTINGS = ['position', 'index'];
+const PUPIL_COLOR = 'rgb(0,0,0)';
 //#endregion
 
 /**
  * An animated eye created in the panel that follows the pointer.
  *
  * @param {EyeOnCursorExtension} extension - The extension instance.
+ * @param {Gio.Settings} eyeSettings - This eye's own settings, an instance of the
+ * 'org.gnome.shell.extensions.eye-on-cursor.eye' child schema.
+ * @param {string} id - This eye's ID.
  */
 export const Eye = GObject.registerClass(
 class Eye extends PanelMenu.Button {
-    #settings;
+    #globalSettings;
     #mouseTracker;
 
     #mouseX = 0;
@@ -67,10 +73,12 @@ class Eye extends PanelMenu.Button {
     #eyeRedrawInterval;
 
     //#region Constructor
-    constructor(extension) {
+    constructor(extension, eyeSettings, id) {
         super(0, _('Animated eye that follows the mouse'), false);
 
-        this.#settings = extension.settings;
+        this.#globalSettings = extension.settings;
+        this.settings = eyeSettings;
+        this.id = id;
 
         // Attach mouse tracker
         this.#mouseTracker = extension.mouseTracker;
@@ -78,26 +86,41 @@ class Eye extends PanelMenu.Button {
         this.#mouseTracker.connectObject('color-changed', () => this.#area.queue_repaint(), this);
 
         // Initialize settings values
-        this.reactive = this.#settings.get_boolean('eye-reactive');
-        this.#shape = this.#settings.get_string('eye-shape');
-        this.#lineMode = this.#settings.get_boolean('eye-line-mode');
-        this.#lineWidth = this.#settings.get_int('eye-line-width') / 10;
-        this.#width = this.#settings.get_int('eye-width');
-        this.#color.useCustomIris = this.#settings.get_boolean('eye-color-iris-enabled');
-        this.#color.iris = parseRGB(this.#settings.get_string('eye-color-iris'));
-        this.#color.eyelid = parseRGB(this.#settings.get_string('eye-color-eyelid'));
-        this.#refreshRate = this.#settings.get_int('eye-refresh-rate');
+        this.reactive = this.#globalSettings.get_boolean('eye-reactive'); // Inherited property
+        this.#refreshRate = this.#globalSettings.get_int('eye-refresh-rate');
+
+        this.#shape = this.settings.get_string('shape');
+        this.#lineMode = this.settings.get_boolean('outline-mode');
+        this.#lineWidth = this.settings.get_int('line-width') / 10;
+        this.#width = this.settings.get_int('width');
+        this.#color.useCustomIris = this.settings.get_boolean('color-iris-enabled');
+        this.#color.iris = this.#parseRGB(this.settings.get_string('color-iris'));
+        this.#color.eyelid = this.#parseRGB(this.settings.get_string('color-eyelid'));
         // TODO use foreground color as default eyelid to match it with contour
 
         this.onThemeChanged(extension.themeColor);
 
-        // Connect change in settings to update method
-        EYE_SETTINGS.forEach((key) =>
-            this.#settings.connectObject(
+        // Connect change in global settings to update method
+        EYE_GLOBAL_SETTINGS.forEach((key) =>
+            this.#globalSettings.connectObject(
                 `changed::${key}`,
                 this.#updateEyeProperties.bind(this),
                 this
             )
+        );
+
+        // Connect change in per-eye settings to update method
+        EYE_CHILD_SETTINGS.forEach((key) =>
+            this.settings.connectObject(
+                `changed::${key}`,
+                this.#updateEyeProperties.bind(this),
+                this
+            )
+        );
+
+        // Connect change in panel-related settings to button placement update
+        EYE_PANEL_SETTINGS.forEach((key) =>
+            this.settings.connectObject(`changed::${key}`, () => spawnEyes(extension), this)
         );
 
         // Add popups
@@ -147,6 +170,15 @@ class Eye extends PanelMenu.Button {
         };
         this.#area?.queue_repaint();
     }
+
+    #parseRGB(rgbString) {
+        const [red, green, blue] = rgbString.match(/[\d.]+/g).map((value) => value / 255);
+        return {
+            red,
+            green,
+            blue,
+        };
+    }
     //#endregion
 
     //#region Drawing methods
@@ -176,8 +208,8 @@ class Eye extends PanelMenu.Button {
         // Get iris color
         let irisColor;
         if (this.#mouseTracker.enabled)
-            irisColor = parseRGB(this.#mouseTracker.currentColor);
-        else if (!this.#color.useCustomIris && this.#color.theme !== null)
+            irisColor = this.#parseRGB(this.#mouseTracker.currentColor);
+        else if (!this.#color.useCustomIris && this.#color.theme)
             irisColor = this.#color.theme;
         else
             irisColor = this.#color.iris;
@@ -192,7 +224,7 @@ class Eye extends PanelMenu.Button {
             lineMode: this.#lineMode,
             scleraColor,
             irisColor,
-            pupilColor: PUPIL_COLOR,
+            pupilColor: this.#parseRGB(PUPIL_COLOR),
             eyelidLevel: this.#eyelidLevel,
             eyelidColor: this.#color.eyelid,
         };
@@ -202,15 +234,16 @@ class Eye extends PanelMenu.Button {
 
     //#region Properties updater
     #updateEyeProperties() {
-        const newReactive = this.#settings.get_boolean('eye-reactive');
-        const newShape = this.#settings.get_string('eye-shape');
-        const newLineMode = this.#settings.get_boolean('eye-line-mode');
-        const newLineWidth = this.#settings.get_int('eye-line-width');
-        const newWidth = this.#settings.get_int('eye-width');
-        const newColorUseCustomIris = this.#settings.get_boolean('eye-color-iris-enabled');
-        const newColorIris = parseRGB(this.#settings.get_string('eye-color-iris'));
-        const newColorEyelid = parseRGB(this.#settings.get_string('eye-color-eyelid'));
-        const newRefreshRate = this.#settings.get_int('eye-refresh-rate');
+        const newReactive = this.#globalSettings.get_boolean('eye-reactive');
+        const newRefreshRate = this.#globalSettings.get_int('eye-refresh-rate');
+
+        const newShape = this.settings.get_string('shape');
+        const newLineMode = this.settings.get_boolean('outline-mode');
+        const newLineWidth = this.settings.get_int('line-width');
+        const newWidth = this.settings.get_int('width');
+        const newColorUseCustomIris = this.settings.get_boolean('color-iris-enabled');
+        const newColorIris = this.#parseRGB(this.settings.get_string('color-iris'));
+        const newColorEyelid = this.#parseRGB(this.settings.get_string('color-eyelid'));
 
         // Update reactive property
         if (this.reactive !== newReactive)
@@ -219,25 +252,25 @@ class Eye extends PanelMenu.Button {
         // Update shape
         if (this.#shape !== newShape) {
             this.#shape = newShape;
-            this.#area?.queue_repaint();
+            this.#area.queue_repaint();
         }
 
         // Update drawing mode
         if (this.#lineMode !== newLineMode) {
             this.#lineMode = newLineMode;
-            this.#area?.queue_repaint();
+            this.#area.queue_repaint();
         }
 
         // Update line thickness
         if (this.#lineWidth !== newLineWidth) {
             this.#lineWidth = newLineWidth / 10; // TODO remove the division step
-            this.#area?.queue_repaint();
+            this.#area.queue_repaint();
         }
 
         // Update width
         if (this.#width !== newWidth) {
             this.#width = newWidth;
-            this.#area?.set_width(this.#width);
+            this.#area.set_width(this.#width);
         }
 
         // Update iris color
@@ -247,13 +280,13 @@ class Eye extends PanelMenu.Button {
         ) {
             this.#color.useCustomIris = newColorUseCustomIris;
             this.#color.iris = newColorIris;
-            this.#area?.queue_repaint();
+            this.#area.queue_repaint();
         }
 
         // Update eyelid color
         if (JSON.stringify(this.#color.eyelid) !== JSON.stringify(newColorEyelid)) {
             this.#color.eyelid = newColorEyelid;
-            this.#area?.queue_repaint();
+            this.#area.queue_repaint();
         }
 
         // Update refresh rate if changed
@@ -312,8 +345,10 @@ class Eye extends PanelMenu.Button {
         this.#area = null;
 
         // Disconnect settings
-        this.#settings.disconnectObject(this);
-        this.#settings = null;
+        this.#globalSettings.disconnectObject(this);
+        this.#globalSettings = null;
+        this.settings.disconnectObject(this);
+        this.settings = null;
 
         // Destroy popups
         this.#menuItems.forEach((menuItem) => menuItem.destroy());
@@ -339,19 +374,38 @@ export function spawnEyes(extension) {
     // Remove current eyes
     destroyEyes(extension.eyeArray);
 
-    if (!extension.settings.get_boolean('eye-active'))
+    if (!extension.settings.get_boolean('eye-enabled'))
         return; // Stop here if eyes are disabled
 
+    // Load schemas from the extension's compiled schema file
+    const schemaSource = Gio.SettingsSchemaSource.new_from_directory(
+        extension.dir.get_child('schemas').get_path(),
+        Gio.SettingsSchemaSource.get_default(),
+        false
+    );
+    // Recursive lookup into parent sources
+    const eyeSchema = schemaSource.lookup(EYE_CHILD_SCHEMA_ID, true);
     const count = extension.settings.get_int('eye-count');
-    const index = extension.settings.get_int('eye-index');
-    const position = extension.settings.get_string('eye-position');
-    const domain = extension.metadata['gettext-domain'];
 
-    for (let i = 0; i < count; i++) {
-        const eye = new Eye(extension);
-        Main.panel.addToStatusArea(`${domain}-${i}`, eye, index, position);
-        extension.eyeArray.push(eye);
+    // Create eye array
+    for (let i = 1; i <= count; i++) {
+        const eyeID = `eye-${String(i).padStart(2, '0')}`;
+        const eyeSettings = new Gio.Settings({
+            settings_schema: eyeSchema,
+            path: `${EYE_CHILD_SETTINGS_PATH_ROOT}/${eyeID}/`,
+        });
+        extension.eyeArray.push(new Eye(extension, eyeSettings, eyeID));
     }
+
+    // Reverse order in LTR locales so that when adding eyes to the panel, index 0 appears leftmost
+    const isLTR = Clutter.get_default_text_direction() === Clutter.TextDirection.LTR;
+    (isLTR ? extension.eyeArray.slice().reverse() : extension.eyeArray).forEach((eye) =>
+        Main.panel.addToStatusArea(
+            eye.id,
+            eye,
+            eye.settings.get_int('index'),
+            eye.settings.get_string('position'))
+    );
 }
 //#endregion
 
@@ -362,24 +416,7 @@ export function spawnEyes(extension) {
  * @param {Eye[]} eyeArray - The array that stores created Eye instances.
  */
 export function destroyEyes(eyeArray) {
-    eyeArray?.forEach((eye) => eye.destroy());
+    eyeArray.forEach((eye) => eye.destroy());
     eyeArray.length = 0;
-}
-//#endregion
-
-//#region Helper functions
-/**
- * Parses an `rgb(r, g, b)` color string and returns an object containing RGB components.
- *
- * @param {string} rgbString - The color string (color value 0-255).
- * @returns {object} The object containing the 'red', 'green', and 'blue' values (0–1)
- */
-function parseRGB(rgbString) {
-    const [red, green, blue] = rgbString.match(/[\d.]+/g).map((value) => value / 255);
-    return {
-        red,
-        green,
-        blue,
-    };
 }
 //#endregion

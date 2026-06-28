@@ -45,12 +45,7 @@ export default class EyeOnCursorExtension extends Extension {
             new BlinkController(this.settings, this.eyeArray, this.mouseTracker);
 
         // Connect eye placement settings
-        [
-            'eye-active',
-            'eye-position',
-            'eye-index',
-            'eye-count',
-        ].forEach((key) =>
+        ['eye-enabled', 'eye-count'].forEach((key) =>
             this.settings.connectObject(`changed::${key}`, () => spawnEyes(this), this)
         );
 

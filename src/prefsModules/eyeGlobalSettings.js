@@ -1,0 +1,217 @@
+// SPDX-FileCopyrightText: 2026 Djinn Alexio
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+//#region Imports
+import Adw from 'gi://Adw';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
+import GObject from 'gi://GObject';
+import Gtk from 'gi://Gtk';
+
+import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
+
+import {EyeResetRow} from './prefsWidgets.js';
+//#endregion
+
+/**
+ * A page displaying the eye settings.
+ *
+ * @param {Gio.Settings} settings - The settings object for this extension.
+ */
+export const EyeGlobalPage = GObject.registerClass(
+class EyePage extends Adw.PreferencesPage {
+    constructor(settings) {
+        super({
+            icon_name: 'preferences-system-symbolic',
+            name: 'global',
+            title: _('Global'),
+        });
+        const globalKeys = [];
+        const resetFunctions = [];
+
+        //#region Global
+        const globalGroup = new Adw.PreferencesGroup({title: _('Global')});
+        this.add(globalGroup);
+
+        //#region Eye status
+        globalKeys.push('eye-enabled');
+        const activeRow = new Adw.SwitchRow({
+            title: _('Show Eyes'),
+            subtitle: _('Enables the eyes on the panel'),
+        });
+        settings.bind('eye-enabled', activeRow, 'active', Gio.SettingsBindFlags.DEFAULT);
+        globalGroup.add(activeRow);
+        //#endregion
+
+        //#region Eye reactivity
+        globalKeys.push('eye-reactive');
+        const reactiveRow = new Adw.SwitchRow({
+            title: _('Menu'),
+            subtitle: _('Enables the right-click menu for the eyes'),
+        });
+        settings.bind('eye-reactive', reactiveRow, 'active', Gio.SettingsBindFlags.DEFAULT);
+        globalGroup.add(reactiveRow);
+        //#endregion
+
+        //#region Eye refresh rate
+        globalKeys.push('eye-refresh-rate');
+        const refreshRow = new Adw.SpinRow({
+            title: _('Refresh Rate (Hz)'),
+            subtitle: _('Frames per second'),
+            adjustment: new Gtk.Adjustment({
+                lower: 1,
+                upper: 360,
+                step_increment: 1,
+            }),
+        });
+        settings.bind('eye-refresh-rate', refreshRow, 'value', Gio.SettingsBindFlags.DEFAULT);
+        refreshRow.set_tooltip_text(_('Higher refresh rates may impact performance.'));
+        globalGroup.add(refreshRow);
+        //#endregion
+        //#endregion
+
+        //#region Blink
+        const blinkGroup = new Adw.PreferencesGroup({title: _('Blinking')});
+        this.add(blinkGroup);
+
+        //#region Blink mode
+        globalKeys.push('eye-blink-mode');
+        const blinkModeList = new Gtk.StringList();
+        [_('Click'), _('Fixed'), _('Random')].forEach((mode) => blinkModeList.append(mode));
+
+        // Each option enables the corresponding row
+        const blinkModeRow = new Adw.ComboRow({
+            title: _('Blink Mode'),
+            subtitle: _('How blinking is triggered'),
+            model: blinkModeList,
+            selected: settings.get_enum('eye-blink-mode'),
+        });
+        blinkModeRow.connect('notify::selected', (widget) =>
+            settings.set_enum('eye-blink-mode', widget.selected)
+        );
+        blinkGroup.add(blinkModeRow);
+
+        resetFunctions.push(
+            () => {
+                const defValue = settings.get_default_value('eye-blink-mode').deep_unpack();
+                const values = ['click', 'synced', 'unsynced'];// Values from eye-blink-mode enum in schema
+                blinkModeRow.set_selected(values.indexOf(defValue));
+            }
+        );
+        //#endregion
+
+        //#region Blink interval
+        globalKeys.push('eye-blink-interval');
+        const blinkIntervalRow = new Adw.SpinRow({
+            title: _('Fixed Blink Interval'),
+            subtitle: _('Time between blinks in seconds'),
+            adjustment: new Gtk.Adjustment({
+                lower: 0.1,
+                upper: 86400,
+                step_increment: 0.1,
+            }),
+            digits: 1,
+        });
+        settings.bind(
+            'eye-blink-interval',
+            blinkIntervalRow,
+            'value',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+        blinkGroup.add(blinkIntervalRow);
+        //#endregion
+
+        //#region Blink random interval range
+        globalKeys.push('eye-blink-interval-range');
+        const blinkIntervalRangeRow = new Adw.ActionRow({
+            title: _('Blink Interval Range'),
+            subtitle: _('Minimum and maximum time between blinks in seconds'),
+        });
+
+        const blinkIntervalRange = settings
+                .get_value('eye-blink-interval-range')
+                .deep_unpack();
+
+        const MIN_GAP = 0.1;
+        const minIntervalButton = new Gtk.SpinButton({
+            adjustment: new Gtk.Adjustment({
+                lower: 0.1,
+                upper: blinkIntervalRange[1] - MIN_GAP,
+                step_increment: 0.1,
+            }),
+            digits: 1,
+            value: blinkIntervalRange[0],
+        });
+        const maxIntervalButton = new Gtk.SpinButton({
+            adjustment: new Gtk.Adjustment({
+                lower: blinkIntervalRange[0] + MIN_GAP,
+                upper: 86400,
+                step_increment: 0.1,
+            }),
+            digits: 1,
+            value: blinkIntervalRange[1],
+        });
+
+        minIntervalButton.connect('value-changed',
+            () => {
+                // Update the minimum value of the max interval
+                maxIntervalButton.adjustment.set_lower(minIntervalButton.get_value() + MIN_GAP);
+
+                settings.set_value(
+                    'eye-blink-interval-range',
+                    new GLib.Variant(
+                        'ad',
+                        [minIntervalButton.get_value(), maxIntervalButton.get_value()])
+                );
+            });
+        maxIntervalButton.connect('value-changed',
+            () => {
+                // Update the maximum value of the min interval
+                minIntervalButton.adjustment.set_upper(maxIntervalButton.get_value() - MIN_GAP);
+
+                settings.set_value(
+                    'eye-blink-interval-range',
+                    new GLib.Variant(
+                        'ad',
+                        [minIntervalButton.get_value(), maxIntervalButton.get_value()])
+                );
+            });
+
+        const box = new Gtk.Box({
+            orientation: Gtk.Orientation.VERTICAL,
+            spacing: 4,
+            margin_top: 12,
+            margin_bottom: 12,
+        });
+        box.append(minIntervalButton);
+        box.append(new Gtk.Label({label: _('to')}));
+        box.append(maxIntervalButton);
+
+        blinkIntervalRangeRow.add_suffix(box);
+        blinkGroup.add(blinkIntervalRangeRow);
+
+        resetFunctions.push(() => {
+            const [min, max] =
+                settings.get_default_value('eye-blink-interval-range').deep_unpack();
+            minIntervalButton.adjustment.set_upper(max - MIN_GAP);
+            maxIntervalButton.adjustment.set_lower(min + MIN_GAP);
+            minIntervalButton.set_value(min);
+            maxIntervalButton.set_value(max);
+        });
+        //#endregion
+        //#endregion
+
+        //#region Reset
+        const resetGroup = new Adw.PreferencesGroup({title: _('Reset')});
+        this.add(resetGroup);
+
+        const resetRow = new EyeResetRow(
+            _('Reset global eye settings?'),
+            settings,
+            globalKeys,
+            resetFunctions
+        );
+        resetGroup.add(resetRow);
+        //#endregion
+    }
+});

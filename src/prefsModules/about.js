@@ -66,7 +66,7 @@ class EyeAboutRow extends Adw.ActionRow {
             release_notes: releaseNotes,
             release_notes_version: metadata['version-name'],
             support_url: supportUrl,
-            translator_credits: pgettext('(USER)NAME EMAIL/URL', 'translator_credits'),
+            translator_credits: pgettext('(USER)NAME EMAIL', 'translator_credits'),
             version: metadata['version-name'],
             website: metadata.url,
         });
