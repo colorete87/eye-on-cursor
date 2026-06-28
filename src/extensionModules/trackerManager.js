@@ -46,8 +46,9 @@ Gio._promisify(Gio.File.prototype, 'replace_contents_async');
 export const TrackerManager = GObject.registerClass(
     {
         Signals: {
-            toggled: {},
-            click: {},
+            'toggled': {},
+            'clicked': {},
+            'color-changed': {},
         },
     },
 class TrackerManager extends GObject.Object {
@@ -223,6 +224,7 @@ class TrackerManager extends GObject.Object {
         const trackerIconPath = GLib.build_filenamev([this.#cacheDir, `${shape}_${colorTag}.svg`]);
         this.#tracker.gicon = Gio.icon_new_for_string(trackerIconPath);
         this.currentColor = color;
+        this.emit('color-changed');
     }
 
     #resolveMainColor() {

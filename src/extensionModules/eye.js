@@ -75,6 +75,7 @@ class Eye extends PanelMenu.Button {
         // Attach mouse tracker
         this.#mouseTracker = extension.mouseTracker;
         this.#mouseTracker.connectObject('toggled', this.blink.bind(this), this);
+        this.#mouseTracker.connectObject('color-changed', () => this.#area.queue_repaint(), this);
 
         // Initialize settings values
         this.reactive = this.#settings.get_boolean('eye-reactive');
