@@ -28,8 +28,6 @@ const EYE_CHILD_SETTINGS = [
     'color-iris-enabled',
     'color-eyelid',
 ];
-const EYE_CHILD_SCHEMA_ID = 'org.gnome.shell.extensions.eye-on-cursor.eye';
-const EYE_CHILD_SETTINGS_PATH_ROOT = '/org/gnome/shell/extensions/eye-on-cursor/eyes';
 const EYE_GLOBAL_SETTINGS = ['eye-reactive', 'eye-refresh-rate'];
 const EYE_PANEL_SETTINGS = ['position', 'index'];
 const PUPIL_COLOR = 'rgb(0,0,0)';
@@ -372,6 +370,9 @@ class Eye extends PanelMenu.Button {
  * @param {EyeOnCursorExtension} extension - The extension instance.
  */
 export function spawnEyes(extension) {
+    const EYE_CHILD_SCHEMA_ID = 'org.gnome.shell.extensions.eye-on-cursor.eye';
+    const EYE_CHILD_SETTINGS_PATH_ROOT = '/org/gnome/shell/extensions/eye-on-cursor/eyes';
+
     // Remove current eyes
     destroyEyes(extension.eyeArray);
 
