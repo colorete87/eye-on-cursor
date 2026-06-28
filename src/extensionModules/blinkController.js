@@ -39,8 +39,7 @@ export class BlinkController {
         // Initialize settings values
         this.#blinkMode = this.#settings.get_string('eye-blink-mode');
         this.#blinkInterval = this.#settings.get_double('eye-blink-interval');
-        this.#blinkIntervalRange =
-            this.#settings.get_value('eye-blink-interval-range').deep_unpack();
+        this.#blinkIntervalRange = this.#getValidIntervalRange();
 
         // Connect changes in eye array or blink mode settings to update methods
         EYE_ARRAY_SETTINGS.forEach((key) =>
@@ -70,15 +69,25 @@ export class BlinkController {
         this.#settings.connectObject(
             'changed::eye-blink-interval-range',
             () => {
-                this.#blinkIntervalRange = this.#settings
-                    .get_value('eye-blink-interval-range')
-                    .deep_unpack();
+                this.#blinkIntervalRange = this.#getValidIntervalRange();
                 this.#startBlinkMode();
             },
             this
         );
 
         this.#startBlinkMode();
+    }
+
+    #getValidIntervalRange() {
+        const range = this.#settings.get_value('eye-blink-interval-range').deep_unpack();
+
+        if (range[0] < range[1]) {
+            return range;
+        } else {
+            console.warn('Eye on Cursor: Invalid blink interval range (min >= max), ' +
+                'using default.');
+            return this.#settings.get_default_value('eye-blink-interval-range').deep_unpack();
+        }
     }
     //#endregion
 
