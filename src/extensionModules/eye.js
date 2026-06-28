@@ -309,6 +309,7 @@ class Eye extends PanelMenu.Button {
         this.#eyelidLevelInterval = clearInterval(this.#eyelidLevelInterval);
         this.#blinking = true;
         let currentFrame = 0;
+        this.#eyelidLevel = 0;
         this.#eyelidLevelInterval = setInterval(() => {
             currentFrame++;
 
