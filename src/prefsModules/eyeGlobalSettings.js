@@ -77,7 +77,12 @@ class EyePage extends Adw.PreferencesPage {
         //#region Blink mode
         globalKeys.push('eye-blink-mode');
         const blinkModeList = new Gtk.StringList();
-        [_('Click'), _('Fixed'), _('Random')].forEach((mode) => blinkModeList.append(mode));
+        [
+            _('None'),
+            _('Click'),
+            _('Fixed'),
+            _('Random'),
+        ].forEach((mode) => blinkModeList.append(mode));
 
         // Each option enables the corresponding row
         const blinkModeRow = new Adw.ComboRow({
@@ -94,7 +99,12 @@ class EyePage extends Adw.PreferencesPage {
         resetFunctions.push(
             () => {
                 const defValue = settings.get_default_value('eye-blink-mode').deep_unpack();
-                const values = ['click', 'synced', 'unsynced'];// Values from eye-blink-mode enum in schema
+                const values = [
+                    'none',
+                    'click',
+                    'fixed',
+                    'random',
+                ];// Values from eye-blink-mode enum in schema
                 blinkModeRow.set_selected(values.indexOf(defValue));
             }
         );
@@ -107,7 +117,7 @@ class EyePage extends Adw.PreferencesPage {
             subtitle: _('Time between blinks in seconds'),
             adjustment: new Gtk.Adjustment({
                 lower: 0.1,
-                upper: 86400,
+                upper: 3600,
                 step_increment: 0.1,
             }),
             digits: 1,
@@ -145,7 +155,7 @@ class EyePage extends Adw.PreferencesPage {
         const maxIntervalButton = new Gtk.SpinButton({
             adjustment: new Gtk.Adjustment({
                 lower: blinkIntervalRange[0] + MIN_GAP,
-                upper: 86400,
+                upper: 3600,
                 step_increment: 0.1,
             }),
             digits: 1,

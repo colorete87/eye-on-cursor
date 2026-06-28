@@ -120,12 +120,14 @@ export class BlinkController {
                 case 'click':
                     this.#startClickBlink();
                     break;
-                case 'unsynced':
-                    this.#startUnsyncedBlink();
+                case 'fixed':
+                    this.#startFixedBlink();
                     break;
-                case 'synced':
+                case 'random':
+                    this.#startRandomBlink();
+                    break;
+                case 'none':
                 default:
-                    this.#startSyncedBlink();
                     break;
             }
         }
@@ -138,12 +140,14 @@ export class BlinkController {
             case 'click':
                 this.#stopClickBlink();
                 break;
-            case 'unsynced':
-                this.#stopUnsyncedBlink();
+            case 'fixed':
+                this.#stopFixedBlink();
                 break;
-            case 'synced':
+            case 'random':
+                this.#stopRandomBlink();
+                break;
+            case 'none':
             default:
-                this.#stopSyncedBlink();
                 break;
         }
     }
@@ -160,21 +164,21 @@ export class BlinkController {
     //#endregion
 
     //#region Synced mode
-    #startSyncedBlink() {
+    #startFixedBlink() {
         this.#syncedRoutine = setInterval(this.#blinkAll.bind(this), 1000 * this.#blinkInterval);
     }
 
-    #stopSyncedBlink() {
+    #stopFixedBlink() {
         this.#syncedRoutine = clearInterval(this.#syncedRoutine);
     }
     //#endregion
 
     //#region Unsynced mode
-    #startUnsyncedBlink() {
+    #startRandomBlink() {
         this.#eyeArray.forEach((eye) => this.#scheduleNextBlink(eye));
     }
 
-    #stopUnsyncedBlink() {
+    #stopRandomBlink() {
         this.#eyeArray.forEach((eye) => {
             eye.randomBlinkTimeout = clearTimeout(eye.randomBlinkTimeout);
         });
