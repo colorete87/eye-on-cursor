@@ -168,13 +168,20 @@ class TrackerManager extends GObject.Object {
     }
 
     onThemeChanged(themeColor) {
-        if (themeColor)
+        if (themeColor) {
             this.#color.theme = `rgb(${themeColor.red},${themeColor.green},${themeColor.blue})`;
-        else
+            this.#updateCacheTrackers(this.#shape, [this.#color.theme]);
+        } else {
             this.#color.theme = null;
+        }
 
-        this.#updateCacheTrackers(this.#shape, [this.#color.theme]);
         this.#updateTrackerIcon(this.#shape, this.#resolveMainColor());
+    }
+
+    #resolveMainColor() {
+        return !this.#color.useCustomMain && this.#color.theme
+            ? this.#color.theme
+            : this.#color.main;
     }
     //#endregion
 
@@ -227,11 +234,6 @@ class TrackerManager extends GObject.Object {
         this.emit('color-changed');
     }
 
-    #resolveMainColor() {
-        return !this.#color.useCustomMain && this.#color.theme !== null
-            ? this.#color.theme
-            : this.#color.main;
-    }
     //#endregion
 
     //#region Position updater
@@ -462,8 +464,10 @@ class TrackerManager extends GObject.Object {
                 this.#color.left,
                 this.#color.middle,
                 this.#color.right,
-                this.#color.theme,
             ]);
+
+            if (this.#color.theme)
+                await this.#updateCacheTrackers(this.#shape, [this.#color.theme]);
 
             this.#updateTrackerIcon(this.#shape, this.#resolveMainColor());
         }
