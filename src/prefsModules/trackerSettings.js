@@ -92,12 +92,9 @@ class TrackerPage extends Adw.PreferencesPage {
         });
 
         shapeList.forEach((shape) => {
-            const displayName = shape.replaceAll('_', ' ');
-            const filePath = GLib.build_filenamev([shapeDirPath, `${shape}.svg`]);
-
             const flowItem = new Gtk.FlowBoxChild();
             flowItem.shape = shape;
-            flowItem.name = displayName;
+            flowItem.displayName = shape.replaceAll('_', ' ');
 
             const flowItemContent = new Gtk.Box({
                 orientation: Gtk.Orientation.VERTICAL,
@@ -106,12 +103,13 @@ class TrackerPage extends Adw.PreferencesPage {
                 valign: Gtk.Align.CENTER,
             });
 
+            const filePath = GLib.build_filenamev([shapeDirPath, `${shape}.svg`]);
             const picture = Gtk.Picture.new_for_filename(filePath);
             picture.set_size_request(48, 48);
             picture.set_content_fit(Gtk.ContentFit.CONTAIN);
 
             const label = new Gtk.Label({
-                label: displayName,
+                label: flowItem.displayName,
                 justify: Gtk.Justification.CENTER,
                 wrap: true,
                 xalign: 0.5,
@@ -124,7 +122,7 @@ class TrackerPage extends Adw.PreferencesPage {
         });
 
         shapePicker.connect('child-activated', (flowBox, flowBoxChild) => {
-            shapeRowLabel.set_label(flowBoxChild.name);
+            shapeRowLabel.set_label(flowBoxChild.displayName);
             settings.set_string('tracker-shape', flowBoxChild.shape);
             shapeWindow.close();
         });
