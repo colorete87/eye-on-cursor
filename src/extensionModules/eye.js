@@ -161,11 +161,15 @@ class Eye extends PanelMenu.Button {
     }
 
     onThemeChanged(themeColor) {
-        this.#color.theme = {
-            red: themeColor.red / 255,
-            green: themeColor.green / 255,
-            blue: themeColor.blue / 255,
-        };
+        if (themeColor) {
+            this.#color.theme = {
+                red: themeColor.red / 255,
+                green: themeColor.green / 255,
+                blue: themeColor.blue / 255,
+            };
+        } else {
+            this.#color.theme = null;
+        }
         this.#area?.queue_repaint();
     }
 
