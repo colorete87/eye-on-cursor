@@ -26,11 +26,11 @@ const EYE_CHILD_SETTINGS = [
     'width',
     'color-iris',
     'color-iris-enabled',
+    'color-pupil',
     'color-eyelid',
 ];
 const EYE_GLOBAL_SETTINGS = ['eye-reactive', 'eye-refresh-rate'];
 const EYE_PANEL_SETTINGS = ['position', 'index'];
-const PUPIL_COLOR = 'rgb(0,0,0)';
 //#endregion
 
 /**
@@ -61,6 +61,7 @@ class Eye extends PanelMenu.Button {
     #color = {
         useCustomIris: null,
         iris: null,
+        pupil: null,
         eyelid: null,
         theme: null,
     };
@@ -93,6 +94,7 @@ class Eye extends PanelMenu.Button {
         this.#width = this.settings.get_int('width');
         this.#color.useCustomIris = this.settings.get_boolean('color-iris-enabled');
         this.#color.iris = this.#parseRGB(this.settings.get_string('color-iris'));
+        this.#color.pupil = this.#parseRGB(this.settings.get_string('color-pupil'));
         this.#color.eyelid = this.#parseRGB(this.settings.get_string('color-eyelid'));
         // TODO use foreground color as default eyelid to match it with contour
 
@@ -226,7 +228,7 @@ class Eye extends PanelMenu.Button {
             lineMode: this.#lineMode,
             scleraColor,
             irisColor,
-            pupilColor: this.#parseRGB(PUPIL_COLOR),
+            pupilColor: this.#color.pupil,
             eyelidLevel: this.#eyelidLevel,
             eyelidColor: this.#color.eyelid,
         };
@@ -245,6 +247,7 @@ class Eye extends PanelMenu.Button {
         const newWidth = this.settings.get_int('width');
         const newColorUseCustomIris = this.settings.get_boolean('color-iris-enabled');
         const newColorIris = this.#parseRGB(this.settings.get_string('color-iris'));
+        const newColorPupil = this.#parseRGB(this.settings.get_string('color-pupil'));
         const newColorEyelid = this.#parseRGB(this.settings.get_string('color-eyelid'));
 
         // Update reactive property
@@ -282,6 +285,12 @@ class Eye extends PanelMenu.Button {
         ) {
             this.#color.useCustomIris = newColorUseCustomIris;
             this.#color.iris = newColorIris;
+            this.#area.queue_repaint();
+        }
+
+        // Update pupil color
+        if (JSON.stringify(this.#color.pupil) !== JSON.stringify(newColorPupil)) {
+            this.#color.pupil = newColorPupil;
             this.#area.queue_repaint();
         }
 

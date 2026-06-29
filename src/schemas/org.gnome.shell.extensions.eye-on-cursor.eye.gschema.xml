@@ -58,6 +58,11 @@
       <summary>Iris color of this eye</summary>
       <description>Specifies the color of this eye's iris.</description>
     </key>
+    <key name='color-pupil' type='s'>
+      <default>'rgb(0,0,0)'</default>
+      <summary>Pupil color of this eye</summary>
+      <description>Specifies the color of this eye's pupil.</description>
+    </key>
     <key name='color-eyelid' type='s'>
       <default>'rgb(0,0,0)'</default>
       <summary>Eyelid color of this eye</summary>

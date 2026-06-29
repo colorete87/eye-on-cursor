@@ -217,6 +217,19 @@ class EyesPage extends Adw.PreferencesPage {
             // TODO Make sclera and pupil color into settings
             //#endregion
 
+            //#region Pupil color
+            eyeKeys.push('color-pupil');
+            const colorPupilRow = new Adw.ActionRow({
+                title: _('Pupil Color'),
+                subtitle: _('Custom color for the pupil'),
+            });
+            const pupilColorPicker = new EyeColorPicker(eyeSettings, 'color-pupil');
+            colorPupilRow.add_suffix(pupilColorPicker);
+            eyeDrawerRow.add_row(colorPupilRow);
+
+            resetFunctions.push(() => pupilColorPicker.reset());
+            //#endregion
+
             //#region Eyelid color
             eyeKeys.push('color-eyelid');
             const colorEyelidRow = new Adw.ActionRow({
