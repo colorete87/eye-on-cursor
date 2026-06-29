@@ -87,7 +87,7 @@ class EyeColorPicker extends Gtk.Box {
  * A row that allows users to set a keyboard shortcut.
  *
  * @param {Gio.Settings} settings - The settings object for this extension.
- * @param {string} key -  The settings key for this color setting.
+ * @param {string} key -  The settings key for this keybinding.
  * @param {string} shortcutName - The name of the shortcut and title of the row.
  */
 export const EyeKeybindingRow = GObject.registerClass(
@@ -258,7 +258,7 @@ class EyeKeybindingRow extends Adw.ActionRow {
  * @param {Gio.Settings} settings - The settings object for this group of keys.
  * @param {string[]} keys - The array of keys to reset.
  * @param {Function[]} resetFunctions - The array of functions that update widget values with
- * current key values.
+ * default key values.
  */
 export const EyeResetRow = GObject.registerClass(
 class EyeResetRow extends Adw.ActionRow {
