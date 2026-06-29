@@ -23,7 +23,9 @@ export function getThemeColor() {
         if (color.alpha > 0 && // Color is visible
             !(color.red === color.green && color.green === color.blue) // Color isn't black/grey
         )
-            break;
+            break; // Stop looking
+        else
+            color = null;
     }
 
     if (color) {
