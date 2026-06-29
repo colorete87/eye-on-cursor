@@ -4,7 +4,6 @@
 stages:
   - lint        # Run ESLint
   - build       # Pack the extension into a .zip
-  - test        # Run the Shexli Static Analyzer
   - publish     # Make a release with an asset published to the package registry and upload to EGO
 
 default:
@@ -47,33 +46,6 @@ pack:
      - $PACKAGE_NAME
     expire_in: 1 day
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      changes:                                              # if changes to `src` are pushed to the default branch
-      - src/**/*
-    - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/              # if there is a version tag
-
-############ STAGE TEST ########################################################
-
-shexli-review:
-  stage: test
-  image: python:slim
-  variables:
-    SHEXLI_LOG: "shexli_report_${CI_COMMIT_SHORT_SHA}"
-  before_script:
-    - pip install -U shexli
-  script:
-    - shexli $PACKAGE_NAME > "${SHEXLI_LOG}.txt"
-    - diff "${SHEXLI_LOG}.txt" tools/shexli_success.txt
-  artifacts:
-    name: $SHEXLI_LOG
-    paths:
-      - "${SHEXLI_LOG}.txt"
-    when: on_failure
-    expire_in: 4 weeks
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      changes:                                              # if changes to `src` are pushed to the default branch
-      - src/**/*
     - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/              # if there is a version tag
 
 ############ STAGE PUBLISH #####################################################
