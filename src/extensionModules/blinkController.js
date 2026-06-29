@@ -75,7 +75,7 @@ export class BlinkController {
     #getValidIntervalRange() {
         const range = this.#settings.get_value('eye-blink-interval-range').deep_unpack();
 
-        if (range[0] < range[1]) {
+        if (range.length === 2 && range[0] < range[1]) {
             return range;
         } else {
             console.warn('Eye on Cursor: Invalid blink interval range (min >= max), ' +
