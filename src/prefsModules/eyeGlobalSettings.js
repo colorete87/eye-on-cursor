@@ -19,7 +19,7 @@ import {EyeResetRow} from './prefsWidgets.js';
  * @param {Gio.Settings} settings - The settings object for this extension.
  */
 export const EyeGlobalPage = GObject.registerClass(
-class EyePage extends Adw.PreferencesPage {
+class EyeGlobalPage extends Adw.PreferencesPage {
     constructor(settings) {
         super({
             icon_name: 'preferences-system-symbolic',
@@ -211,6 +211,11 @@ class EyePage extends Adw.PreferencesPage {
         //#endregion
         //#endregion
 
+        this.onBlinkModeChanged(blinkIntervalRow, blinkIntervalRangeRow, blinkModeRow);
+        blinkModeRow.connect('notify::selected', (widget) =>
+            this.onBlinkModeChanged(blinkIntervalRow, blinkIntervalRangeRow, widget)
+        );
+
         //#region Reset
         const resetGroup = new Adw.PreferencesGroup({title: _('Reset')});
         this.add(resetGroup);
@@ -223,5 +228,29 @@ class EyePage extends Adw.PreferencesPage {
         );
         resetGroup.add(resetRow);
         //#endregion
+    }
+
+    onBlinkModeChanged(blinkIntervalRow, blinkIntervalRangeRow, widget) {
+        blinkIntervalRow.set_sensitive(false);
+        blinkIntervalRangeRow.set_sensitive(false);
+
+        const values = [
+            'none',
+            'click',
+            'fixed',
+            'random',
+        ];// Values from eye-blink-mode enum in schema
+        switch (values[widget.selected]) {
+            case 'fixed':
+                blinkIntervalRow.set_sensitive(true);
+                break;
+            case 'random':
+                blinkIntervalRangeRow.set_sensitive(true);
+                break;
+            case 'none':
+            case 'click':
+            default:
+                break;
+        }
     }
 });
