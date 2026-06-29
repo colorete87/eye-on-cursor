@@ -21,7 +21,7 @@ import {EyeColorPicker, EyeResetRow} from './prefsWidgets.js';
  * @param {Gio.Settings} settings - The settings object for this extension.
  */
 export const EyesPage = GObject.registerClass(
-class EyePage extends Adw.PreferencesPage {
+class EyesPage extends Adw.PreferencesPage {
     constructor(settings, extensionDir) {
         super({
             icon_name: 'view-reveal-symbolic',
@@ -59,9 +59,8 @@ class EyePage extends Adw.PreferencesPage {
         let eyeGroups = this.#createEyeGroups(eyeSchema, countRow.value);
 
         countRow.adjustment.connect('value-changed', (widget) => {
-            // Destroy groups
+            // Remove groups
             eyeGroups.forEach((eyeGroup) => this.remove(eyeGroup));
-            eyeGroups.length = 0;
 
             // Recreate groups
             eyeGroups = this.#createEyeGroups(eyeSchema, widget.value);
@@ -87,7 +86,7 @@ class EyePage extends Adw.PreferencesPage {
                 title: pgettext(
                     '%s is the eye ID number (e.g. 01)',
                     'Eye #%s'
-                ).replace('%s', eyeID),
+                ).format(eyeID),
             });
             eyeGroup.add(eyeDrawerRow);
 
@@ -236,7 +235,7 @@ class EyePage extends Adw.PreferencesPage {
                 pgettext(
                     '%s is the eye ID number (e.g. 01)',
                     'Reset settings for eye #%s?'
-                ).replace('%s', eyeID),
+                ).format(eyeID),
                 eyeSettings,
                 eyeKeys,
                 resetFunctions
