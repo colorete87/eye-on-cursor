@@ -24,6 +24,8 @@ const EYE_CHILD_SETTINGS = [
     'outline-mode',
     'line-width',
     'width',
+    'color-sclera',
+    'color-sclera-enabled',
     'color-iris',
     'color-iris-enabled',
     'color-pupil',
@@ -59,6 +61,8 @@ class Eye extends PanelMenu.Button {
     #width;
     #refreshRate;
     #color = {
+        useCustomSclera: null,
+        sclera: null,
         useCustomIris: null,
         iris: null,
         pupil: null,
@@ -92,6 +96,8 @@ class Eye extends PanelMenu.Button {
         this.#lineMode = this.settings.get_boolean('outline-mode');
         this.#lineWidth = this.settings.get_double('line-width');
         this.#width = this.settings.get_int('width');
+        this.#color.useCustomSclera = this.settings.get_boolean('color-sclera-enabled');
+        this.#color.sclera = this.#parseRGB(this.settings.get_string('color-sclera'));
         this.#color.useCustomIris = this.settings.get_boolean('color-iris-enabled');
         this.#color.iris = this.#parseRGB(this.settings.get_string('color-iris'));
         this.#color.pupil = this.#parseRGB(this.settings.get_string('color-pupil'));
@@ -201,13 +207,18 @@ class Eye extends PanelMenu.Button {
         if (isNaN(originX) || isNaN(originY))
             return; // Don't draw if the surface isn't placed yet
 
-        // Use foreground color from the theme for the white of the eye
-        const fg = this.#area.get_theme_node().get_foreground_color();
-        const scleraColor = {
-            red: fg.red / 255,
-            green: fg.green / 255,
-            blue: fg.blue / 255,
-        };
+        // Get sclera color
+        let scleraColor;
+        if (!this.#color.useCustomSclera) {
+            const fg = this.#area.get_theme_node().get_foreground_color();
+            scleraColor = {
+                red: fg.red / 255,
+                green: fg.green / 255,
+                blue: fg.blue / 255,
+            };
+        } else {
+            scleraColor = this.#color.sclera;
+        }
 
         // Get iris color
         let irisColor;
@@ -245,6 +256,8 @@ class Eye extends PanelMenu.Button {
         const newLineMode = this.settings.get_boolean('outline-mode');
         const newLineWidth = this.settings.get_double('line-width');
         const newWidth = this.settings.get_int('width');
+        const newColorUseCustomSclera = this.settings.get_boolean('color-sclera-enabled');
+        const newColorSclera = this.#parseRGB(this.settings.get_string('color-sclera'));
         const newColorUseCustomIris = this.settings.get_boolean('color-iris-enabled');
         const newColorIris = this.#parseRGB(this.settings.get_string('color-iris'));
         const newColorPupil = this.#parseRGB(this.settings.get_string('color-pupil'));
@@ -276,6 +289,16 @@ class Eye extends PanelMenu.Button {
         if (this.#width !== newWidth) {
             this.#width = newWidth;
             this.#area.set_width(this.#width);
+        }
+
+        // Update Sclera color
+        if (
+            this.#color.useCustomSclera !== newColorUseCustomSclera ||
+            JSON.stringify(this.#color.sclera) !== JSON.stringify(newColorSclera)
+        ) {
+            this.#color.useCustomSclera = newColorUseCustomSclera;
+            this.#color.sclera = newColorSclera;
+            this.#area.queue_repaint();
         }
 
         // Update iris color

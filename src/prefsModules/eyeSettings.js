@@ -47,7 +47,7 @@ class EyesPage extends Adw.PreferencesPage {
         globalGroup.add(countRow);
         //#endregion
 
-        //#region Per-eye groups
+        //#region Rows creation
         // Load schemas from the extension's compiled schema file
         const schemaSource = Gio.SettingsSchemaSource.new_from_directory(
             extensionDir.get_child('schemas').get_path(),
@@ -68,7 +68,7 @@ class EyesPage extends Adw.PreferencesPage {
         //#endregion
     }
 
-    //#region Create eye group
+    //#region Eye group
     #createEyeGroups(schema, count) {
         const eyeGroupsArray = [];
 
@@ -90,7 +90,7 @@ class EyesPage extends Adw.PreferencesPage {
             });
             eyeGroup.add(eyeDrawerRow);
 
-            //#region Eye position
+            //#region Position
             eyeKeys.push('position');
             const positionLabelList = new Gtk.StringList();
             [_('Left'), _('Center'), _('Right')]
@@ -116,7 +116,7 @@ class EyesPage extends Adw.PreferencesPage {
             );
             //#endregion
 
-            //#region Eye index
+            //#region Index
             eyeKeys.push('index');
             const indexRow = new Adw.SpinRow({
                 title: _('Index'),
@@ -131,7 +131,7 @@ class EyesPage extends Adw.PreferencesPage {
             eyeDrawerRow.add_row(indexRow);
             //#endregion
 
-            //#region Eye width
+            //#region Width
             eyeKeys.push('width');
             const widthRow = new Adw.SpinRow({
                 title: _('Width'),
@@ -146,7 +146,7 @@ class EyesPage extends Adw.PreferencesPage {
             eyeDrawerRow.add_row(widthRow);
             //#endregion
 
-            //#region Eye shape
+            //#region Shape
             eyeKeys.push('shape');
             const shapeLabelList = new Gtk.StringList();
             [_('Natural'), _('Round'), _('Comic')].forEach((shape) => shapeLabelList.append(shape));
@@ -171,7 +171,7 @@ class EyesPage extends Adw.PreferencesPage {
             );
             //#endregion
 
-            //#region Eye outline mode
+            //#region Outline mode
             eyeKeys.push('outline-mode');
             const lineModeRow = new Adw.SwitchRow({
                 title: _('Sketch Mode'),
@@ -199,48 +199,74 @@ class EyesPage extends Adw.PreferencesPage {
             eyeDrawerRow.add_row(lineWidthRow);
             //#endregion
 
-            //#region Eye iris color
-            ['color-iris', 'color-iris-enabled'].forEach((key) => eyeKeys.push(key));
-            const colorRow = new Adw.ActionRow({
-                title: _('Iris Color'),
-                subtitle: _('Custom color for the iris'),
-            });
-            const irisColorPicker = new EyeColorPicker(
-                eyeSettings,
+            //#region Colors
+            const colorDrawerRow = new Adw.ExpanderRow({title: _('Colors')});
+            eyeDrawerRow.add_row(colorDrawerRow);
+
+            [
+                'color-sclera',
+                'color-sclera-enabled',
                 'color-iris',
-                'color-iris-enabled'
-            );
-            colorRow.add_suffix(irisColorPicker);
-            eyeDrawerRow.add_row(colorRow);
+                'color-iris-enabled',
+                'color-pupil',
+                'color-eyelid',
+            ].forEach((key) => eyeKeys.push(key));
 
-            resetFunctions.push(() => irisColorPicker.reset());
-            // TODO Make sclera and pupil color into settings
-            //#endregion
+            const colorGridRow = new Adw.ActionRow({subtitle: _('Custom colors')});
 
-            //#region Pupil color
-            eyeKeys.push('color-pupil');
-            const colorPupilRow = new Adw.ActionRow({
-                title: _('Pupil Color'),
-                subtitle: _('Custom color for the pupil'),
+            const colorGrid = new Gtk.Grid({
+                column_spacing: 16,
+                halign: Gtk.Align.CENTER,
+                valign: Gtk.Align.CENTER,
+                row_spacing: 8,
+                margin_top: 12,
+                margin_bottom: 12,
+                margin_end: 36,
             });
-            const pupilColorPicker = new EyeColorPicker(eyeSettings, 'color-pupil');
-            colorPupilRow.add_suffix(pupilColorPicker);
-            eyeDrawerRow.add_row(colorPupilRow);
 
-            resetFunctions.push(() => pupilColorPicker.reset());
-            //#endregion
+            const colorDefs = [
+                {
+                    label: _('Sclera'),
+                    key: 'color-sclera',
+                    enabledKey: 'color-sclera-enabled',
+                },
+                {
+                    label: _('Pupil'),
+                    key: 'color-pupil',
+                },
+                {
+                    label: _('Iris'),
+                    key: 'color-iris',
+                    enabledKey: 'color-iris-enabled',
+                },
+                {
+                    label: _('Eyelid'),
+                    key: 'color-eyelid',
+                },
+            ];
 
-            //#region Eyelid color
-            eyeKeys.push('color-eyelid');
-            const colorEyelidRow = new Adw.ActionRow({
-                title: _('Eyelid Color'),
-                subtitle: _('Custom color for the eyelid'),
+            colorDefs.forEach(({label, key, enabledKey}, i) => {
+                const col = i % 2;
+                const row = Math.floor(i / 2);
+
+                const lbl = new Gtk.Label({
+                    label,
+                    valign: Gtk.Align.CENTER,
+                    halign: Gtk.Align.END,
+                });
+
+                const picker = enabledKey
+                    ? new EyeColorPicker(eyeSettings, key, enabledKey)
+                    : new EyeColorPicker(eyeSettings, key);
+
+                colorGrid.attach(lbl, col * 2, row * 2, 1, 1);
+                colorGrid.attach(picker, (col * 2) + 1, row * 2, 1, 1);
+
+                resetFunctions.push(() => picker.reset());
             });
-            const eyelidColorPicker = new EyeColorPicker(eyeSettings, 'color-eyelid');
-            colorEyelidRow.add_suffix(eyelidColorPicker);
-            eyeDrawerRow.add_row(colorEyelidRow);
 
-            resetFunctions.push(() => eyelidColorPicker.reset());
+            colorGridRow.add_suffix(colorGrid);
+            colorDrawerRow.add_row(colorGridRow);
             //#endregion
 
             //#region Reset

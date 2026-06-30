@@ -48,10 +48,20 @@
       <summary>Line width of this eye's drawing</summary>
       <description>Specifies the thickness of the lines used to draw this eye.</description>
     </key>
+    <key name='color-sclera-enabled' type='b'>
+      <default>false</default>
+      <summary>Custom sclera color state</summary>
+      <description>Indicates whether this eye's sclera uses a custom color instead of the foreground color.</description>
+    </key>
+    <key name='color-sclera' type='s'>
+      <default>'rgb(246,245,244)'</default>
+      <summary>Sclera color of this eye</summary>
+      <description>Specifies the color of this eye's sclera.</description>
+    </key>
     <key name='color-iris-enabled' type='b'>
       <default>false</default>
       <summary>Custom iris color state</summary>
-      <description>Indicates whether this eye's iris uses a custom color instead of the foreground color.</description>
+      <description>Indicates whether this eye's iris uses a custom color instead of the accent color.</description>
     </key>
     <key name='color-iris' type='s'>
       <default>'rgb(0,255,255)'</default>
