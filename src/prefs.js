@@ -30,7 +30,7 @@ export default class EyeOnCursorPreferences extends ExtensionPreferences {
             iconTheme.add_search_path(iconThemePath);
 
         window.add(new EyeGlobalPage(settings));
-        window.add(new EyesPage(settings, this.dir));
+        window.add(new EyesPage(settings));
         window.add(new TrackerPage(settings, this.metadata, this.path));
 
         window.set_visible_page_name('eyes');

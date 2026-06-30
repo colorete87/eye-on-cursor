@@ -22,7 +22,7 @@ import {EyeColorPicker, EyeResetRow} from './prefsWidgets.js';
  */
 export const EyesPage = GObject.registerClass(
 class EyesPage extends Adw.PreferencesPage {
-    constructor(settings, extensionDir) {
+    constructor(settings) {
         super({
             icon_name: 'view-reveal-symbolic',
             name: 'eyes',
@@ -48,35 +48,28 @@ class EyesPage extends Adw.PreferencesPage {
         //#endregion
 
         //#region Rows creation
-        // Load schemas from the extension's compiled schema file
-        const schemaSource = Gio.SettingsSchemaSource.new_from_directory(
-            extensionDir.get_child('schemas').get_path(),
-            Gio.SettingsSchemaSource.get_default(),
-            false
-        );
-        // Recursive lookup into parent sources
-        const eyeSchema = schemaSource.lookup('org.gnome.shell.extensions.eye-on-cursor.eye', true);
-        let eyeGroups = this.#createEyeGroups(eyeSchema, countRow.value);
+        const eyeSchema = settings.get_child('eye').settings_schema;
+        const eyeSchemaPathRoot = `${settings.settings_schema.get_path()}eyes/`;
+
+        let eyeGroups = this.#createEyeGroups(eyeSchema, eyeSchemaPathRoot, countRow.value);
 
         countRow.adjustment.connect('value-changed', (widget) => {
-            // Remove groups
             eyeGroups.forEach((eyeGroup) => this.remove(eyeGroup));
-
-            // Recreate groups
-            eyeGroups = this.#createEyeGroups(eyeSchema, widget.value);
+            eyeGroups = this.#createEyeGroups(eyeSchema, eyeSchemaPathRoot, widget.value);
         });
         //#endregion
     }
 
     //#region Eye group
-    #createEyeGroups(schema, count) {
+    #createEyeGroups(schema, schemaPathRoot, count) {
         const eyeGroupsArray = [];
 
         for (let i = 1; i <= count; i++) {
-            const eyeID = `${String(i).padStart(2, '0')}`;
+            const eyeID = String(i).padStart(2, '0');
+            const eyeName = `eye-${eyeID}`;
             const eyeSettings = new Gio.Settings({
                 settings_schema: schema,
-                path: `/org/gnome/shell/extensions/eye-on-cursor/eyes/eye-${eyeID}/`,
+                path: `${schemaPathRoot}${eyeName}/`,
             });
             const eyeKeys = [];
             const resetFunctions = [];

@@ -11,6 +11,8 @@
   </enum>
   <!-- Global Settings -->
   <schema id='org.gnome.shell.extensions.eye-on-cursor' path='/org/gnome/shell/extensions/eye-on-cursor/'>
+    <!--Child schema for per-eye settings  -->
+    <child name='eye' schema='org.gnome.shell.extensions.eye-on-cursor.eye'/>
     <!-- Eye Global Settings A: changes require `SpawnEyes()`  -->
     <key name='eye-enabled' type='b'>
       <default>true</default>

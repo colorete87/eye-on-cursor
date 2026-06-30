@@ -406,37 +406,31 @@ class Eye extends PanelMenu.Button {
  * @param {EyeOnCursorExtension} extension - The extension instance.
  */
 export function spawnEyes(extension) {
-    const EYE_CHILD_SCHEMA_ID = 'org.gnome.shell.extensions.eye-on-cursor.eye';
-    const EYE_CHILD_SETTINGS_PATH_ROOT = '/org/gnome/shell/extensions/eye-on-cursor/eyes';
-
     // Remove current eyes
     destroyEyes(extension.eyeArray);
 
     if (!extension.settings.get_boolean('eye-enabled'))
         return; // Stop here if eyes are disabled
 
-    // Load schemas from the extension's compiled schema file
-    const schemaSource = Gio.SettingsSchemaSource.new_from_directory(
-        extension.dir.get_child('schemas').get_path(),
-        Gio.SettingsSchemaSource.get_default(),
-        false
-    );
-    // Recursive lookup into parent sources
-    const eyeSchema = schemaSource.lookup(EYE_CHILD_SCHEMA_ID, true);
-    const count = extension.settings.get_int('eye-count');
+    const eyeSchema = extension.settings.get_child('eye').settings_schema;
+    const eyeSchemaPathRoot = `${extension.settings.settings_schema.get_path()}eyes/`;
 
     // Create eye array
+    const count = extension.settings.get_int('eye-count');
     for (let i = 1; i <= count; i++) {
-        const eyeID = `eye-${String(i).padStart(2, '0')}`;
+        const eyeID = String(i).padStart(2, '0');
+        const eyeName = `eye-${eyeID}`;
         const eyeSettings = new Gio.Settings({
             settings_schema: eyeSchema,
-            path: `${EYE_CHILD_SETTINGS_PATH_ROOT}/${eyeID}/`,
+            path: `${eyeSchemaPathRoot}${eyeName}/`,
         });
-        extension.eyeArray.push(new Eye(extension, eyeSettings, eyeID));
+
+        extension.eyeArray.push(new Eye(extension, eyeSettings, eyeName));
     }
 
     // Reverse order in LTR locales so that when adding eyes to the panel, index 0 appears leftmost
     const isLTR = Clutter.get_default_text_direction() === Clutter.TextDirection.LTR;
+
     (isLTR ? extension.eyeArray.slice().reverse() : extension.eyeArray).forEach((eye) =>
         Main.panel.addToStatusArea(
             eye.id,
