@@ -44,6 +44,17 @@ class EyeSettingsGroup extends Adw.PreferencesGroup {
         });
         this.add(eyeDrawerRow);
 
+        //#region Label
+        const nicknameEntry = new Gtk.Entry({
+            placeholder_text: 'Label',
+            valign: Gtk.Align.CENTER,
+            max_width_chars: 64,
+            buffer: new Gtk.EntryBuffer({text: this.settings.get_string('label')}),
+        });
+        this.settings.bind('label', nicknameEntry.buffer, 'text', Gio.SettingsBindFlags.DEFAULT);
+        eyeDrawerRow.add_suffix(nicknameEntry);
+        //#endregion
+
         //#region Position
         const positionLabelList = new Gtk.StringList();
         [_('Left'), _('Center'), _('Right')]
