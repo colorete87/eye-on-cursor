@@ -32,7 +32,7 @@ const EYE_CHILD_SETTINGS = [
     'color-eyelid',
 ];
 const EYE_GLOBAL_SETTINGS = ['eye-reactive', 'eye-refresh-rate'];
-const EYE_PANEL_SETTINGS = ['position', 'index'];
+const EYE_PANEL_SETTINGS = ['enabled', 'position', 'index'];
 //#endregion
 
 /**
@@ -431,13 +431,15 @@ export function spawnEyes(extension) {
     // Reverse order in LTR locales so that when adding eyes to the panel, index 0 appears leftmost
     const isLTR = Clutter.get_default_text_direction() === Clutter.TextDirection.LTR;
 
-    (isLTR ? extension.eyeArray.slice().reverse() : extension.eyeArray).forEach((eye) =>
-        Main.panel.addToStatusArea(
-            eye.id,
-            eye,
-            eye.settings.get_int('index'),
-            eye.settings.get_string('position'))
-    );
+    (isLTR ? extension.eyeArray.slice().reverse() : extension.eyeArray).forEach((eye) => {
+        if (eye.settings.get_boolean('enabled')) {
+            Main.panel.addToStatusArea(
+                eye.id,
+                eye,
+                eye.settings.get_int('index'),
+                eye.settings.get_string('position'));
+        }
+    });
 }
 //#endregion
 

@@ -20,6 +20,11 @@
       <summary>Label for the eye's settings</summary>
       <description>Specifies the label on the expander row for this eye's settings.</description>
     </key>
+    <key name='enabled' type='b'>
+      <default>true</default>
+      <summary>Enabled state of this eye</summary>
+      <description>Indicates whether this eye is displayed on the panel.</description>
+    </key>
     <key name='position' enum='org.gnome.shell.extensions.eye-on-cursor.eye.position'>
       <default>'center'</default>
       <summary>Panel position of this eye</summary>

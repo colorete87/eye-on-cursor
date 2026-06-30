@@ -55,6 +55,15 @@ class EyeSettingsGroup extends Adw.PreferencesGroup {
         eyeDrawerRow.add_suffix(nicknameEntry);
         //#endregion
 
+        //#region Status
+        const activeRow = new Adw.SwitchRow({
+            title: _('Show Eye'),
+            subtitle: _('Make the eye visible on the panel'),
+        });
+        this.settings.bind('enabled', activeRow, 'active', Gio.SettingsBindFlags.DEFAULT);
+        eyeDrawerRow.add_row(activeRow);
+        //#endregion
+
         //#region Position
         const positionLabelList = new Gtk.StringList();
         [_('Left'), _('Center'), _('Right')]
