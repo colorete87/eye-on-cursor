@@ -92,6 +92,8 @@ class EyeColorPicker extends Gtk.Box {
  */
 export const EyeKeybindingRow = GObject.registerClass(
 class EyeKeybindingRow extends Adw.ActionRow {
+    #settings;
+    #key;
     #label;
     #box;
     #resetButton;
@@ -104,11 +106,14 @@ class EyeKeybindingRow extends Adw.ActionRow {
             activatable: true,
         });
 
+        this.#settings = settings;
+        this.#key = key;
+
         // Display current keybinding
         this.#label = new Gtk.ShortcutLabel({
             disabled_text: _('New shortcut…'),
             valign: Gtk.Align.CENTER,
-            accelerator: settings.get_strv(key)[0],
+            accelerator: this.#settings.get_strv(this.#key)[0],
         });
         this.#box = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL});
         this.#box.append(this.#label);
@@ -132,7 +137,7 @@ class EyeKeybindingRow extends Adw.ActionRow {
 
         // Connect change in accelerator to setting update
         this.#label.connect('notify::accelerator', (widget) =>
-            settings.set_strv(key, [widget.accelerator])
+            this.#settings.set_strv(this.#key, [widget.accelerator])
             // Main.wm.addKeybinding takes string arrays, not strings
         );
     }
@@ -140,6 +145,7 @@ class EyeKeybindingRow extends Adw.ActionRow {
     //#region Keybinding row methods
     resetKeybinding() {
         this.#label.accelerator = '';
+        this.#settings.reset(this.#key);
         this.#resetButton.visible = false;
     }
 
