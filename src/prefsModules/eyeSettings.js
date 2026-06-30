@@ -15,6 +15,215 @@ import {
 import {EyeColorPicker, EyeResetRow} from './prefsWidgets.js';
 //#endregion
 
+//#region Eye Group
+/**
+ * An `Adw.PreferencesGroup` containing an `Adw.ExpanderRow` containing the settings for an eye.
+ *
+ * @param {Gio.SettingsSchema} schema - The settings schema for an individual eye.
+ * @param {string} schemaPathRoot - The GSettings path under which eyes settings are stored.
+ * @param {number} index - The position of this eye among all eyes.
+ */
+const EyeSettingsGroup = GObject.registerClass(
+class EyeSettingsGroup extends Adw.PreferencesGroup {
+    constructor(schema, schemaPathRoot, index) {
+        super();
+
+        const eyeID = String(index).padStart(2, '0');
+        const eyeName = `eye-${eyeID}`;
+        this.settings = new Gio.Settings({
+            settings_schema: schema,
+            path: `${schemaPathRoot}${eyeName}/`,
+        });
+        this.resetFunctions = [];
+
+        const eyeDrawerRow = new Adw.ExpanderRow({
+            title: pgettext(
+                '%s is the eye ID number (e.g. 01)',
+                'Eye #%s'
+            ).format(eyeID),
+        });
+        this.add(eyeDrawerRow);
+
+        //#region Position
+        const positionLabelList = new Gtk.StringList();
+        [_('Left'), _('Center'), _('Right')]
+            .forEach((position) => positionLabelList.append(position));
+
+        const positionRow = new Adw.ComboRow({
+            title: _('Position'),
+            subtitle: _('Where the eyes appear on the panel'),
+            model: positionLabelList,
+            selected: this.settings.get_enum('position'),
+        });
+        positionRow.connect('notify::selected', (widget) =>
+            this.settings.set_enum('position', widget.selected)
+        );
+        eyeDrawerRow.add_row(positionRow);
+
+        this.resetFunctions.push(
+            () => {
+                const defValue = this.settings.get_default_value('position').deep_unpack();
+                const values = ['left', 'center', 'right']; // Values from position enum in schema
+                positionRow.set_selected(values.indexOf(defValue));
+            }
+        );
+        //#endregion
+
+        //#region Index
+        const indexRow = new Adw.SpinRow({
+            title: _('Index'),
+            subtitle: _('Order of the eyes among other items in the chosen panel section'),
+            adjustment: new Gtk.Adjustment({
+                lower: -1,
+                upper: 100,
+                step_increment: 1,
+            }),
+        });
+        this.settings.bind('index', indexRow, 'value', Gio.SettingsBindFlags.DEFAULT);
+        eyeDrawerRow.add_row(indexRow);
+        //#endregion
+
+        //#region Width
+        const widthRow = new Adw.SpinRow({
+            title: _('Width'),
+            subtitle: _('Drawing space and padding around each eye'),
+            adjustment: new Gtk.Adjustment({
+                lower: 20,
+                upper: 200,
+                step_increment: 1,
+            }),
+        });
+        this.settings.bind('width', widthRow, 'value', Gio.SettingsBindFlags.DEFAULT);
+        eyeDrawerRow.add_row(widthRow);
+        //#endregion
+
+        //#region Shape
+        const shapeLabelList = new Gtk.StringList();
+        [_('Natural'), _('Round'), _('Comic')].forEach((shape) => shapeLabelList.append(shape));
+
+        const shapeRow = new Adw.ComboRow({
+            title: _('Shape'),
+            subtitle: _('Outline style used for the eyes'),
+            model: shapeLabelList,
+            selected: this.settings.get_enum('shape'),
+        });
+        shapeRow.connect('notify::selected', (widget) =>
+            this.settings.set_enum('shape', widget.selected)
+        );
+        eyeDrawerRow.add_row(shapeRow);
+
+        this.resetFunctions.push(
+            () => {
+                const defValue = this.settings.get_default_value('shape').deep_unpack();
+                const values = ['natural', 'round', 'comic']; // Values from shape enum in schema
+                shapeRow.set_selected(values.indexOf(defValue));
+            }
+        );
+        //#endregion
+
+        //#region Outline mode
+        const lineModeRow = new Adw.SwitchRow({
+            title: _('Sketch Mode'),
+            subtitle: _('Only draw the outline'),
+        });
+        this.settings.bind('outline-mode', lineModeRow, 'active', Gio.SettingsBindFlags.DEFAULT);
+        eyeDrawerRow.add_row(lineModeRow);
+        //#endregion
+
+        //#region Eye line width
+        const lineWidthRow = new Adw.SpinRow({
+            title: _('Line Thickness'),
+            subtitle: _('Thickness of the strokes in sketch mode'),
+            adjustment: new Gtk.Adjustment({
+                lower: 0,
+                upper: 5,
+                step_increment: 0.1,
+            }),
+            digits: 1,
+        });
+        this.settings.bind('line-width', lineWidthRow, 'value', Gio.SettingsBindFlags.DEFAULT);
+        this.settings
+                .bind('outline-mode', lineWidthRow, 'sensitive', Gio.SettingsBindFlags.DEFAULT);
+        eyeDrawerRow.add_row(lineWidthRow);
+        //#endregion
+
+        //#region Colors
+        const colorDrawerRow = new Adw.ExpanderRow({title: _('Colors')});
+        eyeDrawerRow.add_row(colorDrawerRow);
+
+        const colorGridRow = new Adw.ActionRow({subtitle: _('Custom colors')});
+
+        const colorGrid = new Gtk.Grid({
+            column_spacing: 16,
+            halign: Gtk.Align.CENTER,
+            valign: Gtk.Align.CENTER,
+            row_spacing: 8,
+            margin_top: 12,
+            margin_bottom: 12,
+            margin_end: 36,
+        });
+
+        const colorDefs = [
+            {
+                label: _('Sclera'),
+                key: 'color-sclera',
+                enabledKey: 'color-sclera-enabled',
+            },
+            {
+                label: _('Pupil'),
+                key: 'color-pupil',
+            },
+            {
+                label: _('Iris'),
+                key: 'color-iris',
+                enabledKey: 'color-iris-enabled',
+            },
+            {
+                label: _('Eyelid'),
+                key: 'color-eyelid',
+            },
+        ];
+
+        colorDefs.forEach(({label, key, enabledKey}, i) => {
+            const col = i % 2;
+            const row = Math.floor(i / 2);
+
+            const lbl = new Gtk.Label({
+                label,
+                valign: Gtk.Align.CENTER,
+                halign: Gtk.Align.END,
+            });
+
+            const picker = enabledKey
+                ? new EyeColorPicker(this.settings, key, enabledKey)
+                : new EyeColorPicker(this.settings, key);
+
+            colorGrid.attach(lbl, col * 2, row * 2, 1, 1);
+            colorGrid.attach(picker, (col * 2) + 1, row * 2, 1, 1);
+
+            this.resetFunctions.push(() => picker.reset());
+        });
+
+        colorGridRow.add_suffix(colorGrid);
+        colorDrawerRow.add_row(colorGridRow);
+        //#endregion
+
+        //#region Reset
+        const resetRow = new EyeResetRow(
+            pgettext(
+                '%s is the eye ID number (e.g. 01)',
+                'Reset settings for Eye #%s?'
+            ).format(eyeID),
+            this.settings,
+            this.settings.settings_schema.list_keys(),
+            this.resetFunctions
+        );
+        eyeDrawerRow.add_row(resetRow);
+        //#endregion
+    }
+});
+//#endregion
+
 /**
  * A page displaying the eye settings.
  *
@@ -22,6 +231,8 @@ import {EyeColorPicker, EyeResetRow} from './prefsWidgets.js';
  */
 export const EyesPage = GObject.registerClass(
 class EyesPage extends Adw.PreferencesPage {
+    #eyeGroups = [];
+
     constructor(settings) {
         super({
             icon_name: 'view-reveal-symbolic',
@@ -47,238 +258,65 @@ class EyesPage extends Adw.PreferencesPage {
         globalGroup.add(countRow);
         //#endregion
 
-        //#region Rows creation
+        //#region Reset All
+        const resetRow = new Adw.ActionRow({
+            title: _('Reset Settings'),
+            activatable: true,
+            css_classes: ['error'],
+        });
+
+        resetRow.add_prefix(new Gtk.Image({icon_name: 'view-refresh-symbolic'}));
+        resetRow.get_child().set_halign(Gtk.Align.CENTER);
+        resetRow.get_child().add_css_class('heading');
+
+        const resetAlert = new Adw.AlertDialog({
+            heading: _('Reset all individual eye settings?'),
+            body: _('Any related customizations will be lost.'),
+        });
+
+        resetAlert.add_response('close', _('Cancel'));
+        resetAlert.add_response('reset', _('Reset'));
+        resetAlert.set_default_response('close');
+        resetAlert.set_response_appearance('reset', Adw.ResponseAppearance.DESTRUCTIVE);
+
+        resetAlert.connect('response::reset', () => {
+            // Reset eye groups
+            this.#eyeGroups.forEach((eyeGroup) => {
+                eyeGroup.resetFunctions.forEach((func) => func());
+                eyeGroup.settings.settings_schema.list_keys().forEach(
+                    (key) => eyeGroup.settings.reset(key)
+                );
+            });
+
+            // Reset count
+            settings.reset('eye-count');
+        });
+
+        resetRow.connect('activated', () => resetAlert.present(this));
+        globalGroup.add(resetRow);
+        //#endregion
+
+        //#region Eyes
         const eyeSchema = settings.get_child('eye').settings_schema;
         const eyeSchemaPathRoot = `${settings.settings_schema.get_path()}eyes/`;
 
-        let eyeGroups = this.#createEyeGroups(eyeSchema, eyeSchemaPathRoot, countRow.value);
+        this.#createEyeGroups(eyeSchema, eyeSchemaPathRoot, countRow.value);
 
-        countRow.adjustment.connect('value-changed', (widget) => {
-            eyeGroups.forEach((eyeGroup) => this.remove(eyeGroup));
-            eyeGroups = this.#createEyeGroups(eyeSchema, eyeSchemaPathRoot, widget.value);
-        });
+        countRow.adjustment.connect(
+            'value-changed',
+            (widget) => this.#createEyeGroups(eyeSchema, eyeSchemaPathRoot, widget.value)
+        );
         //#endregion
     }
 
-    //#region Eye group
+    //#region Create eye groups
     #createEyeGroups(schema, schemaPathRoot, count) {
-        const eyeGroupsArray = [];
+        this.#eyeGroups.forEach((eyeGroup) => this.remove(eyeGroup));
+        this.#eyeGroups.length = 0;
 
-        for (let i = 1; i <= count; i++) {
-            const eyeID = String(i).padStart(2, '0');
-            const eyeName = `eye-${eyeID}`;
-            const eyeSettings = new Gio.Settings({
-                settings_schema: schema,
-                path: `${schemaPathRoot}${eyeName}/`,
-            });
-            const eyeKeys = [];
-            const resetFunctions = [];
-
-            const eyeGroup = new Adw.PreferencesGroup();
-            const eyeDrawerRow = new Adw.ExpanderRow({
-                title: pgettext(
-                    '%s is the eye ID number (e.g. 01)',
-                    'Eye #%s'
-                ).format(eyeID),
-            });
-            eyeGroup.add(eyeDrawerRow);
-
-            //#region Position
-            eyeKeys.push('position');
-            const positionLabelList = new Gtk.StringList();
-            [_('Left'), _('Center'), _('Right')]
-            .forEach((position) => positionLabelList.append(position));
-
-            const positionRow = new Adw.ComboRow({
-                title: _('Position'),
-                subtitle: _('Where the eyes appear on the panel'),
-                model: positionLabelList,
-                selected: eyeSettings.get_enum('position'),
-            });
-            positionRow.connect('notify::selected', (widget) =>
-                eyeSettings.set_enum('position', widget.selected)
-            );
-            eyeDrawerRow.add_row(positionRow);
-
-            resetFunctions.push(
-                () => {
-                    const defValue = eyeSettings.get_default_value('position').deep_unpack();
-                    const values = ['left', 'center', 'right']; // Values from position enum in schema
-                    positionRow.set_selected(values.indexOf(defValue));
-                }
-            );
-            //#endregion
-
-            //#region Index
-            eyeKeys.push('index');
-            const indexRow = new Adw.SpinRow({
-                title: _('Index'),
-                subtitle: _('Order of the eyes among other items in the chosen panel section'),
-                adjustment: new Gtk.Adjustment({
-                    lower: -1,
-                    upper: 100,
-                    step_increment: 1,
-                }),
-            });
-            eyeSettings.bind('index', indexRow, 'value', Gio.SettingsBindFlags.DEFAULT);
-            eyeDrawerRow.add_row(indexRow);
-            //#endregion
-
-            //#region Width
-            eyeKeys.push('width');
-            const widthRow = new Adw.SpinRow({
-                title: _('Width'),
-                subtitle: _('Drawing space and padding around each eye'),
-                adjustment: new Gtk.Adjustment({
-                    lower: 20,
-                    upper: 200,
-                    step_increment: 1,
-                }),
-            });
-            eyeSettings.bind('width', widthRow, 'value', Gio.SettingsBindFlags.DEFAULT);
-            eyeDrawerRow.add_row(widthRow);
-            //#endregion
-
-            //#region Shape
-            eyeKeys.push('shape');
-            const shapeLabelList = new Gtk.StringList();
-            [_('Natural'), _('Round'), _('Comic')].forEach((shape) => shapeLabelList.append(shape));
-
-            const shapeRow = new Adw.ComboRow({
-                title: _('Shape'),
-                subtitle: _('Outline style used for the eyes'),
-                model: shapeLabelList,
-                selected: eyeSettings.get_enum('shape'),
-            });
-            shapeRow.connect('notify::selected', (widget) =>
-                eyeSettings.set_enum('shape', widget.selected)
-            );
-            eyeDrawerRow.add_row(shapeRow);
-
-            resetFunctions.push(
-                () => {
-                    const defValue = eyeSettings.get_default_value('shape').deep_unpack();
-                    const values = ['natural', 'round', 'comic']; // Values from shape enum in schema
-                    shapeRow.set_selected(values.indexOf(defValue));
-                }
-            );
-            //#endregion
-
-            //#region Outline mode
-            eyeKeys.push('outline-mode');
-            const lineModeRow = new Adw.SwitchRow({
-                title: _('Sketch Mode'),
-                subtitle: _('Only draw the outline'),
-            });
-            eyeSettings.bind('outline-mode', lineModeRow, 'active', Gio.SettingsBindFlags.DEFAULT);
-            eyeDrawerRow.add_row(lineModeRow);
-            //#endregion
-
-            //#region Eye line width
-            eyeKeys.push('line-width');
-            const lineWidthRow = new Adw.SpinRow({
-                title: _('Line Thickness'),
-                subtitle: _('Thickness of the strokes in sketch mode'),
-                adjustment: new Gtk.Adjustment({
-                    lower: 0,
-                    upper: 5,
-                    step_increment: 0.1,
-                }),
-                digits: 1,
-            });
-            eyeSettings.bind('line-width', lineWidthRow, 'value', Gio.SettingsBindFlags.DEFAULT);
-            eyeSettings
-                .bind('outline-mode', lineWidthRow, 'sensitive', Gio.SettingsBindFlags.DEFAULT);
-            eyeDrawerRow.add_row(lineWidthRow);
-            //#endregion
-
-            //#region Colors
-            const colorDrawerRow = new Adw.ExpanderRow({title: _('Colors')});
-            eyeDrawerRow.add_row(colorDrawerRow);
-
-            [
-                'color-sclera',
-                'color-sclera-enabled',
-                'color-iris',
-                'color-iris-enabled',
-                'color-pupil',
-                'color-eyelid',
-            ].forEach((key) => eyeKeys.push(key));
-
-            const colorGridRow = new Adw.ActionRow({subtitle: _('Custom colors')});
-
-            const colorGrid = new Gtk.Grid({
-                column_spacing: 16,
-                halign: Gtk.Align.CENTER,
-                valign: Gtk.Align.CENTER,
-                row_spacing: 8,
-                margin_top: 12,
-                margin_bottom: 12,
-                margin_end: 36,
-            });
-
-            const colorDefs = [
-                {
-                    label: _('Sclera'),
-                    key: 'color-sclera',
-                    enabledKey: 'color-sclera-enabled',
-                },
-                {
-                    label: _('Pupil'),
-                    key: 'color-pupil',
-                },
-                {
-                    label: _('Iris'),
-                    key: 'color-iris',
-                    enabledKey: 'color-iris-enabled',
-                },
-                {
-                    label: _('Eyelid'),
-                    key: 'color-eyelid',
-                },
-            ];
-
-            colorDefs.forEach(({label, key, enabledKey}, i) => {
-                const col = i % 2;
-                const row = Math.floor(i / 2);
-
-                const lbl = new Gtk.Label({
-                    label,
-                    valign: Gtk.Align.CENTER,
-                    halign: Gtk.Align.END,
-                });
-
-                const picker = enabledKey
-                    ? new EyeColorPicker(eyeSettings, key, enabledKey)
-                    : new EyeColorPicker(eyeSettings, key);
-
-                colorGrid.attach(lbl, col * 2, row * 2, 1, 1);
-                colorGrid.attach(picker, (col * 2) + 1, row * 2, 1, 1);
-
-                resetFunctions.push(() => picker.reset());
-            });
-
-            colorGridRow.add_suffix(colorGrid);
-            colorDrawerRow.add_row(colorGridRow);
-            //#endregion
-
-            //#region Reset
-            const resetRow = new EyeResetRow(
-                pgettext(
-                    '%s is the eye ID number (e.g. 01)',
-                    'Reset settings for eye #%s?'
-                ).format(eyeID),
-                eyeSettings,
-                eyeKeys,
-                resetFunctions
-            );
-            eyeDrawerRow.add_row(resetRow);
-            //#endregion
-
-            this.add(eyeGroup);
-            eyeGroupsArray.push(eyeGroup);
-        }
-        return eyeGroupsArray;
+        for (let i = 1; i <= count; i++)
+            this.#eyeGroups.push(new EyeSettingsGroup(schema, schemaPathRoot, i));
+        this.#eyeGroups.forEach((eyeGroup) => this.add(eyeGroup));
     }
     //#endregion
 });
