@@ -75,7 +75,7 @@ class EyeAboutRow extends Adw.ActionRow {
             _('Extension Page'),
             'https://extensions.gnome.org/extension/7036/eye-on-cursor/'
         );
-        aboutWindow.add_link(_('Donate'), 'https://www.paypal.com/paypalme/djinnalexio');
+        aboutWindow.add_link(_('Donate'), 'https://github.com/sponsors/djinnalexio');
         aboutWindow.add_acknowledgement_section(
             _('Forked from'),
             ['Eye and Mouse Extended https://extensions.gnome.org/extension/3139/eye-extended/']
