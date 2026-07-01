@@ -102,6 +102,9 @@ class TrackerManager extends GObject.Object {
         this.#opacity = this.#settings.get_int('tracker-opacity');
         this.#refreshRate = this.#settings.get_int('tracker-refresh-rate');
 
+        const {red, green, blue} = extension.themeColor;
+        this.#color.theme = red && green && blue ? `rgb(${red},${green},${blue})` : null;
+
         // Connect change in settings to update method
         TRACKER_SETTINGS.forEach(
             (key) => this.#settings.connectObject(
@@ -133,14 +136,14 @@ class TrackerManager extends GObject.Object {
         }
 
         // Create tracker icons files in cache based on the initial settings
-        this.#updateCacheTrackers(this.#shape, [
+        this.#updateCachedTrackers(this.#shape, [
             this.#color.main,
             this.#color.left,
             this.#color.middle,
             this.#color.right,
-        ]);
-
-        this.onThemeChanged(extension.themeColor);
+            this.#color.theme,
+        ]).then(() => this.#updateTrackerIcon(this.#shape, this.#resolveMainColor()))
+            .catch((e) => console.error(`Eye on Cursor: Failed to cache trackers: ${e}`));
 
         // Connect toggle tracker shortcut
         Main.wm.addKeybinding(
@@ -166,34 +169,20 @@ class TrackerManager extends GObject.Object {
             this.#mouseListener.register('mouse');
         }
     }
-
-    onThemeChanged(themeColor) {
-        if (themeColor) {
-            this.#color.theme = `rgb(${themeColor.red},${themeColor.green},${themeColor.blue})`;
-            this.#updateCacheTrackers(this.#shape, [this.#color.theme]);
-        } else {
-            this.#color.theme = null;
-        }
-
-        this.#updateTrackerIcon(this.#shape, this.#resolveMainColor());
-    }
-
-    #resolveMainColor() {
-        return !this.#color.useCustomMain && this.#color.theme
-            ? this.#color.theme
-            : this.#color.main;
-    }
     //#endregion
 
-    //#region Cache icons methods
+    //#region Icon methods
     // Create cached tracker icons for a given shape and array of colors
-    async #updateCacheTrackers(shape, colorArray) {
+    async #updateCachedTrackers(shape, colorArray) {
         const tasks = colorArray.map(async (color) => {
+            if (!color)
+                return;
+
             // Get the cached tracker icon file for this shape and color
             const colorTag = color.replace(/[^\d,]/g, '');
-            const cacheIconPath =
+            const cachedIconPath =
                 GLib.build_filenamev([this.#cacheDir, `${shape}_${colorTag}.svg`]);
-            const cacheIcon = Gio.File.new_for_path(cacheIconPath);
+            const cachedIcon = Gio.File.new_for_path(cachedIconPath);
 
             // Get template shape
             const templatePath = GLib.build_filenamev([this.#trackersDir, `${shape}.svg`]);
@@ -214,7 +203,7 @@ class TrackerManager extends GObject.Object {
             const encodedContents = encoder.encode(decodedContents);
 
             // Fill cached icon file with modified contents
-            await cacheIcon.replace_contents_async(
+            await cachedIcon.replace_contents_async(
                 encodedContents,
                 null,
                 false,
@@ -234,6 +223,21 @@ class TrackerManager extends GObject.Object {
         this.emit('color-changed');
     }
 
+    #resolveMainColor() {
+        return !this.#color.useCustomMain && this.#color.theme
+            ? this.#color.theme
+            : this.#color.main;
+    }
+
+    onThemeChanged(themeColor) {
+        this.#color.theme = themeColor.red && themeColor.green && themeColor.blue
+            ? `rgb(${themeColor.red},${themeColor.green},${themeColor.blue})`
+            : null;
+
+        this.#updateCachedTrackers(this.#shape, [this.#color.theme])
+            .then(() => this.#updateTrackerIcon(this.#shape, this.#resolveMainColor()))
+            .catch((e) => console.error(`Eye on Cursor: Failed to cache theme tracker: ${e}`));
+    }
     //#endregion
 
     //#region Position updater
@@ -298,7 +302,7 @@ class TrackerManager extends GObject.Object {
     }
     //#endregion
 
-    //#region Button Press methods
+    //#region Button press methods
     // Button press method
     #handleMouseButtonPress(button) {
         switch (button) {
@@ -459,16 +463,13 @@ class TrackerManager extends GObject.Object {
             this.#color.middle = newColorMiddle;
             this.#color.right = newColorRight;
 
-            await this.#updateCacheTrackers(this.#shape, [
+            await this.#updateCachedTrackers(this.#shape, [
                 this.#color.main,
                 this.#color.left,
                 this.#color.middle,
                 this.#color.right,
+                this.#color.theme,
             ]);
-
-            if (this.#color.theme)
-                await this.#updateCacheTrackers(this.#shape, [this.#color.theme]);
-
             this.#updateTrackerIcon(this.#shape, this.#resolveMainColor());
         }
 
