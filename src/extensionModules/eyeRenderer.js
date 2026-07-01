@@ -22,15 +22,15 @@ const COMIC_EYE_SCALE_Y = 1;
  */
 export function drawEye(area, options) {
     switch (options.shape) {
-        case 'natural':
-            drawNaturalEye(area, options);
-            break;
         case 'round':
             drawRoundEye(area, options);
             break;
         case 'comic':
-        default:
             drawRoundEye(area, options, COMIC_EYE_SCALE_X, COMIC_EYE_SCALE_Y);
+            break;
+        case 'natural':
+        default:
+            drawNaturalEye(area, options);
             break;
     }
 }
