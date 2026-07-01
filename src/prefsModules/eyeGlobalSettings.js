@@ -23,34 +23,34 @@ class EyeGlobalPage extends Adw.PreferencesPage {
     constructor(settings) {
         super({
             icon_name: 'preferences-system-symbolic',
-            name: 'global',
-            title: _('Global'),
+            name: 'overview',
+            title: _('Overview'),
         });
         const globalKeys = [];
         const resetFunctions = [];
 
-        //#region Global
-        const globalGroup = new Adw.PreferencesGroup({title: _('Global')});
-        this.add(globalGroup);
+        //#region General
+        const generalGroup = new Adw.PreferencesGroup({title: _('General')});
+        this.add(generalGroup);
 
         //#region Eye status
         globalKeys.push('eye-enabled');
         const activeRow = new Adw.SwitchRow({
             title: _('Show Eyes'),
-            subtitle: _('Enables the eyes on the panel'),
+            subtitle: _('Show eyes on the panel'),
         });
         settings.bind('eye-enabled', activeRow, 'active', Gio.SettingsBindFlags.DEFAULT);
-        globalGroup.add(activeRow);
+        generalGroup.add(activeRow);
         //#endregion
 
         //#region Eye reactivity
         globalKeys.push('eye-reactive');
         const reactiveRow = new Adw.SwitchRow({
-            title: _('Menu'),
-            subtitle: _('Enables the right-click menu for the eyes'),
+            title: _('Context Menu'),
+            subtitle: _('Click menu for the eyes'),
         });
         settings.bind('eye-reactive', reactiveRow, 'active', Gio.SettingsBindFlags.DEFAULT);
-        globalGroup.add(reactiveRow);
+        generalGroup.add(reactiveRow);
         //#endregion
 
         //#region Eye refresh rate
@@ -65,8 +65,8 @@ class EyeGlobalPage extends Adw.PreferencesPage {
             }),
         });
         settings.bind('eye-refresh-rate', refreshRow, 'value', Gio.SettingsBindFlags.DEFAULT);
-        refreshRow.set_tooltip_text(_('Higher refresh rates may impact performance.'));
-        globalGroup.add(refreshRow);
+        refreshRow.set_tooltip_text(_('Higher refresh rates may impact performance'));
+        generalGroup.add(refreshRow);
         //#endregion
         //#endregion
 
@@ -135,7 +135,7 @@ class EyeGlobalPage extends Adw.PreferencesPage {
         globalKeys.push('eye-blink-interval-range');
         const blinkIntervalRangeRow = new Adw.ActionRow({
             title: _('Blink Interval Range'),
-            subtitle: _('Minimum and maximum time between blinks in seconds'),
+            subtitle: _('Minimum and maximum time between blinks, in seconds'),
         });
 
         const blinkIntervalRange = settings
@@ -221,7 +221,7 @@ class EyeGlobalPage extends Adw.PreferencesPage {
         this.add(resetGroup);
 
         const resetRow = new EyeResetRow(
-            _('Reset global eye settings?'),
+            _('Reset Global Eye Settings?'),
             settings,
             globalKeys,
             resetFunctions

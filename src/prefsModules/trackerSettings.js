@@ -62,7 +62,7 @@ class TrackerPage extends Adw.PreferencesPage {
 
         const shapeRow = new Adw.ActionRow({
             title: _('Shape'),
-            subtitle: _('Icon used for the tracker'),
+            subtitle: _('Tracker icon shape'),
             activatable: true,
         });
 
@@ -177,8 +177,8 @@ class TrackerPage extends Adw.PreferencesPage {
 
         //#region Tracker click colors
         const colorClickRow = new Adw.ActionRow({
-            title: _('Colors on Click'),
-            subtitle: _('Per-button click colors: left, middle, right'),
+            title: _('Click Colors'),
+            subtitle: _('Colors for left, middle, and right clicks'),
         });
 
         const colorClickPickers =
@@ -202,7 +202,7 @@ class TrackerPage extends Adw.PreferencesPage {
         trackerKeys.push('tracker-opacity');
         const opacityRow = new Adw.SpinRow({
             title: _('Opacity'),
-            subtitle: _('How transparent the tracker is'),
+            subtitle: _('Opacity level of the tracker'),
             adjustment: new Gtk.Adjustment({
                 lower: 0,
                 upper: 100,
@@ -225,7 +225,7 @@ class TrackerPage extends Adw.PreferencesPage {
             }),
         });
         settings.bind('tracker-refresh-rate', refreshRow, 'value', Gio.SettingsBindFlags.DEFAULT);
-        refreshRow.set_tooltip_text(_('Higher refresh rates may impact performance.'));
+        refreshRow.set_tooltip_text(_('Higher refresh rates may impact performance'));
         drawingGroup.add(refreshRow);
         //#endregion
         //#endregion

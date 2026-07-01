@@ -46,9 +46,9 @@ class EyeSettingsGroup extends Adw.PreferencesGroup {
 
         //#region Label
         const nicknameEntry = new Gtk.Entry({
-            placeholder_text: 'Label',
+            placeholder_text: 'Name',
             valign: Gtk.Align.CENTER,
-            max_width_chars: 64,
+            max_width_chars: 32,
             buffer: new Gtk.EntryBuffer({text: this.settings.get_string('label')}),
         });
         this.settings.bind('label', nicknameEntry.buffer, 'text', Gio.SettingsBindFlags.DEFAULT);
@@ -58,7 +58,7 @@ class EyeSettingsGroup extends Adw.PreferencesGroup {
         //#region Status
         const activeRow = new Adw.SwitchRow({
             title: _('Show Eye'),
-            subtitle: _('Make the eye visible on the panel'),
+            subtitle: _('Show this eye on the panel'),
         });
         this.settings.bind('enabled', activeRow, 'active', Gio.SettingsBindFlags.DEFAULT);
         eyeDrawerRow.add_row(activeRow);
@@ -71,7 +71,7 @@ class EyeSettingsGroup extends Adw.PreferencesGroup {
 
         const positionRow = new Adw.ComboRow({
             title: _('Position'),
-            subtitle: _('Where the eyes appear on the panel'),
+            subtitle: _('Where this eye appears on the panel'),
             model: positionLabelList,
             selected: this.settings.get_enum('position'),
         });
@@ -91,8 +91,8 @@ class EyeSettingsGroup extends Adw.PreferencesGroup {
 
         //#region Index
         const indexRow = new Adw.SpinRow({
-            title: _('Index'),
-            subtitle: _('Order of the eyes among other items in the chosen panel section'),
+            title: _('Order'),
+            subtitle: _('Position among other items in the same panel section'),
             adjustment: new Gtk.Adjustment({
                 lower: -1,
                 upper: 100,
@@ -106,7 +106,7 @@ class EyeSettingsGroup extends Adw.PreferencesGroup {
         //#region Width
         const widthRow = new Adw.SpinRow({
             title: _('Width'),
-            subtitle: _('Drawing space and padding around each eye'),
+            subtitle: _('Width of the eye area'),
             adjustment: new Gtk.Adjustment({
                 lower: 20,
                 upper: 200,
@@ -123,7 +123,7 @@ class EyeSettingsGroup extends Adw.PreferencesGroup {
 
         const shapeRow = new Adw.ComboRow({
             title: _('Shape'),
-            subtitle: _('Outline style used for the eyes'),
+            subtitle: _('Eye outline style'),
             model: shapeLabelList,
             selected: this.settings.get_enum('shape'),
         });
@@ -171,7 +171,7 @@ class EyeSettingsGroup extends Adw.PreferencesGroup {
         const colorDrawerRow = new Adw.ExpanderRow({title: _('Colors')});
         eyeDrawerRow.add_row(colorDrawerRow);
 
-        const colorGridRow = new Adw.ActionRow({subtitle: _('Custom colors')});
+        const colorGridRow = new Adw.ActionRow({title: _('Custom colors')});
 
         const colorGrid = new Gtk.Grid({
             column_spacing: 16,
@@ -180,7 +180,6 @@ class EyeSettingsGroup extends Adw.PreferencesGroup {
             row_spacing: 8,
             margin_top: 12,
             margin_bottom: 12,
-            margin_end: 36,
         });
 
         const colorDefs = [
@@ -232,7 +231,7 @@ class EyeSettingsGroup extends Adw.PreferencesGroup {
         const resetRow = new EyeResetRow(
             pgettext(
                 '%s is the eye ID number (e.g. 01)',
-                'Reset settings for Eye #%s?'
+                'Reset Eye #%s Settings?'
             ).format(eyeID),
             this.settings,
             this.settings.settings_schema.list_keys(),
@@ -266,7 +265,7 @@ class EyesPage extends Adw.PreferencesPage {
 
         const countRow = new Adw.SpinRow({
             title: _('Count'),
-            subtitle: _('Number of eyes to display'),
+            subtitle: _('Number of eyes shown on the panel'),
             adjustment: new Gtk.Adjustment({
                 lower: 1,
                 upper: 99,
@@ -274,13 +273,13 @@ class EyesPage extends Adw.PreferencesPage {
             }),
         });
         settings.bind('eye-count', countRow, 'value', Gio.SettingsBindFlags.DEFAULT);
-        countRow.set_tooltip_text(_('Displaying more eyes may impact performance.'));
+        countRow.set_tooltip_text(_('Displaying more eyes may impact performance'));
         globalGroup.add(countRow);
         //#endregion
 
         //#region Reset All
         const resetRow = new Adw.ActionRow({
-            title: _('Reset Settings'),
+            title: _('Reset…'),
             activatable: true,
             css_classes: ['error'],
         });
@@ -290,8 +289,8 @@ class EyesPage extends Adw.PreferencesPage {
         resetRow.get_child().add_css_class('heading');
 
         const resetAlert = new Adw.AlertDialog({
-            heading: _('Reset all individual eye settings?'),
-            body: _('Any related customizations will be lost.'),
+            heading: _('Reset All Eye Settings?'),
+            body: _('All customizations in this section will be lost'),
         });
 
         resetAlert.add_response('close', _('Cancel'));

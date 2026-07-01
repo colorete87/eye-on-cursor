@@ -68,7 +68,7 @@
     <key name='tracker-color-main-enabled' type='b'>
       <default>false</default>
       <summary>Custom color state of the tracker</summary>
-      <description>Indicates whether the tracker uses a custom color instead of the theme color.</description>
+      <description>Indicates whether the tracker uses the custom color instead of the theme color.</description>
     </key>
     <key name='tracker-color-main' type='s'>
       <default>'rgb(255,255,0)'</default>

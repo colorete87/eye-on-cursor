@@ -270,7 +270,7 @@ export const EyeResetRow = GObject.registerClass(
 class EyeResetRow extends Adw.ActionRow {
     constructor(heading, settings, keys, resetFunctions) {
         super({
-            title: _('Reset Settings'),
+            title: _('Reset…'),
             activatable: true,
             css_classes: ['error'],
         });
@@ -281,7 +281,7 @@ class EyeResetRow extends Adw.ActionRow {
 
         const resetAlert = new Adw.AlertDialog({
             heading,
-            body: _('Any related customizations will be lost.'),
+            body: _('All customizations in this section will be lost'),
         });
 
         resetAlert.add_response('close', _('Cancel'));
