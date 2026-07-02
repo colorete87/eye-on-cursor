@@ -112,14 +112,12 @@ class EyeGlobalPage extends Adw.PreferencesPage {
         );
         blinkGroup.add(blinkModeRow);
 
-        resetFunctions.push(
-            () => {
-                const defValue = settings.get_default_value('eye-blink-mode').deep_unpack();
-                blinkModeRow.set_selected(blinkModeOptions.findIndex(
-                    (option) => option.nick === defValue
-                ));
-            }
-        );
+        resetFunctions.push(() => {
+            const defValue = settings.get_default_value('eye-blink-mode').deep_unpack();
+            blinkModeRow.set_selected(blinkModeOptions.findIndex(
+                (option) => option.nick === defValue
+            ));
+        });
         //#endregion
 
         //#region Blink interval
@@ -174,30 +172,28 @@ class EyeGlobalPage extends Adw.PreferencesPage {
             value: blinkIntervalRange[1],
         });
 
-        minIntervalButton.connect('value-changed',
-            () => {
-                // Update the minimum value of the max interval
-                maxIntervalButton.adjustment.set_lower(minIntervalButton.get_value() + MIN_GAP);
+        minIntervalButton.connect('value-changed', () => {
+            // Update the minimum value of the max interval
+            maxIntervalButton.adjustment.set_lower(minIntervalButton.get_value() + MIN_GAP);
 
-                settings.set_value(
-                    'eye-blink-interval-range',
-                    new GLib.Variant(
-                        'ad',
-                        [minIntervalButton.get_value(), maxIntervalButton.get_value()])
-                );
-            });
-        maxIntervalButton.connect('value-changed',
-            () => {
-                // Update the maximum value of the min interval
-                minIntervalButton.adjustment.set_upper(maxIntervalButton.get_value() - MIN_GAP);
+            settings.set_value(
+                'eye-blink-interval-range',
+                new GLib.Variant(
+                    'ad',
+                    [minIntervalButton.get_value(), maxIntervalButton.get_value()])
+            );
+        });
+        maxIntervalButton.connect('value-changed', () => {
+            // Update the maximum value of the min interval
+            minIntervalButton.adjustment.set_upper(maxIntervalButton.get_value() - MIN_GAP);
 
-                settings.set_value(
-                    'eye-blink-interval-range',
-                    new GLib.Variant(
-                        'ad',
-                        [minIntervalButton.get_value(), maxIntervalButton.get_value()])
-                );
-            });
+            settings.set_value(
+                'eye-blink-interval-range',
+                new GLib.Variant(
+                    'ad',
+                    [minIntervalButton.get_value(), maxIntervalButton.get_value()])
+            );
+        });
 
         const box = new Gtk.Box({
             orientation: Gtk.Orientation.VERTICAL,

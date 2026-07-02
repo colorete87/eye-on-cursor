@@ -410,14 +410,11 @@ class TrackerManager extends GObject.Object {
     #handleClickRelease(button) {
         // Debounce the release event
         this.#clickReleaseTimeout = clearTimeout(this.#clickReleaseTimeout);
-        this.#clickReleaseTimeout = setTimeout(
-            () => {
-                // Only reset if no new click event has occurred in the meantime
-                if (this.#activeClick === button && this.#clickResetPending)
-                    this.#resetColor();
-            },
-            CLICK_MIN_DEBOUNCE
-        );
+        this.#clickReleaseTimeout = setTimeout(() => {
+            // Only reset if no new click event has occurred in the meantime
+            if (this.#activeClick === button && this.#clickResetPending)
+                this.#resetColor();
+        }, CLICK_MIN_DEBOUNCE);
         this.#clickResetPending = true;
     }
 

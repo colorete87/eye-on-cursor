@@ -93,14 +93,12 @@ class EyeSettingsGroup extends Adw.PreferencesGroup {
         );
         eyeDrawerRow.add_row(positionRow);
 
-        this.resetFunctions.push(
-            () => {
-                const defValue = this.settings.get_default_value('position').deep_unpack();
-                positionRow.set_selected(positionOptions.findIndex(
-                    (option) => option.nick === defValue
-                ));
-            }
-        );
+        this.resetFunctions.push(() => {
+            const defValue = this.settings.get_default_value('position').deep_unpack();
+            positionRow.set_selected(positionOptions.findIndex(
+                (option) => option.nick === defValue
+            ));
+        });
         //#endregion
 
         //#region Index
@@ -160,12 +158,10 @@ class EyeSettingsGroup extends Adw.PreferencesGroup {
         );
         eyeDrawerRow.add_row(shapeRow);
 
-        this.resetFunctions.push(
-            () => {
-                const defValue = this.settings.get_default_value('shape').deep_unpack();
-                shapeRow.set_selected(shapeOptions.findIndex((option) => option.nick === defValue));
-            }
-        );
+        this.resetFunctions.push(() => {
+            const defValue = this.settings.get_default_value('shape').deep_unpack();
+            shapeRow.set_selected(shapeOptions.findIndex((option) => option.nick === defValue));
+        });
         //#endregion
 
         //#region Outline mode
