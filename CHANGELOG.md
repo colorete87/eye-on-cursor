@@ -28,9 +28,18 @@ bash tools/make_version_tag.sh
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-07-02
+
+### Added
+
+- Per-eye configuration (position, appearance)"
+- Custom colors for sclera and pupil
+- **Click** and **Synced Random** blink modes
+- Support for accent color from custom themes
+
 ### Changed
 
-- Tracker setting icon
+- Some default settings and value ranges
 
 ## [2.4.1] - 2026-05-11
 
@@ -179,7 +188,8 @@ bash tools/make_version_tag.sh
 
 Forked from [Eye and Mouse Extended][eye-and-mouse-extended] by [Alexey Lovchikov][alexey-lovchikov].
 
-[unreleased]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/compare/v2.4.1...HEAD
+[unreleased]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/compare/v3.0.0...HEAD
+[3.0.0]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/compare/v2.4.1...v3.0.0
 [2.4.1]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/compare/v2.2.1...v2.4.1
 [2.2.1]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/compare/v2.1.1...v2.2.1
 [2.1.1]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/compare/v2.1.0...v2.1.1

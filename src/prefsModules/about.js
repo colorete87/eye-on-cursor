@@ -27,8 +27,19 @@ const developerName = 'Djinn Alexio';
 const issueUrl = 'https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/issues';
 // The string for `release_notes` supports paragraphs <p>, emphasis (italics) <em>, code <code>,
 // and ordered <ol> and unordered <ul> lists with <li> list items.
-const releaseNotes =
-    '';
+const releaseNotes = `
+<p>Added</p>
+<ul>
+    <li>Per-eye configuration (position, appearance)"</li>
+    <li>Custom colors for sclera and pupil</li>
+    <li><em>Click</em> and <em>Synced Random</em> blink modes</li>
+    <li>Support for accent color from custom themes</li>
+</ul>
+<p>Changed</p>
+<ul>
+    <li>Some default settings and value ranges</li>
+</ul>
+`;
 const supportUrl = '';
 //#endregion
 
