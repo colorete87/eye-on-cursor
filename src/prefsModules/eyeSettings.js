@@ -48,7 +48,7 @@ class EyeSettingsGroup extends Adw.PreferencesGroup {
         const nicknameEntry = new Gtk.Entry({
             placeholder_text: 'Name',
             valign: Gtk.Align.CENTER,
-            max_width_chars: 32,
+            max_width_chars: 24,
             buffer: new Gtk.EntryBuffer({text: this.settings.get_string('label')}),
         });
         this.settings.bind('label', nicknameEntry.buffer, 'text', Gio.SettingsBindFlags.DEFAULT);
