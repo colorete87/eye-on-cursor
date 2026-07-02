@@ -65,9 +65,22 @@ class EyeSettingsGroup extends Adw.PreferencesGroup {
         //#endregion
 
         //#region Position
+        const positionOptions = [
+            {
+                label: _('Left'),
+                nick: 'left',
+            },
+            {
+                label: _('Center'),
+                nick: 'center',
+            },
+            {
+                label: _('Right'),
+                nick: 'right',
+            },
+        ];
         const positionLabelList = new Gtk.StringList();
-        [_('Left'), _('Center'), _('Right')]
-            .forEach((position) => positionLabelList.append(position));
+        positionOptions.forEach((option) => positionLabelList.append(option.label));
 
         const positionRow = new Adw.ComboRow({
             title: _('Position'),
@@ -83,8 +96,9 @@ class EyeSettingsGroup extends Adw.PreferencesGroup {
         this.resetFunctions.push(
             () => {
                 const defValue = this.settings.get_default_value('position').deep_unpack();
-                const values = ['left', 'center', 'right']; // Values from position enum in schema
-                positionRow.set_selected(values.indexOf(defValue));
+                positionRow.set_selected(positionOptions.findIndex(
+                    (option) => option.nick === defValue
+                ));
             }
         );
         //#endregion
@@ -118,8 +132,22 @@ class EyeSettingsGroup extends Adw.PreferencesGroup {
         //#endregion
 
         //#region Shape
+        const shapeOptions = [
+            {
+                label: _('Natural'),
+                nick: 'natural',
+            },
+            {
+                label: _('Round'),
+                nick: 'round',
+            },
+            {
+                label: _('Comic'),
+                nick: 'comic',
+            },
+        ];
         const shapeLabelList = new Gtk.StringList();
-        [_('Natural'), _('Round'), _('Comic')].forEach((shape) => shapeLabelList.append(shape));
+        shapeOptions.forEach((option) => shapeLabelList.append(option.label));
 
         const shapeRow = new Adw.ComboRow({
             title: _('Shape'),
@@ -135,8 +163,7 @@ class EyeSettingsGroup extends Adw.PreferencesGroup {
         this.resetFunctions.push(
             () => {
                 const defValue = this.settings.get_default_value('shape').deep_unpack();
-                const values = ['natural', 'round', 'comic']; // Values from shape enum in schema
-                shapeRow.set_selected(values.indexOf(defValue));
+                shapeRow.set_selected(shapeOptions.findIndex((option) => option.nick === defValue));
             }
         );
         //#endregion

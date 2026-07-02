@@ -76,19 +76,31 @@ class EyeGlobalPage extends Adw.PreferencesPage {
 
         //#region Blink mode
         globalKeys.push('eye-blink-mode');
-        const blinkModeList = new Gtk.StringList();
-        [
-            _('None'),
-            _('Click'),
-            _('Fixed'),
-            _('Random'),
-        ].forEach((mode) => blinkModeList.append(mode));
+        const blinkModeOptions = [
+            {
+                label: _('None'),
+                nick: 'none',
+            },
+            {
+                label: _('Click'),
+                nick: 'click',
+            },
+            {
+                label: _('Fixed'),
+                nick: 'fixed',
+            },
+            {
+                label: _('Random'),
+                nick: 'random',
+            },
+        ];
+        const blinkModeLabelList = new Gtk.StringList();
+        blinkModeOptions.forEach((option) => blinkModeLabelList.append(option.label));
 
-        // Each option enables the corresponding row
         const blinkModeRow = new Adw.ComboRow({
             title: _('Blink Mode'),
             subtitle: _('How blinking is triggered'),
-            model: blinkModeList,
+            model: blinkModeLabelList,
             selected: settings.get_enum('eye-blink-mode'),
         });
         blinkModeRow.connect('notify::selected', (widget) =>
@@ -99,13 +111,9 @@ class EyeGlobalPage extends Adw.PreferencesPage {
         resetFunctions.push(
             () => {
                 const defValue = settings.get_default_value('eye-blink-mode').deep_unpack();
-                const values = [
-                    'none',
-                    'click',
-                    'fixed',
-                    'random',
-                ];// Values from eye-blink-mode enum in schema
-                blinkModeRow.set_selected(values.indexOf(defValue));
+                blinkModeRow.set_selected(blinkModeOptions.findIndex(
+                    (option) => option.nick === defValue
+                ));
             }
         );
         //#endregion
