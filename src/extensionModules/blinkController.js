@@ -17,11 +17,12 @@ export class BlinkController {
     #eyeArray;
     #mouseTracker;
 
-    #fixedRoutine;
     #blinkChangeDelay;
-    #blinkMode;
     #blinkInterval;
     #blinkIntervalRange;
+    #blinkMode;
+    #fixedRoutine;
+    #randomSyncTimeout;
 
     //#region Constructor
     constructor(settings, eyeArray, mouseTracker) {
@@ -97,13 +98,22 @@ export class BlinkController {
             this.#blinkIntervalRange[0] +
             ((this.#blinkIntervalRange[1] - this.#blinkIntervalRange[0]) * Math.random());
 
-        eye.randomBlinkTimeout = setTimeout(
-            () => {
-                eye.blink();
-                this.#scheduleNextBlink(eye);
-            },
-            1000 * interval
-        );
+        eye.randomBlinkTimeout = setTimeout(() => {
+            eye.blink();
+            this.#scheduleNextBlink(eye);
+        }, 1000 * interval);
+    }
+
+    #scheduleNextSyncBlink() {
+        // Calculate a random interval to next blink
+        const interval =
+            this.#blinkIntervalRange[0] +
+        ((this.#blinkIntervalRange[1] - this.#blinkIntervalRange[0]) * Math.random());
+
+        return setTimeout(() => {
+            this.#blinkAll();
+            this.#randomSyncTimeout = this.#scheduleNextSyncBlink();
+        }, 1000 * interval);
     }
     //#endregion
 
@@ -127,6 +137,9 @@ export class BlinkController {
                 case 'random':
                     this.#startRandomBlink();
                     break;
+                case 'unsynced':
+                    this.#startUnsyncedBlink();
+                    break;
                 case 'none':
                 default:
                     break;
@@ -146,6 +159,9 @@ export class BlinkController {
                 break;
             case 'random':
                 this.#stopRandomBlink();
+                break;
+            case 'unsynced':
+                this.#stopUnsyncedBlink();
                 break;
             case 'none':
             default:
@@ -176,10 +192,20 @@ export class BlinkController {
 
     //#region Random mode
     #startRandomBlink() {
-        this.#eyeArray.forEach((eye) => this.#scheduleNextBlink(eye));
+        this.#randomSyncTimeout = this.#scheduleNextSyncBlink();
     }
 
     #stopRandomBlink() {
+        this.#randomSyncTimeout = clearTimeout(this.#randomSyncTimeout);
+    }
+    //#endregion
+
+    //#region Unsynced mode
+    #startUnsyncedBlink() {
+        this.#eyeArray.forEach((eye) => this.#scheduleNextBlink(eye));
+    }
+
+    #stopUnsyncedBlink() {
         this.#eyeArray.forEach((eye) => {
             eye.randomBlinkTimeout = clearTimeout(eye.randomBlinkTimeout);
         });

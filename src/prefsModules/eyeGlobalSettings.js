@@ -93,6 +93,10 @@ class EyeGlobalPage extends Adw.PreferencesPage {
                 label: _('Random'),
                 nick: 'random',
             },
+            {
+                label: _('Unsynced'),
+                nick: 'unsynced',
+            },
         ];
         const blinkModeLabelList = new Gtk.StringList();
         blinkModeOptions.forEach((option) => blinkModeLabelList.append(option.label));
@@ -219,9 +223,19 @@ class EyeGlobalPage extends Adw.PreferencesPage {
         //#endregion
         //#endregion
 
-        this.onBlinkModeChanged(blinkIntervalRow, blinkIntervalRangeRow, blinkModeRow);
+        this.onBlinkModeChanged(
+            blinkModeOptions,
+            blinkModeRow,
+            blinkIntervalRow,
+            blinkIntervalRangeRow
+        );
         blinkModeRow.connect('notify::selected', (widget) =>
-            this.onBlinkModeChanged(blinkIntervalRow, blinkIntervalRangeRow, widget)
+            this.onBlinkModeChanged(
+                blinkModeOptions,
+                widget,
+                blinkIntervalRow,
+                blinkIntervalRangeRow
+            )
         );
 
         //#region Reset
@@ -238,21 +252,17 @@ class EyeGlobalPage extends Adw.PreferencesPage {
         //#endregion
     }
 
-    onBlinkModeChanged(blinkIntervalRow, blinkIntervalRangeRow, widget) {
+    onBlinkModeChanged(options, modeRow, blinkIntervalRow, blinkIntervalRangeRow) {
         blinkIntervalRow.set_sensitive(false);
         blinkIntervalRangeRow.set_sensitive(false);
 
-        const values = [
-            'none',
-            'click',
-            'fixed',
-            'random',
-        ];// Values from eye-blink-mode enum in schema
-        switch (values[widget.selected]) {
+        const mode = options[modeRow.selected].nick;
+        switch (mode) {
             case 'fixed':
                 blinkIntervalRow.set_sensitive(true);
                 break;
             case 'random':
+            case 'unsynced':
                 blinkIntervalRangeRow.set_sensitive(true);
                 break;
             case 'none':

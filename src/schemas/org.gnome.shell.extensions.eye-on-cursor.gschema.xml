@@ -8,6 +8,7 @@
     <value value='1' nick='click' />
     <value value='2' nick='fixed' />
     <value value='3' nick='random' />
+    <value value='4' nick='unsynced' />
   </enum>
   <!-- Global Settings -->
   <schema id='org.gnome.shell.extensions.eye-on-cursor' path='/org/gnome/shell/extensions/eye-on-cursor/'>
@@ -38,9 +39,9 @@
       <description>Specifies the refresh rate of the eyes in frames per second.</description>
     </key>
     <key name='eye-blink-mode' enum='org.gnome.shell.extensions.eye-on-cursor.eye-blink-mode'>
-      <default>'fixed'</default>
+      <default>'random'</default>
       <summary>Blinking mode of the eyes</summary>
-      <description>Describes how the eyes blink: 'none', 'click', 'fixed', 'random'.</description>
+      <description>Describes how the eyes blink: 'none', 'click', 'fixed', 'random', 'unsynced'.</description>
     </key>
     <key name='eye-blink-interval' type='d'>
       <default>6.0</default>
