@@ -469,7 +469,7 @@ class TrackerManager extends GObject.Object {
                 this.#color.middle,
                 this.#color.right,
                 this.#color.theme,
-            ]);
+            ]).catch((e) => console.error(`Eye on Cursor: Failed to cache trackers: ${e}`));
             this.#updateTrackerIcon(this.#shape, this.#resolveMainColor());
         }
 
