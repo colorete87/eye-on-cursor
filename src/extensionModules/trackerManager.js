@@ -121,7 +121,7 @@ class TrackerManager extends GObject.Object {
             track_hover: false,
         });
         this.#tracker.icon_size = this.#size;
-        this.#tracker.opacity = Math.ceil(this.#opacity * 2.55); // Convert from 0-100 to 0-255 range
+        this.#tracker.opacity = Math.round(this.#opacity * 2.55); // Convert from 0-100 to 0-255 range
 
         // Get the cache directory for colored trackers
         const gettextDomain = extension.metadata['gettext-domain'];
@@ -374,7 +374,7 @@ class TrackerManager extends GObject.Object {
         const colorTag = color.replace(/[^\d,]/g, '');
         const trackerIconPath =
             GLib.build_filenamev([this.#cacheDir, `${this.#shape}_${colorTag}.svg`]);
-        let animatedIcon = new St.Icon({
+        const animatedIcon = new St.Icon({
             x: this.#tracker.x,
             y: this.#tracker.y,
             reactive: false,
@@ -403,7 +403,6 @@ class TrackerManager extends GObject.Object {
             onComplete() {
                 Main.uiGroup.remove_child(animatedIcon);
                 animatedIcon.destroy();
-                animatedIcon = null;
             },
         });
     }
@@ -482,7 +481,7 @@ class TrackerManager extends GObject.Object {
         // Update opacity if changed
         if (this.#opacity !== newOpacity) {
             this.#opacity = newOpacity;
-            this.#tracker.opacity = Math.ceil(this.#opacity * 2.55);
+            this.#tracker.opacity = Math.round(this.#opacity * 2.55);
         }
 
         // Update refresh rate if changed
