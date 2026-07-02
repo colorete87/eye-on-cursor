@@ -1,7 +1,7 @@
 {
   "name": "eye-on-cursor",
-  "version": "2.4.1",
-  "description": "Let your desktop \"keep an eye\" on your mouse! And with the included cursor indicator, keep track of your pointer's every action!\n\nForked from Eye and Mouse Extended by Alexey Lovchikov (https://extensions.gnome.org/extension/3139/eye-extended/).",
+  "version": "3.0.0",
+  "description": "Add animated eyes to your GNOME panel that follow your mouse cursor. Bring your desktop to life!\n\nComes with a cursor tracker to help you keep track of your pointer during presentations, screencasts, or everyday use.\n\nFeatures:\n- Panel eyes that follow your mouse cursor\n- Eye shape, color, and blinking customization\n- Customizable cursor tracker\n- Keyboard shortcut to toggle the tracker\n\nForked from Eye and Mouse Extended by Alexey Lovchikov.",
   "keywords": [
     "GNOME",
     "Shell",
@@ -26,6 +26,6 @@
     "@stylistic/eslint-plugin": "^5.10.0",
     "eslint": "^10.3.0",
     "eslint-config-gnome": "git+https://gitlab.gnome.org/World/javascript/eslint-config-gnome.git#c479d059e8d9ea99c3b53c2ea43abf7fdb05eb51",
-    "eslint-formatter-junit": "^9.0.1"
+    "eslint-formatter-junit": "^9.0.0"
   }
 }

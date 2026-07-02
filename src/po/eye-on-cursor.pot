@@ -6,10 +6,10 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: eye-on-cursor 2.4.1\n"
+"Project-Id-Version: eye-on-cursor 3.0.0.\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/"
 "issues\n"
-"POT-Creation-Date: 2026-06-28 20:34+0100\n"
+"POT-Creation-Date: 2026-07-02 09:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,104 +18,137 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/extensionModules/eye.js:77
+#: src/extensionModules/eye.js:80
 msgid "Animated eye that follows the mouse"
 msgstr ""
 
-#: src/extensionModules/eye.js:132 src/prefsModules/trackerSettings.js:243
+#: src/extensionModules/eye.js:138 src/prefsModules/trackerSettings.js:241
 msgid "Toggle Tracker"
 msgstr ""
 
-#: src/extensionModules/eye.js:137
+#: src/extensionModules/eye.js:143
 msgid "Settings"
 msgstr ""
 
-#: src/prefsModules/trackerSettings.js:31
-msgid "Tracker"
+#: src/prefsModules/prefsWidgets.js:105 src/prefsModules/prefsWidgets.js:156
+msgid "Set shortcut"
 msgstr ""
 
-#: src/prefsModules/trackerSettings.js:37
-msgid "Appearance"
+#: src/prefsModules/prefsWidgets.js:114
+msgid "New shortcut…"
 msgstr ""
 
-#: src/prefsModules/trackerSettings.js:64 src/prefsModules/eyeSettings.js:156
-msgid "Shape"
+#: src/prefsModules/prefsWidgets.js:157
+msgid "Press Esc to cancel or Backspace to disable the keyboard shortcut"
 msgstr ""
 
-#: src/prefsModules/trackerSettings.js:65
-msgid "Icon used for the tracker"
+#: src/prefsModules/prefsWidgets.js:273 src/prefsModules/eyeSettings.js:309
+msgid "Reset…"
 msgstr ""
 
-#: src/prefsModules/trackerSettings.js:77
-msgid "Select a Tracker"
+#: src/prefsModules/prefsWidgets.js:284 src/prefsModules/eyeSettings.js:320
+msgid "All customizations in this section will be lost"
 msgstr ""
 
-#: src/prefsModules/trackerSettings.js:150
-msgid "Size"
+#: src/prefsModules/prefsWidgets.js:287 src/prefsModules/eyeSettings.js:323
+msgid "Cancel"
 msgstr ""
 
-#: src/prefsModules/trackerSettings.js:151
-msgid "Diameter of the tracker in pixels"
-msgstr ""
-
-#: src/prefsModules/trackerSettings.js:166
-msgid "Color"
-msgstr ""
-
-#: src/prefsModules/trackerSettings.js:167
-msgid "Custom color for the tracker"
-msgstr ""
-
-#: src/prefsModules/trackerSettings.js:182
-msgid "Colors on Click"
-msgstr ""
-
-#: src/prefsModules/trackerSettings.js:183
-msgid "Per-button click colors: left, middle, right"
-msgstr ""
-
-#: src/prefsModules/trackerSettings.js:198
-msgid "Click highlighting does not work in windows."
-msgstr ""
-
-#: src/prefsModules/trackerSettings.js:206
-msgid "Opacity"
-msgstr ""
-
-#: src/prefsModules/trackerSettings.js:207
-msgid "How transparent the tracker is"
-msgstr ""
-
-#: src/prefsModules/trackerSettings.js:221
-#: src/prefsModules/eyeGlobalSettings.js:59
-msgid "Refresh Rate (Hz)"
-msgstr ""
-
-#: src/prefsModules/trackerSettings.js:222
-#: src/prefsModules/eyeGlobalSettings.js:60
-msgid "Frames per second"
-msgstr ""
-
-#: src/prefsModules/trackerSettings.js:230
-#: src/prefsModules/eyeGlobalSettings.js:68
-msgid "Higher refresh rates may impact performance."
-msgstr ""
-
-#: src/prefsModules/trackerSettings.js:237
-msgid "Keybinding"
-msgstr ""
-
-#: src/prefsModules/trackerSettings.js:251 src/prefsModules/prefsWidgets.js:282
-#: src/prefsModules/eyeGlobalSettings.js:205
+#: src/prefsModules/prefsWidgets.js:288
+#: src/prefsModules/eyeGlobalSettings.js:228
+#: src/prefsModules/eyeSettings.js:324 src/prefsModules/trackerSettings.js:249
 msgid "Reset"
 msgstr ""
 
-#: src/prefsModules/trackerSettings.js:255
-msgid "Reset tracker settings?"
+#: src/prefsModules/eyeGlobalSettings.js:27
+msgid "Overview"
 msgstr ""
 
-#: src/prefsModules/trackerSettings.js:264
-msgid "Information"
+#: src/prefsModules/eyeGlobalSettings.js:33
+msgid "General"
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:39
+msgid "Show Eyes"
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:40
+msgid "Show eyes on the panel"
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:49
+msgid "Context Menu"
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:50
+msgid "Click menu for the eyes"
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:59
+#: src/prefsModules/trackerSettings.js:219
+msgid "Refresh Rate (Hz)"
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:60
+#: src/prefsModules/trackerSettings.js:220
+msgid "Frames per second"
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:68
+#: src/prefsModules/trackerSettings.js:228
+msgid "Higher refresh rates may impact performance"
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:74
+msgid "Blinking"
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:81
+msgid "None"
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:85
+msgid "Click"
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:89
+msgid "Fixed"
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:93
+msgid "Random"
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:101
+msgid "Blink Mode"
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:102
+msgid "How blinking is triggered"
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:124
+msgid "Fixed Blink Interval"
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:125
+msgid "Time between blinks in seconds"
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:145
+msgid "Blink Interval Range"
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:146
+msgid "Minimum and maximum time between blinks, in seconds"
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:205
+msgid "to"
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:232
+msgid "Reset Global Eye Settings?"
 msgstr ""
 
 #: src/prefsModules/about.js:45
@@ -139,207 +172,202 @@ msgstr ""
 msgid "Forked from"
 msgstr ""
 
-#: src/prefsModules/prefsWidgets.js:103 src/prefsModules/prefsWidgets.js:150
-msgid "Set shortcut"
-msgstr ""
-
-#: src/prefsModules/prefsWidgets.js:109
-msgid "New shortcut…"
-msgstr ""
-
-#: src/prefsModules/prefsWidgets.js:151
-msgid "Press Esc to cancel or Backspace to disable the keyboard shortcut"
-msgstr ""
-
-#: src/prefsModules/prefsWidgets.js:267
-msgid "Reset Settings"
-msgstr ""
-
-#: src/prefsModules/prefsWidgets.js:278
-msgid "Any related customizations will be lost."
-msgstr ""
-
-#: src/prefsModules/prefsWidgets.js:281
-msgid "Cancel"
-msgstr ""
-
-#: src/prefsModules/eyeSettings.js:29
-msgid "Eyes"
-msgstr ""
-
-#: src/prefsModules/eyeSettings.js:37
-msgid "Count"
-msgstr ""
-
-#: src/prefsModules/eyeSettings.js:38
-msgid "Number of eyes to display"
-msgstr ""
-
-#: src/prefsModules/eyeSettings.js:46
-msgid "Displaying more eyes may impact performance."
-msgstr ""
-
-#: src/prefsModules/eyeSettings.js:89
+#: src/prefsModules/eyeSettings.js:42
 #, javascript-format
 msgctxt "%s is the eye ID number (e.g. 01)"
 msgid "Eye #%s"
 msgstr ""
 
-#: src/prefsModules/eyeSettings.js:97
+#: src/prefsModules/eyeSettings.js:60
+msgid "Show Eye"
+msgstr ""
+
+#: src/prefsModules/eyeSettings.js:61
+msgid "Show this eye on the panel"
+msgstr ""
+
+#: src/prefsModules/eyeSettings.js:70
 msgid "Left"
 msgstr ""
 
-#: src/prefsModules/eyeSettings.js:97
+#: src/prefsModules/eyeSettings.js:74
 msgid "Center"
 msgstr ""
 
-#: src/prefsModules/eyeSettings.js:97
+#: src/prefsModules/eyeSettings.js:78
 msgid "Right"
 msgstr ""
 
-#: src/prefsModules/eyeSettings.js:101
+#: src/prefsModules/eyeSettings.js:86
 msgid "Position"
 msgstr ""
 
-#: src/prefsModules/eyeSettings.js:102
-msgid "Where the eyes appear on the panel"
+#: src/prefsModules/eyeSettings.js:87
+msgid "Where this eye appears on the panel"
 msgstr ""
 
-#: src/prefsModules/eyeSettings.js:123
-msgid "Index"
+#: src/prefsModules/eyeSettings.js:108
+msgid "Order"
 msgstr ""
 
-#: src/prefsModules/eyeSettings.js:124
-msgid "Order of the eyes among other items in the chosen panel section"
+#: src/prefsModules/eyeSettings.js:109
+msgid "Position among other items in the same panel section"
 msgstr ""
 
-#: src/prefsModules/eyeSettings.js:138
+#: src/prefsModules/eyeSettings.js:122
 msgid "Width"
 msgstr ""
 
-#: src/prefsModules/eyeSettings.js:139
-msgid "Drawing space and padding around each eye"
+#: src/prefsModules/eyeSettings.js:123
+msgid "Width of the eye area"
 msgstr ""
 
-#: src/prefsModules/eyeSettings.js:153
+#: src/prefsModules/eyeSettings.js:137
 msgid "Natural"
 msgstr ""
 
-#: src/prefsModules/eyeSettings.js:153
+#: src/prefsModules/eyeSettings.js:141
 msgid "Round"
 msgstr ""
 
-#: src/prefsModules/eyeSettings.js:153
+#: src/prefsModules/eyeSettings.js:145
 msgid "Comic"
 msgstr ""
 
-#: src/prefsModules/eyeSettings.js:157
-msgid "Outline style used for the eyes"
+#: src/prefsModules/eyeSettings.js:153 src/prefsModules/trackerSettings.js:64
+msgid "Shape"
 msgstr ""
 
-#: src/prefsModules/eyeSettings.js:178
+#: src/prefsModules/eyeSettings.js:154
+msgid "Eye outline style"
+msgstr ""
+
+#: src/prefsModules/eyeSettings.js:173
 msgid "Sketch Mode"
 msgstr ""
 
-#: src/prefsModules/eyeSettings.js:179
+#: src/prefsModules/eyeSettings.js:174
 msgid "Only draw the outline"
 msgstr ""
 
-#: src/prefsModules/eyeSettings.js:188
+#: src/prefsModules/eyeSettings.js:182
 msgid "Line Thickness"
 msgstr ""
 
-#: src/prefsModules/eyeSettings.js:189
+#: src/prefsModules/eyeSettings.js:183
 msgid "Thickness of the strokes in sketch mode"
 msgstr ""
 
-#: src/prefsModules/eyeSettings.js:205
-msgid "Iris Color"
+#: src/prefsModules/eyeSettings.js:198
+msgid "Colors"
 msgstr ""
 
-#: src/prefsModules/eyeSettings.js:206
-msgid "Custom color for the iris"
+#: src/prefsModules/eyeSettings.js:201
+msgid "Custom colors"
+msgstr ""
+
+#: src/prefsModules/eyeSettings.js:214
+msgid "Sclera"
+msgstr ""
+
+#: src/prefsModules/eyeSettings.js:219
+msgid "Pupil"
 msgstr ""
 
 #: src/prefsModules/eyeSettings.js:223
-msgid "Eyelid Color"
+msgid "Iris"
 msgstr ""
 
-#: src/prefsModules/eyeSettings.js:224
-msgid "Custom color for the eyelid"
+#: src/prefsModules/eyeSettings.js:228
+msgid "Eyelid"
 msgstr ""
 
-#: src/prefsModules/eyeSettings.js:237
+#: src/prefsModules/eyeSettings.js:261
 #, javascript-format
 msgctxt "%s is the eye ID number (e.g. 01)"
-msgid "Reset settings for eye #%s?"
+msgid "Reset Eye #%s Settings?"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:27
-#: src/prefsModules/eyeGlobalSettings.js:33
-msgid "Global"
+#: src/prefsModules/eyeSettings.js:286
+msgid "Eyes"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:39
-msgid "Show Eyes"
+#: src/prefsModules/eyeSettings.js:294
+msgid "Count"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:40
-msgid "Enables the eyes on the panel"
+#: src/prefsModules/eyeSettings.js:295
+msgid "Number of eyes shown on the panel"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:49
-msgid "Menu"
+#: src/prefsModules/eyeSettings.js:303
+msgid "Displaying more eyes may impact performance"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:50
-msgid "Enables the right-click menu for the eyes"
+#: src/prefsModules/eyeSettings.js:319
+msgid "Reset All Eye Settings?"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:74
-msgid "Blinking"
+#: src/prefsModules/trackerSettings.js:31
+msgid "Tracker"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:80
-msgid "Click"
+#: src/prefsModules/trackerSettings.js:37
+msgid "Appearance"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:80
-msgid "Fixed"
+#: src/prefsModules/trackerSettings.js:65
+msgid "Tracker icon shape"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:80
-msgid "Random"
+#: src/prefsModules/trackerSettings.js:77
+msgid "Select a Tracker"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:84
-msgid "Blink Mode"
+#: src/prefsModules/trackerSettings.js:148
+msgid "Size"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:85
-msgid "How blinking is triggered"
+#: src/prefsModules/trackerSettings.js:149
+msgid "Diameter of the tracker in pixels"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:106
-msgid "Fixed Blink Interval"
+#: src/prefsModules/trackerSettings.js:164
+msgid "Color"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:107
-msgid "Time between blinks in seconds"
+#: src/prefsModules/trackerSettings.js:165
+msgid "Custom color for the tracker"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:127
-msgid "Blink Interval Range"
+#: src/prefsModules/trackerSettings.js:180
+msgid "Click Colors"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:128
-msgid "Minimum and maximum time between blinks in seconds"
+#: src/prefsModules/trackerSettings.js:181
+msgid "Colors for left, middle, and right clicks"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:187
-msgid "to"
+#: src/prefsModules/trackerSettings.js:196
+msgid "Click highlighting does not work in windows."
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:209
-msgid "Reset global eye settings?"
+#: src/prefsModules/trackerSettings.js:204
+msgid "Opacity"
+msgstr ""
+
+#: src/prefsModules/trackerSettings.js:205
+msgid "Opacity level of the tracker"
+msgstr ""
+
+#: src/prefsModules/trackerSettings.js:235
+msgid "Keybinding"
+msgstr ""
+
+#: src/prefsModules/trackerSettings.js:253
+msgid "Reset tracker settings?"
+msgstr ""
+
+#: src/prefsModules/trackerSettings.js:262
+msgid "Information"
 msgstr ""
