@@ -110,6 +110,7 @@ export class BlinkController {
     //#region Routine methods
     //#region Start
     #startBlinkMode() {
+        // Stop previous mode
         this.#stopCurrentMode();
 
         // Update blink mode

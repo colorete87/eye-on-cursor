@@ -134,7 +134,7 @@ class Eye extends PanelMenu.Button {
             GLib.build_filenamev([extension.path, 'assets', 'mouse-click-symbolic.svg']);
 
         this.#menuItems = [
-            this.#createPopupMenuItem( // TODO replace with PopupSwitchMenuItem
+            this.#createPopupMenuItem(
                 _('Toggle Tracker'),
                 Gio.icon_new_for_string(trackerIconPath),
                 () => this.#mouseTracker.toggleTracker()
