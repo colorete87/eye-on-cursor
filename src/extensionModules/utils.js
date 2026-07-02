@@ -11,8 +11,14 @@ import St from 'gi://St';
  */
 export function getThemeColor() {
     const candidates = ['calendar-today', 'button default', 'osd-monitor-label'];
+    // Items that commonly get an accent color from custom themes
+    // - 'calendar-today': highlight for the current day in the GNOME calendar
+    // - 'button default': default action button
+    // - 'osd-monitor-label': number overlaid on each display when rearranging them in Settings;
+    //   rarely overridden, so usually still carries '-st-accent-color' as a fallback
 
     let color = null;
+    let found = false;
     for (const styleClass of candidates) {
         const dummy = new St.Widget({style_class: styleClass});
         global.stage.add_child(dummy);
@@ -22,20 +28,19 @@ export function getThemeColor() {
 
         if (color.alpha > 0 && // Color is visible
             !(color.red === color.green && color.green === color.blue) // Color isn't black/grey
-        )
-            break; // Stop looking
-        else
-            color = null;
+        ) {
+            found = true;
+            break;
+        }
     }
 
-    if (color) {
+    if (found) {
         return {
             red: color.red,
             green: color.green,
             blue: color.blue,
         };
     } else {
-        console.warn('Eye on Cursor: Could not determine accent color from theme.');
         return null;
     }
 }
