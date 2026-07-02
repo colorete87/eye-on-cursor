@@ -107,5 +107,11 @@
       <summary>Keyboard shortcut for the tracker</summary>
       <description>Specifies the keyboard shortcut that toggles the tracker visibility.</description>
     </key>
+    <!-- Notification Check -->
+    <key name="last-notified-version" type="s">
+      <default>''</default>
+      <summary>Last version to trigger a notification</summary>
+      <description>Specifies the extension version for which the release notification was last shown.</description>
+    </key>
   </schema>
 </schemalist>

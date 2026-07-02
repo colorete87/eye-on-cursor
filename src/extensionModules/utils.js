@@ -1,8 +1,16 @@
 // SPDX-FileCopyrightText: 2024-2026 Djinn Alexio
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+//#region Imports
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
 import St from 'gi://St';
 
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as MessageTray from 'resource:///org/gnome/shell/ui/messageTray.js';
+//#endregion
+
+//#region Get theme color
 /**
  * Retrieves an accent color from the current theme and returns it as an object containing RGB
  * components. Returns `null` if no suitable accent color can be determined.
@@ -44,3 +52,58 @@ export function getThemeColor() {
         return null;
     }
 }
+//#endregion
+
+//#region Show release notification
+/**
+ * Displays a notification announcing the latest release of the extension.
+ *
+ * @param {EyeOnCursorExtension} extension - The extension instance.
+ * @returns {MessageTray.Source} The source of notifications for the extension.
+ */
+export function showReleaseNotification(extension) {
+    const logoPath = GLib.build_filenamev([extension.path, 'assets', 'eye-on-cursor-logo.svg']);
+
+    let source = new MessageTray.Source({
+        title: extension.metadata.name,
+        icon: Gio.icon_new_for_string(logoPath),
+    });
+
+    // Reset the notification source if it's destroyed
+    source.connect('destroy', () => {
+        source = null;
+    });
+
+    Main.messageTray.add(source);
+
+    const notification = new MessageTray.Notification({
+        source,
+        title: _('Version X.X — What’s New'),
+        body: '',
+        iconName: 'software-update-available-symbolic',
+        urgency: MessageTray.Urgency.NORMAL,
+    });
+
+    notification.connect('activated', () => extension.openPreferences());
+
+    notification.addAction(_('Open Settings'), () => extension.openPreferences());
+
+    notification.addAction(_('View Changelog'), () => {
+        Gio.app_info_launch_default_for_uri(
+            `${extension.metadata.url}-/blob/main/CHANGELOG.md`,
+            null
+        );
+    });
+
+    notification.addAction(_('Donate'), () => {
+        Gio.app_info_launch_default_for_uri(
+            'https://github.com/sponsors/djinnalexio',
+            null
+        );
+    });
+
+    source.addNotification(notification);
+
+    return source; // Stores it to destroy it in disable
+}
+//#endregion

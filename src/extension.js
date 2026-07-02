@@ -7,7 +7,7 @@ import St from 'gi://St';
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {BlinkController} from './extensionModules/blinkController.js';
-import {getThemeColor} from './extensionModules/utils.js';
+import {getThemeColor, showReleaseNotification} from './extensionModules/utils.js';
 import {spawnEyes, destroyEyes} from './extensionModules/eye.js';
 import {TrackerManager} from './extensionModules/trackerManager.js';
 //#endregion
@@ -16,8 +16,9 @@ import {TrackerManager} from './extensionModules/trackerManager.js';
  * The **Eye on Cursor** GNOME Shell extension.
  */
 export default class EyeOnCursorExtension extends Extension {
-    #themeContext;
     #blinkController;
+    #notificationSource;
+    #themeContext;
 
     // DO NOT create objects, connect signals or add main loop sources here
     // constructor(metadata) {
@@ -59,6 +60,13 @@ export default class EyeOnCursorExtension extends Extension {
             },
             this
         );
+
+        // Display the notification on new major or minor versions
+        const currentVersion = this.metadata['version-name'].split('.').slice(0, 2).join('.');
+        if (this.settings.get_string('last-notified-version') !== currentVersion) {
+            this.#notificationSource = showReleaseNotification(this);
+            this.settings.set_string('last-notified-version', currentVersion);
+        }
     }
     //#endregion
 
@@ -67,12 +75,6 @@ export default class EyeOnCursorExtension extends Extension {
      * Disables the extension.
      */
     disable() {
-        this.settings.disconnectObject(this);
-        this.settings = null;
-
-        this.#themeContext?.disconnectObject(this);
-        this.#themeContext = null;
-
         this.#blinkController?.destroy();
         this.#blinkController = null;
 
@@ -81,6 +83,15 @@ export default class EyeOnCursorExtension extends Extension {
 
         this.mouseTracker?.destroy();
         this.mouseTracker = null;
+
+        this.#notificationSource?.destroy();
+        this.#notificationSource = null;
+
+        this.settings.disconnectObject(this);
+        this.settings = null;
+
+        this.#themeContext?.disconnectObject(this);
+        this.#themeContext = null;
     }
     //#endregion
 }
