@@ -84,5 +84,3 @@ ego_upload:
     - gnome-extensions upload $PACKAGE_NAME --accept-tos -u $EGO_USERNAME -p $EGO_PASSWORD
   rules:
     - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/              # if there is a version tag
-      when: manual                                          # requires manual approval
-  allow_failure: true
