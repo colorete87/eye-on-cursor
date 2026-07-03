@@ -12,7 +12,7 @@
   "url": "https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/",
   "gettext-domain": "eye-on-cursor",
   "settings-schema": "org.gnome.shell.extensions.eye-on-cursor",
-  "version-name": "3.0.0",
+  "version-name": "3.0.1",
   "donations": {
     "github": "djinnalexio",
     "paypal": "djinnalexio"
