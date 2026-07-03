@@ -250,7 +250,7 @@ class TrackerPage extends Adw.PreferencesPage {
         this.add(resetGroup);
 
         const resetRow = new EyeResetRow(
-            _('Reset tracker settings?'),
+            _('Reset Tracker Settings?'),
             settings,
             trackerKeys,
             resetFunctions

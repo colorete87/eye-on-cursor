@@ -46,7 +46,7 @@ class EyeSettingsGroup extends Adw.PreferencesGroup {
 
         //#region Label
         const nicknameEntry = new Gtk.Entry({
-            placeholder_text: 'Name',
+            placeholder_text: _('Label'),
             valign: Gtk.Align.CENTER,
             max_width_chars: 24,
             buffer: new Gtk.EntryBuffer({text: this.settings.get_string('label')}),

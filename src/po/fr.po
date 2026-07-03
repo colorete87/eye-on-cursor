@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: eye-on-cursor 2.4.1\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/"
 "issues\n"
-"POT-Creation-Date: 2026-05-10 21:32+0100\n"
-"PO-Revision-Date: 2026-05-10 22:19+0100\n"
+"POT-Creation-Date: 2026-07-02 23:16+0100\n"
+"PO-Revision-Date: 2026-07-02 23:21+0100\n"
 "Last-Translator: Djinn Alexio <djinnalexio+gnome@proton.me>\n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
@@ -17,56 +17,215 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Gtranslator 50.0\n"
 
-#: src/extensionModules/eye.js:44
+#: src/extensionModules/utils.js:82
+msgid "Version 3.0 — What’s New"
+msgstr "Version 3.0 - Quoi de neuf?"
+
+#: src/extensionModules/utils.js:83
+msgid ""
+"Eyes are now individually configurable, with new blink modes and broader "
+"theme color support."
+msgstr ""
+"Configurations individuelles pour les yeux, nouveaux modes de clignement et "
+"meilleur support des couleurs de thème."
+
+#: src/extensionModules/utils.js:91
+msgid "Open Settings"
+msgstr "Paramètres"
+
+#: src/extensionModules/utils.js:93
+msgid "View Changelog"
+msgstr "Modifications"
+
+#: src/extensionModules/utils.js:100 src/prefsModules/about.js:89
+msgid "Donate"
+msgstr "Faire un Don"
+
+#: src/extensionModules/eye.js:80
 msgid "Animated eye that follows the mouse"
 msgstr "Un œil animé qui suit la souris"
 
-#: src/extensionModules/eye.js:110 src/prefsModules/trackerSettings.js:298
+#: src/extensionModules/eye.js:138 src/prefsModules/trackerSettings.js:241
 msgid "Toggle Tracker"
-msgstr "Activer/Désactiver Le Traqueur"
+msgstr "Activer/Désactiver le traqueur"
 
-#: src/extensionModules/eye.js:115
+#: src/extensionModules/eye.js:143
 msgid "Settings"
 msgstr "Paramètres"
 
-#: src/prefsModules/eyeSettings.js:25
-msgid "Eyes"
-msgstr "Yeux"
+#: src/prefsModules/prefsWidgets.js:105 src/prefsModules/prefsWidgets.js:156
+msgid "Set shortcut"
+msgstr "Définir un raccourci"
 
-#: src/prefsModules/eyeSettings.js:37
-msgid "Layout"
-msgstr "Disposition"
+#: src/prefsModules/prefsWidgets.js:114
+msgid "New shortcut…"
+msgstr "Nouveau raccourci…"
 
-#: src/prefsModules/eyeSettings.js:43
-msgid "Active"
-msgstr "Actif"
+#: src/prefsModules/prefsWidgets.js:157
+msgid "Press Esc to cancel or Backspace to disable the keyboard shortcut"
+msgstr ""
+"Appuyez sur Échap pour annuler ou sur Retour arrière pour désactiver le "
+"raccourci"
 
-#: src/prefsModules/eyeSettings.js:44
-msgid "Enable the eyes"
-msgstr "Activer les yeux"
+#: src/prefsModules/prefsWidgets.js:273 src/prefsModules/eyeSettings.js:305
+msgid "Reset…"
+msgstr "Réinitialiser…"
 
-#: src/prefsModules/eyeSettings.js:59
-msgid "Count"
-msgstr "Compte"
+#: src/prefsModules/prefsWidgets.js:284 src/prefsModules/eyeSettings.js:316
+msgid "All customizations in this section will be lost"
+msgstr "Toutes les personnalisations de cette section seront perdues"
+
+#: src/prefsModules/prefsWidgets.js:287 src/prefsModules/eyeSettings.js:319
+msgid "Cancel"
+msgstr "Annuler"
+
+#: src/prefsModules/prefsWidgets.js:288
+#: src/prefsModules/eyeGlobalSettings.js:238
+#: src/prefsModules/eyeSettings.js:320 src/prefsModules/trackerSettings.js:249
+msgid "Reset"
+msgstr "Réinitialiser"
+
+#: src/prefsModules/eyeGlobalSettings.js:27
+msgid "Overview"
+msgstr "Aperçu"
+
+#: src/prefsModules/eyeGlobalSettings.js:33
+msgid "General"
+msgstr "Général"
+
+#: src/prefsModules/eyeGlobalSettings.js:39
+msgid "Show Eyes"
+msgstr "Montrer les yeux"
+
+#: src/prefsModules/eyeGlobalSettings.js:40
+msgid "Show eyes on the panel"
+msgstr "Montrer les yeux sur le panneau"
+
+#: src/prefsModules/eyeGlobalSettings.js:49
+msgid "Context Menu"
+msgstr "Menu contextuel"
+
+#: src/prefsModules/eyeGlobalSettings.js:50
+msgid "Click menu for the eyes"
+msgstr "Menu contextuel des yeux"
+
+#: src/prefsModules/eyeGlobalSettings.js:59
+#: src/prefsModules/trackerSettings.js:219
+msgid "Refresh Rate (Hz)"
+msgstr "Fréquence (Hz)"
+
+#: src/prefsModules/eyeGlobalSettings.js:60
+#: src/prefsModules/trackerSettings.js:220
+msgid "Frames per second"
+msgstr "Images pas second"
+
+#: src/prefsModules/eyeGlobalSettings.js:68
+#: src/prefsModules/trackerSettings.js:228
+msgid "Higher refresh rates may impact performance"
+msgstr "Une fréquence élevée peut réduire la performance"
+
+#: src/prefsModules/eyeGlobalSettings.js:74
+msgid "Blinking"
+msgstr "Clignement"
+
+#: src/prefsModules/eyeGlobalSettings.js:81
+msgid "None"
+msgstr "Aucun"
+
+#: src/prefsModules/eyeGlobalSettings.js:85
+msgid "Click"
+msgstr "Click"
+
+#: src/prefsModules/eyeGlobalSettings.js:89
+msgid "Fixed"
+msgstr "Fixe"
+
+#: src/prefsModules/eyeGlobalSettings.js:93
+msgid "Random"
+msgstr "Irrégulier"
+
+#: src/prefsModules/eyeGlobalSettings.js:97
+msgid "Unsynced"
+msgstr "Chaotique"
+
+#: src/prefsModules/eyeGlobalSettings.js:105
+msgid "Blink Mode"
+msgstr "Mode de clignement"
+
+#: src/prefsModules/eyeGlobalSettings.js:106
+msgid "How blinking is triggered"
+msgstr "Comment le clignement est controlé"
+
+#: src/prefsModules/eyeGlobalSettings.js:126
+msgid "Fixed Blink Interval"
+msgstr "Intervalle fixe de clignement"
+
+#: src/prefsModules/eyeGlobalSettings.js:127
+msgid "Time between blinks in seconds"
+msgstr "Secondes entre clignements"
+
+#: src/prefsModules/eyeGlobalSettings.js:147
+msgid "Blink Interval Range"
+msgstr "Plage d'intervalles de clignement"
+
+#: src/prefsModules/eyeGlobalSettings.js:148
+msgid "Minimum and maximum time between blinks, in seconds"
+msgstr "Minimum et maximum de secondes entre clignements"
+
+#: src/prefsModules/eyeGlobalSettings.js:205
+msgid "to"
+msgstr "à"
+
+#: src/prefsModules/eyeGlobalSettings.js:242
+msgid "Reset Global Eye Settings?"
+msgstr "Réinitialiser les paramètres globaux d’yeux?"
+
+#: src/prefsModules/about.js:56
+msgid "About Eye on Cursor"
+msgstr "À propos de Eye on Cursor"
+
+#: src/prefsModules/about.js:80
+msgctxt "(USER)NAME EMAIL"
+msgid "translator_credits"
+msgstr "Djinn Alexio djinnalexio+gnome@proton.me"
+
+#: src/prefsModules/about.js:86
+msgid "Extension Page"
+msgstr "Page de l’extension"
+
+#: src/prefsModules/about.js:91
+msgid "Forked from"
+msgstr "Dérivé de"
+
+#: src/prefsModules/eyeSettings.js:42
+#, javascript-format
+msgctxt "%s is the eye ID number (e.g. 01)"
+msgid "Eye #%s"
+msgstr "Œil #%s"
+
+#: src/prefsModules/eyeSettings.js:49
+msgid "Label"
+msgstr "Étiquette"
 
 #: src/prefsModules/eyeSettings.js:60
-msgid "Number of eyes"
-msgstr "Nombre d'yeux"
+msgid "Show Eye"
+msgstr "Montrer l’œil"
 
-#: src/prefsModules/eyeSettings.js:71
-msgid "Displaying more eyes may reduce performance."
-msgstr "Augmenter le nombre d'yeux peut réduire la performance."
+#: src/prefsModules/eyeSettings.js:61
+msgid "Show this eye on the panel"
+msgstr "Montrer cet œil sur le panneau"
 
-#: src/prefsModules/eyeSettings.js:82
+#: src/prefsModules/eyeSettings.js:70
 msgid "Left"
 msgstr "Gauche"
 
-#: src/prefsModules/eyeSettings.js:82
+#: src/prefsModules/eyeSettings.js:74
 msgid "Center"
 msgstr "Centre"
 
-#: src/prefsModules/eyeSettings.js:82
+#: src/prefsModules/eyeSettings.js:78
 msgid "Right"
 msgstr "Droite"
 
@@ -75,294 +234,171 @@ msgid "Position"
 msgstr "Position"
 
 #: src/prefsModules/eyeSettings.js:87
-msgid "Position of the eyes on the panel"
-msgstr "Position des yeux sur le panneau"
+msgid "Where this eye appears on the panel"
+msgstr "Position de l’œil sur le panneau"
 
-#: src/prefsModules/eyeSettings.js:107
-msgid "Index"
+#: src/prefsModules/eyeSettings.js:106
+msgid "Order"
 msgstr "Ordre"
 
-#: src/prefsModules/eyeSettings.js:108
-msgid "Index of the eyes on the panel segment"
-msgstr "Rang des yeux sur le segment du panneau"
+#: src/prefsModules/eyeSettings.js:107
+msgid "Position among other items in the same panel section"
+msgstr "Position parmi les autres objets de la section"
 
-#: src/prefsModules/eyeSettings.js:128
+#: src/prefsModules/eyeSettings.js:120
 msgid "Width"
 msgstr "Largeur"
 
-#: src/prefsModules/eyeSettings.js:129
-msgid "Drawing space and padding"
-msgstr "Espace et marge"
+#: src/prefsModules/eyeSettings.js:121
+msgid "Width of the eye area"
+msgstr "Largeur de la surface de l’œil"
 
-#: src/prefsModules/eyeSettings.js:149
-msgid "Menu"
-msgstr "Menu"
-
-#: src/prefsModules/eyeSettings.js:150
-msgid "Enable the eye menu"
-msgstr "Activer le menu de l'œil"
-
-#: src/prefsModules/eyeSettings.js:168 src/prefsModules/trackerSettings.js:38
-msgid "Appearance"
-msgstr "Apparence"
-
-#: src/prefsModules/eyeSettings.js:174
+#: src/prefsModules/eyeSettings.js:135
 msgid "Natural"
 msgstr "Naturel"
 
-#: src/prefsModules/eyeSettings.js:174
+#: src/prefsModules/eyeSettings.js:139
 msgid "Round"
 msgstr "Rond"
 
-#: src/prefsModules/eyeSettings.js:174
+#: src/prefsModules/eyeSettings.js:143
 msgid "Comic"
 msgstr "Comic"
 
-#: src/prefsModules/eyeSettings.js:177 src/prefsModules/trackerSettings.js:64
+#: src/prefsModules/eyeSettings.js:151 src/prefsModules/trackerSettings.js:64
 msgid "Shape"
 msgstr "Forme"
 
-#: src/prefsModules/eyeSettings.js:178
-msgid "Shape of the eyes"
-msgstr "Forme des yeux"
+#: src/prefsModules/eyeSettings.js:152
+msgid "Eye outline style"
+msgstr "Type d’œil"
 
-#: src/prefsModules/eyeSettings.js:198
+#: src/prefsModules/eyeSettings.js:169
 msgid "Sketch Mode"
 msgstr "Mode Croquis"
 
-#: src/prefsModules/eyeSettings.js:199
+#: src/prefsModules/eyeSettings.js:170
 msgid "Only draw the outline"
-msgstr "Ne dessiner que le croquis"
+msgstr "Ne dessiner que les lignes"
 
-#: src/prefsModules/eyeSettings.js:216
+#: src/prefsModules/eyeSettings.js:178
 msgid "Line Thickness"
 msgstr "Épaisseur des lignes"
 
-#: src/prefsModules/eyeSettings.js:217
-msgid "Thickness of the strokes in outline mode"
-msgstr "Épaisseur des traits en mode contour"
+#: src/prefsModules/eyeSettings.js:179
+msgid "Thickness of the strokes in sketch mode"
+msgstr "Épaisseur des lignes en mode croquis"
 
-#: src/prefsModules/eyeSettings.js:239
-msgid "Iris Color"
-msgstr "Couleur de l'iris"
+#: src/prefsModules/eyeSettings.js:194
+msgid "Colors"
+msgstr "Couleurs"
 
-#: src/prefsModules/eyeSettings.js:240
-msgid "Custom color for the iris"
-msgstr "Couleur personnalisée pour l'iris"
+#: src/prefsModules/eyeSettings.js:197
+msgid "Custom colors"
+msgstr "Couleurs personnalisées"
 
-#: src/prefsModules/eyeSettings.js:289 src/prefsModules/trackerSettings.js:269
-msgid "Refresh Rate (Hz)"
-msgstr "Fréquence (Hz)"
+#: src/prefsModules/eyeSettings.js:210
+msgid "Sclera"
+msgstr "Sclère"
 
-#: src/prefsModules/eyeSettings.js:290 src/prefsModules/trackerSettings.js:270
-msgid "Higher refresh rates may impact performance."
-msgstr "Une fréquence élevée peut réduire la performance."
+#: src/prefsModules/eyeSettings.js:215
+msgid "Pupil"
+msgstr "Pupille"
 
-#: src/prefsModules/eyeSettings.js:314
-msgid "Blinking"
-msgstr "Clignement"
+#: src/prefsModules/eyeSettings.js:219
+msgid "Iris"
+msgstr "Iris"
 
-#: src/prefsModules/eyeSettings.js:319
-msgid "Eyelid Color"
-msgstr "Couleur de la paupière"
+#: src/prefsModules/eyeSettings.js:224
+msgid "Eyelid"
+msgstr "Paupière"
 
-#: src/prefsModules/eyeSettings.js:338
-msgid "Manual"
-msgstr "Manuel"
+#: src/prefsModules/eyeSettings.js:257
+#, javascript-format
+msgctxt "%s is the eye ID number (e.g. 01)"
+msgid "Reset Eye #%s Settings?"
+msgstr "Réinitialiser les paramètres de l’œil #%s?"
 
-#: src/prefsModules/eyeSettings.js:338
-msgid "Fixed"
-msgstr "Fixe"
+#: src/prefsModules/eyeSettings.js:282
+msgid "Eyes"
+msgstr "Yeux"
 
-#: src/prefsModules/eyeSettings.js:338
-msgid "Random"
-msgstr "Irrégulier"
+#: src/prefsModules/eyeSettings.js:290
+msgid "Count"
+msgstr "Compte"
 
-#: src/prefsModules/eyeSettings.js:341
-msgid "Blink Mode"
-msgstr "Mode de clignement"
+#: src/prefsModules/eyeSettings.js:291
+msgid "Number of eyes shown on the panel"
+msgstr "Nombre d’yeux sur le panneau"
 
-#: src/prefsModules/eyeSettings.js:342
-msgid "Choose how eyes blink"
-msgstr "Comment les yeux clignent"
+#: src/prefsModules/eyeSettings.js:299
+msgid "Displaying more eyes may impact performance"
+msgstr "Un nombre d’yeux élevé peut réduire la performance"
 
-#: src/prefsModules/eyeSettings.js:364
-msgid "Manual Blink"
-msgstr "Clignement manuel"
+#: src/prefsModules/eyeSettings.js:315
+msgid "Reset All Eye Settings?"
+msgstr "Réinitialiser tous les paramètres d’yeux?"
 
-#: src/prefsModules/eyeSettings.js:374
-msgid "Fixed Blink Interval"
-msgstr "Intervalle de clignement fixe"
-
-#: src/prefsModules/eyeSettings.js:375
-msgid "Duration in seconds between blinks"
-msgstr "Durée en secondes entre les clignements"
-
-#: src/prefsModules/eyeSettings.js:398
-msgid "Random Blink Interval"
-msgstr "Intervalles de clignement irrégulier"
-
-#: src/prefsModules/eyeSettings.js:399
-msgid "Range of durations in seconds between random blinks"
-msgstr "Plage de durées en secondes entre les clignements irréguliers"
-
-#: src/prefsModules/eyeSettings.js:467
-msgid "to"
-msgstr "à"
-
-#: src/prefsModules/eyeSettings.js:482
-msgid "Reset all eye settings?"
-msgstr "Réinitialiser tous les paramètres d'yeux?"
-
-#: src/prefsModules/about.js:63
-msgid "About Eye on Cursor"
-msgstr "À propos de Eye on Cursor"
-
-#: src/prefsModules/about.js:93
-msgctxt "(USER)NAME EMAIL/URL"
-msgid "translator_credits"
-msgstr "Djinn Alexio https://gitlab.gnome.org/DjinnAlexio"
-
-#: src/prefsModules/about.js:99
-msgid "Extension Page"
-msgstr "Page de l'extension"
-
-#: src/prefsModules/about.js:102
-msgid "Donate"
-msgstr "Faire un Don"
-
-#: src/prefsModules/about.js:104
-msgid "Forked from"
-msgstr "Dérivé de"
-
-#: src/prefsModules/about.js:108
-msgid "Cinnamon Fork"
-msgstr "Branche Cinnamon"
-
-#: src/prefsModules/trackerSettings.js:27
-msgid "Mouse Tracker"
+#: src/prefsModules/trackerSettings.js:31
+msgid "Tracker"
 msgstr "Traqueur"
 
+#: src/prefsModules/trackerSettings.js:37
+msgid "Appearance"
+msgstr "Apparence"
+
 #: src/prefsModules/trackerSettings.js:65
-msgid "Shape of the tracker"
+msgid "Tracker icon shape"
 msgstr "Forme du traqueur"
 
 #: src/prefsModules/trackerSettings.js:77
 msgid "Select a Tracker"
 msgstr "Sélectionner un Traqueur"
 
-#: src/prefsModules/trackerSettings.js:149
+#: src/prefsModules/trackerSettings.js:148
 msgid "Size"
 msgstr "Taille"
 
-#: src/prefsModules/trackerSettings.js:150
-msgid "Size of the tracker"
-msgstr "Taille du traqueur"
+#: src/prefsModules/trackerSettings.js:149
+msgid "Diameter of the tracker in pixels"
+msgstr "Diamètre du traqueur en pixels"
 
-#: src/prefsModules/trackerSettings.js:170
+#: src/prefsModules/trackerSettings.js:164
 msgid "Color"
 msgstr "Couleur"
 
-#: src/prefsModules/trackerSettings.js:171
+#: src/prefsModules/trackerSettings.js:165
 msgid "Custom color for the tracker"
 msgstr "Couleur personnalisée pour le traqueur"
 
-#: src/prefsModules/trackerSettings.js:216
-msgid "Colors on Click"
-msgstr "Couleurs du clic"
+#: src/prefsModules/trackerSettings.js:180
+msgid "Click Colors"
+msgstr "Couleurs de clics"
 
-#: src/prefsModules/trackerSettings.js:217
-msgid "Colors when left, middle, and right-clicking"
+#: src/prefsModules/trackerSettings.js:181
+msgid "Colors for left, middle, and right clicks"
 msgstr "Couleurs de clics gauche, central, et droit"
 
-#: src/prefsModules/trackerSettings.js:223
+#: src/prefsModules/trackerSettings.js:196
 msgid "Click highlighting does not work in windows."
 msgstr "La mise en surbrillance des clics ne fonctionne pas dans les fenêtres."
 
-#: src/prefsModules/trackerSettings.js:246
+#: src/prefsModules/trackerSettings.js:204
 msgid "Opacity"
 msgstr "Opacité"
 
-#: src/prefsModules/trackerSettings.js:247
-msgid "Opacity of the tracker"
+#: src/prefsModules/trackerSettings.js:205
+msgid "Opacity level of the tracker"
 msgstr "Opacité du traqueur"
 
-#: src/prefsModules/trackerSettings.js:292
+#: src/prefsModules/trackerSettings.js:235
 msgid "Keybinding"
 msgstr "Raccourci"
 
-#: src/prefsModules/trackerSettings.js:313
-msgid "Reset all tracker settings?"
+#: src/prefsModules/trackerSettings.js:253
+msgid "Reset Tracker Settings?"
 msgstr "Réinitialiser tous les paramètres du traqueur?"
 
-#: src/prefsModules/trackerSettings.js:320
+#: src/prefsModules/trackerSettings.js:262
 msgid "Information"
 msgstr "Information"
-
-#: src/prefsModules/prefsWidgets.js:59 src/prefsModules/prefsWidgets.js:110
-msgid "Set a shortcut"
-msgstr "Définir un raccourci"
-
-#: src/prefsModules/prefsWidgets.js:65
-msgid "New shortcut…"
-msgstr "Nouveau raccourci…"
-
-#: src/prefsModules/prefsWidgets.js:111
-msgid "Press Esc to cancel or Backspace to disable the shortcut"
-msgstr ""
-"Appuyez sur Échap pour annuler ou sur Retour arrière pour désactiver le "
-"raccourci"
-
-#: src/prefsModules/prefsWidgets.js:227
-msgid "Reset Settings"
-msgstr "Réinitialiser les Paramètres"
-
-#: src/prefsModules/prefsWidgets.js:238
-msgid "Any related customizations will be lost."
-msgstr "Toutes les personnalisations associées seront perdues."
-
-#: src/prefsModules/prefsWidgets.js:241
-msgid "Cancel"
-msgstr "Annuler"
-
-#: src/prefsModules/prefsWidgets.js:242
-msgid "Reset"
-msgstr "Réinitialiser"
-
-#~ msgid "Synced"
-#~ msgstr "Synchronisé"
-
-#~ msgid "Unsynced"
-#~ msgstr "Aléatoire"
-
-#~ msgid "Regular Blink Interval"
-#~ msgstr "Intervalle de clignement fixe"
-
-#~ msgid "Outline Mode"
-#~ msgstr "Mode Contour"
-
-#~ msgid "Strokes"
-#~ msgstr "Traits"
-
-#~ msgid "Hz"
-#~ msgstr "Hz"
-
-#~ msgid "Seconds between synchronized blinks"
-#~ msgstr "Secondes entre les clignements synchronisés"
-
-#~ msgid "Unsynced Blinking Interval"
-#~ msgstr "Intervalle de clignement aléatoire"
-
-#~ msgid "About"
-#~ msgstr "À propos"
-
-#~ msgid "Development information and credits"
-#~ msgstr "Informations de développement et crédits"
-
-#~ msgid "Middle-click highlighting does not work on x11. See README."
-#~ msgstr ""
-#~ "La mise en surbrillance du clic central ne fonctionne pas sur x11. Voir "
-#~ "README."
-
-#~ msgid "Credits"
-#~ msgstr "Crédits"
