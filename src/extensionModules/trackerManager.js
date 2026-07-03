@@ -103,7 +103,7 @@ class TrackerManager extends GObject.Object {
         this.#refreshRate = this.#settings.get_int('tracker-refresh-rate');
 
         const {red, green, blue} = extension.themeColor;
-        this.#color.theme = red && green && blue ? `rgb(${red},${green},${blue})` : null;
+        this.#color.theme = `rgb(${red},${green},${blue})`;
 
         // Connect change in settings to update method
         TRACKER_SETTINGS.forEach(
@@ -224,15 +224,13 @@ class TrackerManager extends GObject.Object {
     }
 
     #resolveMainColor() {
-        return !this.#color.useCustomMain && this.#color.theme
+        return !this.#color.useCustomMain
             ? this.#color.theme
             : this.#color.main;
     }
 
     onThemeChanged(themeColor) {
-        this.#color.theme = themeColor.red && themeColor.green && themeColor.blue
-            ? `rgb(${themeColor.red},${themeColor.green},${themeColor.blue})`
-            : null;
+        this.#color.theme = `rgb(${themeColor.red},${themeColor.green},${themeColor.blue})`;
 
         this.#updateCachedTrackers(this.#shape, [this.#color.theme])
             .then(() => this.#updateTrackerIcon(this.#shape, this.#resolveMainColor()))

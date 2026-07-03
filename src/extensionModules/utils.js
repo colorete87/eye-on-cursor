@@ -49,8 +49,12 @@ export function getThemeColor() {
             green: color.green,
             blue: color.blue,
         };
-    } else {
-        return null;
+    } else { // Adwaita Slate as fallback neutral color
+        return {
+            red: 111,
+            green: 132,
+            blue: 150,
+        };
     }
 }
 //#endregion

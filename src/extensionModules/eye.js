@@ -53,7 +53,6 @@ class Eye extends PanelMenu.Button {
     #blinking;
     #eyelidLevel = 0;
     #eyelidLevelInterval;
-    randomBlinkTimeout;
 
     #shape;
     #lineMode;
@@ -169,15 +168,11 @@ class Eye extends PanelMenu.Button {
     }
 
     onThemeChanged(themeColor) {
-        if (themeColor) {
-            this.#color.theme = {
-                red: themeColor.red / 255,
-                green: themeColor.green / 255,
-                blue: themeColor.blue / 255,
-            };
-        } else {
-            this.#color.theme = null;
-        }
+        this.#color.theme = {
+            red: themeColor.red / 255,
+            green: themeColor.green / 255,
+            blue: themeColor.blue / 255,
+        };
         this.#area?.queue_repaint();
     }
 
@@ -224,7 +219,7 @@ class Eye extends PanelMenu.Button {
         let irisColor;
         if (this.#mouseTracker.enabled)
             irisColor = this.#parseRGB(this.#mouseTracker.currentColor);
-        else if (!this.#color.useCustomIris && this.#color.theme)
+        else if (!this.#color.useCustomIris)
             irisColor = this.#color.theme;
         else
             irisColor = this.#color.iris;
@@ -372,8 +367,6 @@ class Eye extends PanelMenu.Button {
         this.#area.disconnect(this.#repaintHandler);
 
         // Stop blinking
-        if (this.randomBlinkTimeout)
-            clearTimeout(this.randomBlinkTimeout);
         if (this.#eyelidLevelInterval)
             clearInterval(this.#eyelidLevelInterval);
 
