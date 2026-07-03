@@ -4,9 +4,15 @@
 set -euo pipefail
 
 CHANGELOG="${1:-$(dirname "$(realpath "$0")")/../CHANGELOG.md}"
+METADATA="${2:-$(dirname "$(realpath "$0")")/../src/metadata.json}"
 
 if [[ ! -f "$CHANGELOG" ]]; then
   echo "Error: '$CHANGELOG' not found." >&2
+  exit 1
+fi
+
+if [[ ! -f "$METADATA" ]]; then
+  echo "Error: '$METADATA' not found." >&2
   exit 1
 fi
 
@@ -36,11 +42,28 @@ if [[ -z "$body" ]]; then
   exit 1
 fi
 
+# Extract shell-version array from metadata.json
+shell_versions=$(awk '
+  /"shell-version"/ { in_arr=1; next }
+  in_arr && /\]/    { exit }
+  in_arr && /"/     { gsub(/[^0-9]/, ""); printf "%s**%s**", sep, $0; sep=", " }
+' "$METADATA")
+
+if [[ -z "$shell_versions" ]]; then
+  echo "Error: No shell-version found in '$METADATA'." >&2
+  exit 1
+fi
+
+
+full_body="Supported GNOME Versions: ${shell_versions}
+
+${body}"
+
 echo "=== Tag name ==="
 echo "$tag"
 echo ""
 echo "=== Tag message ==="
-echo "$body"
+echo "$full_body"
 echo ""
 
 read -rp "Create signed tag '$tag'? [y/N] " confirm
@@ -65,7 +88,7 @@ restore_comment_char() {
 }
 trap restore_comment_char EXIT
 
-git tag -a "$tag" -s -m "$body"
+git tag -a "$tag" -s -m "$full_body"
 
 echo ""
 echo "✓ Signed tag '$tag' created."
