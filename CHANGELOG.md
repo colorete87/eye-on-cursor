@@ -28,6 +28,10 @@ bash tools/make_version_tag.sh
 
 ## [Unreleased]
 
+### Fixed
+
+- use Adwaita Slate as fallback color
+
 ## [3.0.2] - 2026-07-03
 
 ### Fixed
