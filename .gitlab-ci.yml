@@ -50,7 +50,7 @@ pack:
 
 ############ STAGE PUBLISH #####################################################
 
-package-upload:
+package_upload:
   stage: publish
   image: curlimages/curl:latest
   script:
@@ -59,11 +59,11 @@ package-upload:
   rules:
     - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/              # if there is a version tag
 
-gitlab-release:
+gitlab_release:
   stage: publish
   image: registry.gitlab.com/gitlab-org/cli:latest
   needs:
-    - package-upload
+    - package_upload
   script:
     - echo "Creating release $CI_COMMIT_TAG"
   release:
@@ -73,15 +73,15 @@ gitlab-release:
       links:
         - name: $PACKAGE_NAME
           url: $PACKAGE_URL
-          direct_asset_path: "/${CI_PROJECT_NAME}.shell-extension.zip"
+          filepath: "/${CI_PROJECT_NAME}.shell-extension.zip"
           link_type: "package"
   rules:
     - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/              # if there is a version tag
 
-ego-upload:
+ego_upload:
   stage: publish
   script:
-    - gnome-extensions upload $PACKAGE_NAME --accept-tos -u ${EGO_USERNAME} -p ${EGO_PASSWORD}
+    - gnome-extensions upload $PACKAGE_NAME --accept-tos -u $EGO_USERNAME -p $EGO_PASSWORD
   rules:
     - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/              # if there is a version tag
       when: manual                                          # requires manual approval
