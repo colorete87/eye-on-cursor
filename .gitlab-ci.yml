@@ -68,7 +68,6 @@ gitlab_release:
     - echo "Running the release job $CI_COMMIT_TAG."
   release:
     tag_name: $CI_COMMIT_TAG
-    name: "Release $CI_COMMIT_TAG"
     description: $CI_COMMIT_TAG_MESSAGE
     assets:
       links:
