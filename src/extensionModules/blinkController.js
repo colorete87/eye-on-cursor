@@ -217,11 +217,15 @@ export class BlinkController {
 
     //#region Destroy method
     destroy() {
-        // Stop routines
-        this.#stopCurrentMode();
+        // Clear any remaining routines and timeouts
+        this.#stopFixedBlink();
+        this.#stopRandomBlink();
+        this.#stopUnsyncedBlink();
+        if (this.#blinkChangeDelay)
+            clearTimeout(this.#blinkChangeDelay);
 
-        // Clear any remaining timeouts
-        this.#blinkChangeDelay = clearTimeout(this.#blinkChangeDelay);
+        // Disconnect tracker
+        this.#stopClickBlink();
 
         // Disconnect settings
         this.#settings.disconnectObject(this);
