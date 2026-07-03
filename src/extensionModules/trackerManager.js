@@ -287,9 +287,12 @@ class TrackerManager extends GObject.Object {
         this.enabled = false;
 
         // Clear timeouts
-        this.#clickMaxTimeout = clearTimeout(this.#clickMaxTimeout);
-        this.#clickReleaseTimeout = clearTimeout(this.#clickReleaseTimeout);
-        this.#trackerRaiseTimeout = clearTimeout(this.#trackerRaiseTimeout);
+        if (this.#clickMaxTimeout)
+            clearTimeout(this.#clickMaxTimeout);
+        if (this.#clickReleaseTimeout)
+            clearTimeout(this.#clickReleaseTimeout);
+        if (this.#trackerRaiseTimeout)
+            clearTimeout(this.#trackerRaiseTimeout);
 
         // Remove tracker from desktop
         if (this.#tracker && this.#tracker.get_parent() === Main.uiGroup)
@@ -298,7 +301,8 @@ class TrackerManager extends GObject.Object {
         this.#tracker.gicon = null;
 
         // Stop updating the tracker position
-        this.#trackerPositionUpdater = clearInterval(this.#trackerPositionUpdater);
+        if (this.#trackerPositionUpdater)
+            clearInterval(this.#trackerPositionUpdater);
     }
     //#endregion
 
@@ -360,14 +364,16 @@ class TrackerManager extends GObject.Object {
         this.#updateTrackerIcon(this.#shape, color);
 
         // Move the tracker on top of any new UI element that appears after click
-        this.#trackerRaiseTimeout = clearTimeout(this.#trackerRaiseTimeout);
+        if (this.#trackerRaiseTimeout)
+            clearTimeout(this.#trackerRaiseTimeout);
         this.#trackerRaiseTimeout = setTimeout(
             () => Main.uiGroup.set_child_above_sibling(this.#tracker, null),
             TRACKER_RAISE_DELAY
         );
 
         // Set a maximum timeout to revert the color
-        this.#clickMaxTimeout = clearTimeout(this.#clickMaxTimeout);
+        if (this.#clickMaxTimeout)
+            clearTimeout(this.#clickMaxTimeout);
         this.#clickMaxTimeout = setTimeout(this.#resetColor.bind(this), CLICK_MAX_DEBOUNCE);
 
         // Create an animated icon
@@ -409,7 +415,8 @@ class TrackerManager extends GObject.Object {
 
     #handleClickRelease(button) {
         // Debounce the release event
-        this.#clickReleaseTimeout = clearTimeout(this.#clickReleaseTimeout);
+        if (this.#clickReleaseTimeout)
+            clearTimeout(this.#clickReleaseTimeout);
         this.#clickReleaseTimeout = setTimeout(() => {
             // Only reset if no new click event has occurred in the meantime
             if (this.#activeClick === button && this.#clickResetPending)
@@ -425,7 +432,8 @@ class TrackerManager extends GObject.Object {
         this.#clickResetPending = false;
 
         // Clear timeout
-        this.#clickMaxTimeout = clearTimeout(this.#clickMaxTimeout);
+        if (this.#clickMaxTimeout)
+            clearTimeout(this.#clickMaxTimeout);
     }
     //#endregion
     //#endregion
@@ -485,7 +493,8 @@ class TrackerManager extends GObject.Object {
         if (this.#refreshRate !== newRefreshRate) {
             this.#refreshRate = newRefreshRate;
             if (this.#trackerPositionUpdater) { // Restart position updater if currently running
-                this.#trackerPositionUpdater = clearInterval(this.#trackerPositionUpdater);
+                if (this.#trackerPositionUpdater)
+                    clearInterval(this.#trackerPositionUpdater);
                 this.#trackerPositionUpdater = setInterval(
                     this.#updateTrackerPosition.bind(this),
                     1000 / this.#refreshRate

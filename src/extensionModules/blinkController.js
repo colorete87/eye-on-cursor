@@ -42,7 +42,8 @@ export class BlinkController {
                 `changed::${key}`,
                 () => {
                 // Delay reset so that the blink routine gets updated after the eye array
-                    this.#blinkChangeDelay = clearTimeout(this.#blinkChangeDelay);
+                    if (this.#blinkChangeDelay)
+                        clearTimeout(this.#blinkChangeDelay);
                     this.#blinkChangeDelay = setTimeout(
                         this.#startBlinkMode.bind(this),
                         BLINK_CHANGE_DELAY
@@ -98,7 +99,8 @@ export class BlinkController {
             this.#blinkIntervalRange[0] +
             ((this.#blinkIntervalRange[1] - this.#blinkIntervalRange[0]) * Math.random());
 
-        eye.randomBlinkTimeout = clearTimeout(eye.randomBlinkTimeout);
+        if (eye.randomBlinkTimeout)
+            clearTimeout(eye.randomBlinkTimeout);
         eye.randomBlinkTimeout = setTimeout(() => {
             eye.blink();
             this.#scheduleNextBlink(eye);
@@ -111,7 +113,8 @@ export class BlinkController {
             this.#blinkIntervalRange[0] +
         ((this.#blinkIntervalRange[1] - this.#blinkIntervalRange[0]) * Math.random());
 
-        this.#randomTimeout = clearTimeout(this.#randomTimeout);
+        if (this.#randomTimeout)
+            clearTimeout(this.#randomTimeout);
         this.#randomTimeout = setTimeout(() => {
             this.#blinkAll();
             this.#scheduleNextSyncBlink();
@@ -188,7 +191,8 @@ export class BlinkController {
     }
 
     #stopFixedBlink() {
-        this.#fixedRoutine = clearInterval(this.#fixedRoutine);
+        if (this.#fixedRoutine)
+            clearInterval(this.#fixedRoutine);
     }
     //#endregion
 
@@ -198,7 +202,8 @@ export class BlinkController {
     }
 
     #stopRandomBlink() {
-        this.#randomTimeout = clearTimeout(this.#randomTimeout);
+        if (this.#randomTimeout)
+            clearTimeout(this.#randomTimeout);
     }
     //#endregion
 
@@ -209,7 +214,8 @@ export class BlinkController {
 
     #stopUnsyncedBlink() {
         this.#eyeArray.forEach((eye) => {
-            eye.randomBlinkTimeout = clearTimeout(eye.randomBlinkTimeout);
+            if (eye.randomBlinkTimeout)
+                clearTimeout(eye.randomBlinkTimeout);
         });
     }
     //#endregion

@@ -326,7 +326,8 @@ class Eye extends PanelMenu.Button {
         // Update refresh rate if changed
         if (this.#refreshRate !== newRefreshRate) {
             this.#refreshRate = newRefreshRate;
-            this.#eyeRedrawInterval = clearInterval(this.#eyeRedrawInterval);
+            if (this.#eyeRedrawInterval)
+                clearInterval(this.#eyeRedrawInterval);
             this.#eyeRedrawInterval = setInterval(
                 this.#updateEyeFrame.bind(this),
                 1000 / this.#refreshRate
@@ -340,7 +341,8 @@ class Eye extends PanelMenu.Button {
         const totalFrames = Math.ceil(this.#refreshRate * (BLINK_DURATION / 1000));
         const halfFrames = totalFrames / 2;
 
-        this.#eyelidLevelInterval = clearInterval(this.#eyelidLevelInterval);
+        if (this.#eyelidLevelInterval)
+            clearInterval(this.#eyelidLevelInterval);
         this.#blinking = true;
         let currentFrame = 0;
         this.#eyelidLevel = 0;
@@ -357,7 +359,8 @@ class Eye extends PanelMenu.Button {
                 this.#eyelidLevel = 0;
                 this.#blinking = false;
                 this.#area.queue_repaint(); // Ensure that blinking animation ends with eyelid completely opened
-                this.#eyelidLevelInterval = clearInterval(this.#eyelidLevelInterval);
+                if (this.#eyelidLevelInterval)
+                    clearInterval(this.#eyelidLevelInterval);
             }
         }, 1000 / this.#refreshRate);
     }
@@ -369,11 +372,14 @@ class Eye extends PanelMenu.Button {
         this.#area.disconnect(this.#repaintHandler);
 
         // Stop blinking
-        this.randomBlinkTimeout = clearTimeout(this.randomBlinkTimeout);
-        this.#eyelidLevelInterval = clearInterval(this.#eyelidLevelInterval);
+        if (this.randomBlinkTimeout)
+            clearTimeout(this.randomBlinkTimeout);
+        if (this.#eyelidLevelInterval)
+            clearInterval(this.#eyelidLevelInterval);
 
         // Stop periodic redraw
-        this.#eyeRedrawInterval = clearInterval(this.#eyeRedrawInterval);
+        if (this.#eyeRedrawInterval)
+            clearInterval(this.#eyeRedrawInterval);
 
         // Destroy drawing
         this.#area.destroy();
