@@ -187,6 +187,8 @@ export class BlinkController {
 
     //#region Fixed mode
     #startFixedBlink() {
+        if (this.#fixedRoutine)
+            clearInterval(this.#fixedRoutine);
         this.#fixedRoutine = setInterval(this.#blinkAll.bind(this), 1000 * this.#blinkInterval);
     }
 
