@@ -32,7 +32,7 @@ bash tools/make_version_tag.sh
 
 ### Added
 
-- Per-eye configuration (position, appearance)"
+- Per-eye configuration (position, appearance)
 - Custom colors for sclera and pupil
 - **Click** and **Synced Random** blink modes
 - Support for accent color from custom themes

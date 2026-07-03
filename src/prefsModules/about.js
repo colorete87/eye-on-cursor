@@ -30,7 +30,7 @@ const issueUrl = 'https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/issues';
 const releaseNotes = `
 <p>Added</p>
 <ul>
-    <li>Per-eye configuration (position, appearance)"</li>
+    <li>Per-eye configuration (position, appearance)</li>
     <li>Custom colors for sclera and pupil</li>
     <li><em>Click</em> and <em>Synced Random</em> blink modes</li>
     <li>Support for accent color from custom themes</li>
