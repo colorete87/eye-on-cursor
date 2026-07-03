@@ -22,7 +22,7 @@ export class BlinkController {
     #blinkIntervalRange;
     #blinkMode;
     #fixedRoutine;
-    #randomSyncTimeout;
+    #randomTimeout;
 
     //#region Constructor
     constructor(settings, eyeArray, mouseTracker) {
@@ -98,6 +98,7 @@ export class BlinkController {
             this.#blinkIntervalRange[0] +
             ((this.#blinkIntervalRange[1] - this.#blinkIntervalRange[0]) * Math.random());
 
+        eye.randomBlinkTimeout = clearTimeout(eye.randomBlinkTimeout);
         eye.randomBlinkTimeout = setTimeout(() => {
             eye.blink();
             this.#scheduleNextBlink(eye);
@@ -110,9 +111,10 @@ export class BlinkController {
             this.#blinkIntervalRange[0] +
         ((this.#blinkIntervalRange[1] - this.#blinkIntervalRange[0]) * Math.random());
 
-        return setTimeout(() => {
+        this.#randomTimeout = clearTimeout(this.#randomTimeout);
+        this.#randomTimeout = setTimeout(() => {
             this.#blinkAll();
-            this.#randomSyncTimeout = this.#scheduleNextSyncBlink();
+            this.#scheduleNextSyncBlink();
         }, 1000 * interval);
     }
     //#endregion
@@ -192,11 +194,11 @@ export class BlinkController {
 
     //#region Random mode
     #startRandomBlink() {
-        this.#randomSyncTimeout = this.#scheduleNextSyncBlink();
+        this.#scheduleNextSyncBlink();
     }
 
     #stopRandomBlink() {
-        this.#randomSyncTimeout = clearTimeout(this.#randomSyncTimeout);
+        this.#randomTimeout = clearTimeout(this.#randomTimeout);
     }
     //#endregion
 
