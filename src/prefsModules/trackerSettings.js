@@ -193,7 +193,7 @@ class TrackerPage extends Adw.PreferencesPage {
 
         const isWayland = Gdk.Display.get_default().constructor.name.includes('Wayland');
         if (isWayland)
-            colorClickRow.set_tooltip_text(_('Click highlighting does not work in windows.'));
+            colorClickRow.set_tooltip_text(_('Click detection only works on the desktop.'));
 
         drawingGroup.add(colorClickRow);
         //#endregion

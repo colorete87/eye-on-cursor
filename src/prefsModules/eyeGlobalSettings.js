@@ -3,6 +3,7 @@
 
 //#region Imports
 import Adw from 'gi://Adw';
+import Gdk from 'gi://Gdk';
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
@@ -107,9 +108,20 @@ class EyeGlobalPage extends Adw.PreferencesPage {
             model: blinkModeLabelList,
             selected: settings.get_enum('eye-blink-mode'),
         });
-        blinkModeRow.connect('notify::selected', (widget) =>
-            settings.set_enum('eye-blink-mode', widget.selected)
-        );
+
+        const isWayland = Gdk.Display.get_default().constructor.name.includes('Wayland');
+        const clickTooltip = _('Click detection only works on the desktop.');
+        if (isWayland && settings.get_string('eye-blink-mode') === 'click')
+            blinkModeRow.set_tooltip_text(clickTooltip);
+
+        blinkModeRow.connect('notify::selected', (widget) => {
+            settings.set_enum('eye-blink-mode', widget.selected);
+            if (isWayland && settings.get_string('eye-blink-mode') === 'click')
+                blinkModeRow.set_tooltip_text(clickTooltip);
+            else
+                blinkModeRow.set_tooltip_text('');
+        });
+
         blinkGroup.add(blinkModeRow);
 
         resetFunctions.push(() => {
