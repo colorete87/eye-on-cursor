@@ -112,7 +112,7 @@ This extension is forked from [Eye and Mouse Extended][eye-and-mouse-extended] b
 [charts]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/graphs/main/charts
 [pipelines]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/pipelines?ref=main
 [badge-release]: https://img.shields.io/gitlab/v/release/39179?gitlab_url=https://gitlab.gnome.org&logo=git&color=e01b24
-[badge-shell]: https://img.shields.io/badge/compatibility-46_to_50-3584e4?logo=gnome
+[badge-shell]: https://img.shields.io/badge/GNOME-46_--_50-3584e4?logo=gnome
 [badge-downloads]: https://img.shields.io/gnome-extensions/dt/eye-on-cursor%40djinnalexio.github.io?logo=gnome&color=3584e4
 [badge-gjs]: ./images/gjs-badge.svg
 [badge-pipeline]: https://img.shields.io/gitlab/pipeline-status/DjinnAlexio/eye-on-cursor?gitlab_url=https://gitlab.gnome.org&branch=main&logo=gitlab
