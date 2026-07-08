@@ -34,18 +34,6 @@ bash tools/make_version_tag.sh
 
 ## [3.0.2] - 2026-07-03
 
-### Fixed
-
-- Clear all blink routines and timeouts at destroy
-
-## [3.0.1] - 2026-07-03
-
-### Fixed
-
-- Clear timeouts for random and unsynced blink methods before re-assigning them
-
-## [3.0.0] - 2026-07-02
-
 ### Added
 
 - Per-eye configuration (position, appearance)
@@ -205,9 +193,7 @@ bash tools/make_version_tag.sh
 Forked from [Eye and Mouse Extended][eye-and-mouse-extended] by [Alexey Lovchikov][alexey-lovchikov].
 
 [unreleased]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/compare/v3.0.2...HEAD
-[3.0.2]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/compare/v3.0.1...v3.0.2
-[3.0.1]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/compare/v3.0.0...v3.0.1
-[3.0.0]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/compare/v2.4.1...v3.0.0
+[3.0.2]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/compare/v2.4.1...v3.0.2
 [2.4.1]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/compare/v2.2.1...v2.4.1
 [2.2.1]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/compare/v2.1.1...v2.2.1
 [2.1.1]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/compare/v2.1.0...v2.1.1
