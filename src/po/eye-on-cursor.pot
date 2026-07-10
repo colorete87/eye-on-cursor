@@ -6,10 +6,10 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: eye-on-cursor 3.0.0\n"
+"Project-Id-Version: eye-on-cursor 3.0.3\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/"
 "issues\n"
-"POT-Creation-Date: 2026-07-03 00:28+0100\n"
+"POT-Creation-Date: 2026-07-10 00:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,38 +18,38 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/extensionModules/utils.js:82
+#: src/extensionModules/eye.js:79
+msgid "Animated eye that follows the mouse"
+msgstr ""
+
+#: src/extensionModules/eye.js:137 src/prefsModules/trackerSettings.js:241
+msgid "Toggle Tracker"
+msgstr ""
+
+#: src/extensionModules/eye.js:142
+msgid "Settings"
+msgstr ""
+
+#: src/extensionModules/utils.js:86
 msgid "Version 3.0 — What’s New"
 msgstr ""
 
-#: src/extensionModules/utils.js:83
+#: src/extensionModules/utils.js:87
 msgid ""
 "Eyes are now individually configurable, with new blink modes and broader "
 "theme color support."
 msgstr ""
 
-#: src/extensionModules/utils.js:91
+#: src/extensionModules/utils.js:95
 msgid "Open Settings"
 msgstr ""
 
-#: src/extensionModules/utils.js:93
+#: src/extensionModules/utils.js:97
 msgid "View Changelog"
 msgstr ""
 
-#: src/extensionModules/utils.js:100 src/prefsModules/about.js:89
+#: src/extensionModules/utils.js:104 src/prefsModules/about.js:82
 msgid "Donate"
-msgstr ""
-
-#: src/extensionModules/eye.js:80
-msgid "Animated eye that follows the mouse"
-msgstr ""
-
-#: src/extensionModules/eye.js:138 src/prefsModules/trackerSettings.js:241
-msgid "Toggle Tracker"
-msgstr ""
-
-#: src/extensionModules/eye.js:143
-msgid "Settings"
 msgstr ""
 
 #: src/prefsModules/prefsWidgets.js:105 src/prefsModules/prefsWidgets.js:156
@@ -77,120 +77,125 @@ msgid "Cancel"
 msgstr ""
 
 #: src/prefsModules/prefsWidgets.js:288
-#: src/prefsModules/eyeGlobalSettings.js:238
+#: src/prefsModules/eyeGlobalSettings.js:250
 #: src/prefsModules/eyeSettings.js:320 src/prefsModules/trackerSettings.js:249
 msgid "Reset"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:27
+#: src/prefsModules/eyeGlobalSettings.js:28
 msgid "Overview"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:33
+#: src/prefsModules/eyeGlobalSettings.js:34
 msgid "General"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:39
+#: src/prefsModules/eyeGlobalSettings.js:40
 msgid "Show Eyes"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:40
+#: src/prefsModules/eyeGlobalSettings.js:41
 msgid "Show eyes on the panel"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:49
+#: src/prefsModules/eyeGlobalSettings.js:50
 msgid "Context Menu"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:50
+#: src/prefsModules/eyeGlobalSettings.js:51
 msgid "Click menu for the eyes"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:59
+#: src/prefsModules/eyeGlobalSettings.js:60
 #: src/prefsModules/trackerSettings.js:219
 msgid "Refresh Rate (Hz)"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:60
+#: src/prefsModules/eyeGlobalSettings.js:61
 #: src/prefsModules/trackerSettings.js:220
 msgid "Frames per second"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:68
+#: src/prefsModules/eyeGlobalSettings.js:69
 #: src/prefsModules/trackerSettings.js:228
 msgid "Higher refresh rates may impact performance"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:74
+#: src/prefsModules/eyeGlobalSettings.js:75
 msgid "Blinking"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:81
+#: src/prefsModules/eyeGlobalSettings.js:82
 msgid "None"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:85
+#: src/prefsModules/eyeGlobalSettings.js:86
 msgid "Click"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:89
+#: src/prefsModules/eyeGlobalSettings.js:90
 msgid "Fixed"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:93
+#: src/prefsModules/eyeGlobalSettings.js:94
 msgid "Random"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:97
+#: src/prefsModules/eyeGlobalSettings.js:98
 msgid "Unsynced"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:105
+#: src/prefsModules/eyeGlobalSettings.js:106
 msgid "Blink Mode"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:106
+#: src/prefsModules/eyeGlobalSettings.js:107
 msgid "How blinking is triggered"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:126
+#: src/prefsModules/eyeGlobalSettings.js:113
+#: src/prefsModules/trackerSettings.js:196
+msgid "Click detection only works on the desktop."
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:138
 msgid "Fixed Blink Interval"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:127
+#: src/prefsModules/eyeGlobalSettings.js:139
 msgid "Time between blinks in seconds"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:147
+#: src/prefsModules/eyeGlobalSettings.js:159
 msgid "Blink Interval Range"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:148
+#: src/prefsModules/eyeGlobalSettings.js:160
 msgid "Minimum and maximum time between blinks, in seconds"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:205
+#: src/prefsModules/eyeGlobalSettings.js:217
 msgid "to"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:242
+#: src/prefsModules/eyeGlobalSettings.js:254
 msgid "Reset Global Eye Settings?"
 msgstr ""
 
-#: src/prefsModules/about.js:56
+#: src/prefsModules/about.js:49
 msgid "About Eye on Cursor"
 msgstr ""
 
-#: src/prefsModules/about.js:80
+#: src/prefsModules/about.js:73
 msgctxt "(USER)NAME EMAIL"
 msgid "translator_credits"
 msgstr ""
 
-#: src/prefsModules/about.js:86
+#: src/prefsModules/about.js:79
 msgid "Extension Page"
 msgstr ""
 
-#: src/prefsModules/about.js:91
+#: src/prefsModules/about.js:84
 msgid "Forked from"
 msgstr ""
 
@@ -372,10 +377,6 @@ msgstr ""
 
 #: src/prefsModules/trackerSettings.js:181
 msgid "Colors for left, middle, and right clicks"
-msgstr ""
-
-#: src/prefsModules/trackerSettings.js:196
-msgid "Click highlighting does not work in windows."
 msgstr ""
 
 #: src/prefsModules/trackerSettings.js:204
