@@ -28,6 +28,8 @@ bash tools/make_version_tag.sh
 
 ## [Unreleased]
 
+## [3.0.3]
+
 ### Fixed
 
 - use Adwaita Slate as fallback color
@@ -192,7 +194,8 @@ bash tools/make_version_tag.sh
 
 Forked from [Eye and Mouse Extended][eye-and-mouse-extended] by [Alexey Lovchikov][alexey-lovchikov].
 
-[unreleased]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/compare/v3.0.2...HEAD
+[unreleased]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/compare/v3.0.3...HEAD
+[3.0.3]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/compare/v3.0.2...v3.0.3
 [3.0.2]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/compare/v2.4.1...v3.0.2
 [2.4.1]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/compare/v2.2.1...v2.4.1
 [2.2.1]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/compare/v2.1.1...v2.2.1

@@ -1,6 +1,6 @@
 {
   "name": "eye-on-cursor",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "Add animated eyes to your GNOME panel that follow your mouse cursor. Bring your desktop to life!\n\nComes with a cursor tracker to help you keep track of your pointer during presentations, screencasts, or everyday use.\n\nFeatures:\n- Panel eyes that follow your mouse cursor\n- Eye shape, color, and blinking customization\n- Customizable cursor tracker with keyboard shortcut\n\nForked from Eye and Mouse Extended by Alexey Lovchikov.",
   "keywords": [
     "GNOME",
