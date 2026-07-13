@@ -18,7 +18,6 @@ import {drawEye} from './eyeRenderer.js';
 //#endregion
 
 //#region Constants
-const BLINK_DURATION = 250; // TODO turn blink duration into a setting 0.2-2s
 const EYE_CHILD_SETTINGS = [
     'shape',
     'outline-mode',
@@ -31,7 +30,7 @@ const EYE_CHILD_SETTINGS = [
     'color-pupil',
     'color-eyelid',
 ];
-const EYE_GLOBAL_SETTINGS = ['eye-reactive', 'eye-refresh-rate'];
+const EYE_GLOBAL_SETTINGS = ['eye-reactive', 'eye-refresh-rate', 'eye-blink-duration'];
 const EYE_PANEL_SETTINGS = ['enabled', 'position', 'index'];
 //#endregion
 
@@ -59,6 +58,7 @@ class Eye extends PanelMenu.Button {
     #lineWidth;
     #width;
     #refreshRate;
+    #blinkDuration;
     #color = {
         useCustomSclera: null,
         sclera: null,
@@ -90,6 +90,7 @@ class Eye extends PanelMenu.Button {
         // Initialize settings values
         this.reactive = this.#globalSettings.get_boolean('eye-reactive'); // Inherited property
         this.#refreshRate = this.#globalSettings.get_int('eye-refresh-rate');
+        this.#blinkDuration = this.#globalSettings.get_int('eye-blink-duration');
 
         this.#shape = this.settings.get_string('shape');
         this.#lineMode = this.settings.get_boolean('outline-mode');
@@ -242,10 +243,41 @@ class Eye extends PanelMenu.Button {
     }
     //#endregion
 
+    //#region Blink method
+    blink() {
+        const totalFrames = Math.ceil(this.#refreshRate * (this.#blinkDuration / 1000));
+        const halfFrames = totalFrames / 2;
+
+        if (this.#eyelidLevelInterval)
+            clearInterval(this.#eyelidLevelInterval);
+        this.#blinking = true;
+        let currentFrame = 0;
+        this.#eyelidLevel = 0;
+        this.#eyelidLevelInterval = setInterval(() => {
+            currentFrame++;
+
+            // Compute eyelid level
+            this.#eyelidLevel = currentFrame <= halfFrames
+                ? currentFrame / halfFrames // Closing
+                : 1 - ((currentFrame - halfFrames) / halfFrames); // Opening
+
+            // Finishing
+            if (currentFrame >= totalFrames) {
+                this.#eyelidLevel = 0;
+                this.#blinking = false;
+                this.#area.queue_repaint(); // Ensure that blinking animation ends with eyelid completely opened
+                if (this.#eyelidLevelInterval)
+                    clearInterval(this.#eyelidLevelInterval);
+            }
+        }, 1000 / this.#refreshRate);
+    }
+    //#endregion
+
     //#region Properties updater
     #updateEyeProperties() {
         const newReactive = this.#globalSettings.get_boolean('eye-reactive');
         const newRefreshRate = this.#globalSettings.get_int('eye-refresh-rate');
+        const newBlinkDuration = this.#globalSettings.get_int('eye-blink-duration');
 
         const newShape = this.settings.get_string('shape');
         const newLineMode = this.settings.get_boolean('outline-mode');
@@ -261,6 +293,21 @@ class Eye extends PanelMenu.Button {
         // Update reactive property
         if (this.reactive !== newReactive)
             this.reactive = newReactive;
+
+        // Update refresh rate if changed
+        if (this.#refreshRate !== newRefreshRate) {
+            this.#refreshRate = newRefreshRate;
+            if (this.#eyeRedrawInterval)
+                clearInterval(this.#eyeRedrawInterval);
+            this.#eyeRedrawInterval = setInterval(
+                this.#updateEyeFrame.bind(this),
+                1000 / this.#refreshRate
+            );
+        }
+
+        // Update blink duration if changed
+        if (this.#blinkDuration !== newBlinkDuration)
+            this.#blinkDuration = newBlinkDuration;
 
         // Update shape
         if (this.#shape !== newShape) {
@@ -317,47 +364,6 @@ class Eye extends PanelMenu.Button {
             this.#color.eyelid = newColorEyelid;
             this.#area.queue_repaint();
         }
-
-        // Update refresh rate if changed
-        if (this.#refreshRate !== newRefreshRate) {
-            this.#refreshRate = newRefreshRate;
-            if (this.#eyeRedrawInterval)
-                clearInterval(this.#eyeRedrawInterval);
-            this.#eyeRedrawInterval = setInterval(
-                this.#updateEyeFrame.bind(this),
-                1000 / this.#refreshRate
-            );
-        }
-    }
-    //#endregion
-
-    //#region Blink method
-    blink() {
-        const totalFrames = Math.ceil(this.#refreshRate * (BLINK_DURATION / 1000));
-        const halfFrames = totalFrames / 2;
-
-        if (this.#eyelidLevelInterval)
-            clearInterval(this.#eyelidLevelInterval);
-        this.#blinking = true;
-        let currentFrame = 0;
-        this.#eyelidLevel = 0;
-        this.#eyelidLevelInterval = setInterval(() => {
-            currentFrame++;
-
-            // Compute eyelid level
-            this.#eyelidLevel = currentFrame <= halfFrames
-                ? currentFrame / halfFrames // Closing
-                : 1 - ((currentFrame - halfFrames) / halfFrames); // Opening
-
-            // Finishing
-            if (currentFrame >= totalFrames) {
-                this.#eyelidLevel = 0;
-                this.#blinking = false;
-                this.#area.queue_repaint(); // Ensure that blinking animation ends with eyelid completely opened
-                if (this.#eyelidLevelInterval)
-                    clearInterval(this.#eyelidLevelInterval);
-            }
-        }, 1000 / this.#refreshRate);
     }
     //#endregion
 

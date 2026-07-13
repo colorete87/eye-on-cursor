@@ -132,6 +132,21 @@ class EyeGlobalPage extends Adw.PreferencesPage {
         });
         //#endregion
 
+        //#region Blink duration
+        globalKeys.push('eye-blink-duration');
+        const blinkDuration = new Adw.SpinRow({
+            title: _('Blink Duration'),
+            subtitle: _('Duration of a blink in milliseconds'),
+            adjustment: new Gtk.Adjustment({
+                lower: 100,
+                upper: 1000,
+                step_increment: 10,
+            }),
+        });
+        settings.bind('eye-blink-duration', blinkDuration, 'value', Gio.SettingsBindFlags.DEFAULT);
+        blinkGroup.add(blinkDuration);
+        //#endregion
+
         //#region Blink interval
         globalKeys.push('eye-blink-interval');
         const blinkIntervalRow = new Adw.SpinRow({

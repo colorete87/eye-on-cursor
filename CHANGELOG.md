@@ -28,6 +28,10 @@ bash tools/make_version_tag.sh
 
 ## [Unreleased]
 
+### Added
+
+- Blink duration setting
+
 ## [3.0.3]
 
 ### Fixed

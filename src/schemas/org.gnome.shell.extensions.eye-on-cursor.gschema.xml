@@ -43,6 +43,12 @@
       <summary>Blinking mode of the eyes</summary>
       <description>Describes how the eyes blink: 'none', 'click', 'fixed', 'random', 'unsynced'.</description>
     </key>
+    <key name='eye-blink-duration' type='i'>
+      <default>250</default>
+      <range min='100' max='1000'/>
+      <summary>Blink duration</summary>
+      <description>Specifies the duration of a blink in milliseconds.</description>
+    </key>
     <key name='eye-blink-interval' type='d'>
       <default>6.0</default>
       <range min='0.1' max='3600'/>
