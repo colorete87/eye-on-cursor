@@ -161,8 +161,8 @@ function drawNaturalEye(area, options) {
  *
  * @param {St.DrawingArea} area - The drawing area where the eye will be rendered.
  * @param {object} options - The drawing options.
- * @param {number} scaleX [scaleX=1] - The scaling factor for the horizontal axis.
- * @param {number} scaleY [scaleY=1] - The scaling factor for the vertical axis.
+ * @param {number} [scaleX=1] - The scaling factor for the horizontal axis.
+ * @param {number} [scaleY=1] - The scaling factor for the vertical axis.
  */
 function drawRoundEye(area, options, scaleX = 1, scaleY = 1) {
     let [mouseX, mouseY] = [options.mouseX, options.mouseY];
@@ -260,6 +260,6 @@ function drawRoundEye(area, options, scaleX = 1, scaleY = 1) {
  * @param {object} color - The color to apply.
  */
 function setColor(cr, color) {
-    cr.setSourceRGB(color['red'], color['green'], color['blue']);
+    cr.setSourceRGB(color.red, color.green, color.blue);
 }
 //#endregion

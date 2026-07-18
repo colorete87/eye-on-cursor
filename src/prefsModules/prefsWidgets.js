@@ -19,7 +19,7 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
  *
  * @param {Gio.Settings} settings - The settings object for this extension.
  * @param {string} colorKey - The settings key for this setting color string.
- * @param {string|null} enabledKey [enabledKey=null] - The settings key for the boolean that toggles
+ * @param {string|null} [enabledKey=null] - The settings key for the boolean that toggles
  * overriding the theme color with this user-set color.
  */
 export const EyeColorPicker = GObject.registerClass(

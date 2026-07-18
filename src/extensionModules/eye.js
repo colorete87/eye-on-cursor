@@ -149,7 +149,6 @@ class Eye extends PanelMenu.Button {
 
         // Create the eye canvas
         this.#area = new St.DrawingArea({width: this.#width});
-        // TODO see interaction if any between area width and button width
         this.add_child(this.#area);
 
         // Connect the repaint signal of the area to the repaint method
