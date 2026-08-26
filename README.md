@@ -31,50 +31,37 @@
 
 ## Installation
 
-### GNOME Extensions Website (recommended)
+### From the GNOME Extensions Website (recommended)
 
 [![EGO page][ego-button]][ego-page]
 
-### Manual Installation
+### From the Repository
 
 > [!NOTE]
-> If installed manually, the extension will not receive automatic updates from the GNOME Extensions Website. Check the [Changelog][changelog] to track changes between versions.
+> If installed from the repository, the extension will not receive automatic updates from the GNOME Extensions Website. Check the [Changelog][changelog] to track changes between versions.
 
-#### Latest Release
+#### Option 1: Latest Release
 
-Run the following commands to download and install the latest release:
+Download and install the latest release:
 
 ```bash
 curl -LO https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/releases/permalink/latest/downloads/eye-on-cursor.shell-extension.zip
 gnome-extensions install -f eye-on-cursor.shell-extension.zip
 ```
 
-#### Source
+#### Option 2: Source
 
-1. Download or clone the repository and navigate into it:
+Build from source:
 
-    ```bash
-    curl -LO https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/archive/main/eye-on-cursor-main.zip
-    unzip eye-on-cursor-main.zip
-    cd eye-on-cursor-main
-    ```
-
-    or
-
-    ```bash
-    git clone https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor.git
-    cd eye-on-cursor
-    ```
-
-2. Install the extension:
-
-    ```bash
-    make install
-    ```
+```bash
+git clone https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor.git
+cd eye-on-cursor
+make install
+```
 
 #### Enable
 
-After installing the package, log out and back in, then enable the extension using **Extension Manager** or by running:
+After installing the package, log out and back in, then enable the extension via **Extension Manager** or run:
 
 ```bash
 gnome-extensions enable eye-on-cursor@djinnalexio.github.io
