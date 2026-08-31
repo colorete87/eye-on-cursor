@@ -5,11 +5,11 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: eye-on-cursor 2.4.1\n"
+"Project-Id-Version: eye-on-cursor 3.1.0\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/"
 "issues\n"
-"POT-Creation-Date: 2026-07-04 16:31+0100\n"
-"PO-Revision-Date: 2026-07-10 00:42+0100\n"
+"POT-Creation-Date: 2026-08-31 10:50+0100\n"
+"PO-Revision-Date: 2026-08-31 11:05+0100\n"
 "Last-Translator: Djinn Alexio <djinnalexio+gnome@proton.me>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -23,35 +23,31 @@ msgstr ""
 msgid "Animated eye that follows the mouse"
 msgstr "Un œil animé qui suit la souris"
 
-#: src/extensionModules/eye.js:137 src/prefsModules/trackerSettings.js:241
+#: src/extensionModules/eye.js:138 src/prefsModules/trackerSettings.js:241
 msgid "Toggle Tracker"
 msgstr "Activer/Désactiver le traqueur"
 
-#: src/extensionModules/eye.js:142
+#: src/extensionModules/eye.js:143
 msgid "Settings"
 msgstr "Paramètres"
 
 #: src/extensionModules/utils.js:86
-msgid "Version 3.0 — What’s New"
-msgstr "Version 3.0 - Quoi de neuf?"
+msgid "Version 3.1 — What’s New"
+msgstr "Version 3.1 - Quoi de neuf?"
 
 #: src/extensionModules/utils.js:87
-msgid ""
-"Eyes are now individually configurable, with new blink modes and broader "
-"theme color support."
-msgstr ""
-"Configurations individuelles pour les yeux, nouveaux modes de clignement et "
-"meilleur support des couleurs de thème."
+msgid "Blink duration is now configurable."
+msgstr "La durée de clignement est maintenant configurable."
 
-#: src/extensionModules/utils.js:95
+#: src/extensionModules/utils.js:94
 msgid "Open Settings"
 msgstr "Paramètres"
 
-#: src/extensionModules/utils.js:97
+#: src/extensionModules/utils.js:96
 msgid "View Changelog"
 msgstr "Modifications"
 
-#: src/extensionModules/utils.js:104 src/prefsModules/about.js:89
+#: src/extensionModules/utils.js:103 src/prefsModules/about.js:83
 msgid "Donate"
 msgstr "Faire un Don"
 
@@ -82,7 +78,7 @@ msgid "Cancel"
 msgstr "Annuler"
 
 #: src/prefsModules/prefsWidgets.js:288
-#: src/prefsModules/eyeGlobalSettings.js:250
+#: src/prefsModules/eyeGlobalSettings.js:265
 #: src/prefsModules/eyeSettings.js:320 src/prefsModules/trackerSettings.js:249
 msgid "Reset"
 msgstr "Réinitialiser"
@@ -164,45 +160,36 @@ msgid "Click detection only works on the desktop."
 msgstr "La détection des clics ne fonctionne que sur le bureau."
 
 #: src/prefsModules/eyeGlobalSettings.js:138
+msgid "Blink Duration"
+msgstr "Durée du clignement"
+
+#: src/prefsModules/eyeGlobalSettings.js:139
+msgid "Duration of a blink in milliseconds"
+msgstr "Durée d'un clignement en millisecondes"
+
+#: src/prefsModules/eyeGlobalSettings.js:153
 msgid "Fixed Blink Interval"
 msgstr "Intervalle fixe de clignement"
 
-#: src/prefsModules/eyeGlobalSettings.js:139
+#: src/prefsModules/eyeGlobalSettings.js:154
 msgid "Time between blinks in seconds"
 msgstr "Secondes entre clignements"
 
-#: src/prefsModules/eyeGlobalSettings.js:159
+#: src/prefsModules/eyeGlobalSettings.js:174
 msgid "Blink Interval Range"
 msgstr "Plage d'intervalles de clignement"
 
-#: src/prefsModules/eyeGlobalSettings.js:160
+#: src/prefsModules/eyeGlobalSettings.js:175
 msgid "Minimum and maximum time between blinks, in seconds"
 msgstr "Minimum et maximum de secondes entre clignements"
 
-#: src/prefsModules/eyeGlobalSettings.js:217
+#: src/prefsModules/eyeGlobalSettings.js:232
 msgid "to"
 msgstr "à"
 
-#: src/prefsModules/eyeGlobalSettings.js:254
+#: src/prefsModules/eyeGlobalSettings.js:269
 msgid "Reset Global Eye Settings?"
 msgstr "Réinitialiser les paramètres globaux d’yeux?"
-
-#: src/prefsModules/about.js:56
-msgid "About Eye on Cursor"
-msgstr "À propos de Eye on Cursor"
-
-#: src/prefsModules/about.js:80
-msgctxt "(USER)NAME EMAIL"
-msgid "translator_credits"
-msgstr "Djinn Alexio djinnalexio+gnome@proton.me"
-
-#: src/prefsModules/about.js:86
-msgid "Extension Page"
-msgstr "Page de l’extension"
-
-#: src/prefsModules/about.js:91
-msgid "Forked from"
-msgstr "Dérivé de"
 
 #: src/prefsModules/eyeSettings.js:42
 #, javascript-format
@@ -403,3 +390,20 @@ msgstr "Réinitialiser tous les paramètres du traqueur?"
 #: src/prefsModules/trackerSettings.js:262
 msgid "Information"
 msgstr "Information"
+
+#: src/prefsModules/about.js:50
+msgid "About Eye on Cursor"
+msgstr "À propos de Eye on Cursor"
+
+#: src/prefsModules/about.js:74
+msgctxt "(USER)NAME EMAIL"
+msgid "translator_credits"
+msgstr "Djinn Alexio djinnalexio+gnome@proton.me"
+
+#: src/prefsModules/about.js:80
+msgid "Extension Page"
+msgstr "Page de l’extension"
+
+#: src/prefsModules/about.js:85
+msgid "Forked from"
+msgstr "Dérivé de"

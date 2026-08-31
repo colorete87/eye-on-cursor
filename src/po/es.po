@@ -5,11 +5,11 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: eye-on-cursor 2.4.1\n"
+"Project-Id-Version: eye-on-cursor 3.1.0\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/"
 "issues\n"
-"POT-Creation-Date: 2026-07-04 16:31+0100\n"
-"PO-Revision-Date: 2026-07-10 00:44+0100\n"
+"POT-Creation-Date: 2026-08-31 10:50+0100\n"
+"PO-Revision-Date: 2026-08-31 11:10+0100\n"
 "Last-Translator: Djinn Alexio <djinnalexio+gnome@proton.me>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -23,35 +23,31 @@ msgstr ""
 msgid "Animated eye that follows the mouse"
 msgstr "Ojo animado que sigue el ratón"
 
-#: src/extensionModules/eye.js:137 src/prefsModules/trackerSettings.js:241
+#: src/extensionModules/eye.js:138 src/prefsModules/trackerSettings.js:241
 msgid "Toggle Tracker"
 msgstr "Activar/Desactivar el Rastreador"
 
-#: src/extensionModules/eye.js:142
+#: src/extensionModules/eye.js:143
 msgid "Settings"
 msgstr "Configuración"
 
 #: src/extensionModules/utils.js:86
-msgid "Version 3.0 — What’s New"
-msgstr "Versión 3.0: Novedades"
+msgid "Version 3.1 — What’s New"
+msgstr "Versión 3.1: Novedades"
 
 #: src/extensionModules/utils.js:87
-msgid ""
-"Eyes are now individually configurable, with new blink modes and broader "
-"theme color support."
-msgstr ""
-"Los ojos ahora se pueden configurar individualmente, con nuevos modos de "
-"parpadeo y una compatibilidad más amplia con el color del tema."
+msgid "Blink duration is now configurable."
+msgstr "La duración del parpadeo ahora es configurable."
 
-#: src/extensionModules/utils.js:95
+#: src/extensionModules/utils.js:94
 msgid "Open Settings"
 msgstr "Configuración"
 
-#: src/extensionModules/utils.js:97
+#: src/extensionModules/utils.js:96
 msgid "View Changelog"
 msgstr "Cambios"
 
-#: src/extensionModules/utils.js:104 src/prefsModules/about.js:89
+#: src/extensionModules/utils.js:103 src/prefsModules/about.js:83
 msgid "Donate"
 msgstr "Donar"
 
@@ -80,7 +76,7 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: src/prefsModules/prefsWidgets.js:288
-#: src/prefsModules/eyeGlobalSettings.js:250
+#: src/prefsModules/eyeGlobalSettings.js:265
 #: src/prefsModules/eyeSettings.js:320 src/prefsModules/trackerSettings.js:249
 msgid "Reset"
 msgstr "Reiniciar"
@@ -162,45 +158,36 @@ msgid "Click detection only works on the desktop."
 msgstr "La detección de clics solo funciona en el escritorio."
 
 #: src/prefsModules/eyeGlobalSettings.js:138
+msgid "Blink Duration"
+msgstr "Duración del parpadeo"
+
+#: src/prefsModules/eyeGlobalSettings.js:139
+msgid "Duration of a blink in milliseconds"
+msgstr "Duración de un parpadeo en milisegundos"
+
+#: src/prefsModules/eyeGlobalSettings.js:153
 msgid "Fixed Blink Interval"
 msgstr "Intervalo de parpadeo fijo"
 
-#: src/prefsModules/eyeGlobalSettings.js:139
+#: src/prefsModules/eyeGlobalSettings.js:154
 msgid "Time between blinks in seconds"
 msgstr "Tiempo entre parpadeos en segundos"
 
-#: src/prefsModules/eyeGlobalSettings.js:159
+#: src/prefsModules/eyeGlobalSettings.js:174
 msgid "Blink Interval Range"
 msgstr "Rango de intervalo de parpadeo"
 
-#: src/prefsModules/eyeGlobalSettings.js:160
+#: src/prefsModules/eyeGlobalSettings.js:175
 msgid "Minimum and maximum time between blinks, in seconds"
 msgstr "Tiempo mínimo y máximo entre parpadeos, en segundos"
 
-#: src/prefsModules/eyeGlobalSettings.js:217
+#: src/prefsModules/eyeGlobalSettings.js:232
 msgid "to"
 msgstr "a"
 
-#: src/prefsModules/eyeGlobalSettings.js:254
+#: src/prefsModules/eyeGlobalSettings.js:269
 msgid "Reset Global Eye Settings?"
 msgstr "¿Restablecer la configuración global de ojos?"
-
-#: src/prefsModules/about.js:56
-msgid "About Eye on Cursor"
-msgstr "Acerca de Eye on Cursor"
-
-#: src/prefsModules/about.js:80
-msgctxt "(USER)NAME EMAIL"
-msgid "translator_credits"
-msgstr "Djinn Alexio djinnalexio+gnome@proton.me"
-
-#: src/prefsModules/about.js:86
-msgid "Extension Page"
-msgstr "Página de la extensión"
-
-#: src/prefsModules/about.js:91
-msgid "Forked from"
-msgstr "Derivado de"
 
 #: src/prefsModules/eyeSettings.js:42
 #, javascript-format
@@ -401,3 +388,20 @@ msgstr "¿Restablecer todos los ajustes del rastreador?"
 #: src/prefsModules/trackerSettings.js:262
 msgid "Information"
 msgstr "Información"
+
+#: src/prefsModules/about.js:50
+msgid "About Eye on Cursor"
+msgstr "Acerca de Eye on Cursor"
+
+#: src/prefsModules/about.js:74
+msgctxt "(USER)NAME EMAIL"
+msgid "translator_credits"
+msgstr "Djinn Alexio djinnalexio+gnome@proton.me"
+
+#: src/prefsModules/about.js:80
+msgid "Extension Page"
+msgstr "Página de la extensión"
+
+#: src/prefsModules/about.js:85
+msgid "Forked from"
+msgstr "Derivado de"

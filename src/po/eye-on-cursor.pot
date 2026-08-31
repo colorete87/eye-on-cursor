@@ -6,10 +6,10 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: eye-on-cursor 3.0.3\n"
+"Project-Id-Version: eye-on-cursor 3.1.0\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/"
 "issues\n"
-"POT-Creation-Date: 2026-07-10 00:48+0100\n"
+"POT-Creation-Date: 2026-08-31 10:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,33 +22,31 @@ msgstr ""
 msgid "Animated eye that follows the mouse"
 msgstr ""
 
-#: src/extensionModules/eye.js:137 src/prefsModules/trackerSettings.js:241
+#: src/extensionModules/eye.js:138 src/prefsModules/trackerSettings.js:241
 msgid "Toggle Tracker"
 msgstr ""
 
-#: src/extensionModules/eye.js:142
+#: src/extensionModules/eye.js:143
 msgid "Settings"
 msgstr ""
 
 #: src/extensionModules/utils.js:86
-msgid "Version 3.0 — What’s New"
+msgid "Version 3.1 — What’s New"
 msgstr ""
 
 #: src/extensionModules/utils.js:87
-msgid ""
-"Eyes are now individually configurable, with new blink modes and broader "
-"theme color support."
+msgid "Blink duration is now configurable."
 msgstr ""
 
-#: src/extensionModules/utils.js:95
+#: src/extensionModules/utils.js:94
 msgid "Open Settings"
 msgstr ""
 
-#: src/extensionModules/utils.js:97
+#: src/extensionModules/utils.js:96
 msgid "View Changelog"
 msgstr ""
 
-#: src/extensionModules/utils.js:104 src/prefsModules/about.js:82
+#: src/extensionModules/utils.js:103 src/prefsModules/about.js:83
 msgid "Donate"
 msgstr ""
 
@@ -77,7 +75,7 @@ msgid "Cancel"
 msgstr ""
 
 #: src/prefsModules/prefsWidgets.js:288
-#: src/prefsModules/eyeGlobalSettings.js:250
+#: src/prefsModules/eyeGlobalSettings.js:265
 #: src/prefsModules/eyeSettings.js:320 src/prefsModules/trackerSettings.js:249
 msgid "Reset"
 msgstr ""
@@ -159,44 +157,35 @@ msgid "Click detection only works on the desktop."
 msgstr ""
 
 #: src/prefsModules/eyeGlobalSettings.js:138
-msgid "Fixed Blink Interval"
+msgid "Blink Duration"
 msgstr ""
 
 #: src/prefsModules/eyeGlobalSettings.js:139
+msgid "Duration of a blink in milliseconds"
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:153
+msgid "Fixed Blink Interval"
+msgstr ""
+
+#: src/prefsModules/eyeGlobalSettings.js:154
 msgid "Time between blinks in seconds"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:159
+#: src/prefsModules/eyeGlobalSettings.js:174
 msgid "Blink Interval Range"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:160
+#: src/prefsModules/eyeGlobalSettings.js:175
 msgid "Minimum and maximum time between blinks, in seconds"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:217
+#: src/prefsModules/eyeGlobalSettings.js:232
 msgid "to"
 msgstr ""
 
-#: src/prefsModules/eyeGlobalSettings.js:254
+#: src/prefsModules/eyeGlobalSettings.js:269
 msgid "Reset Global Eye Settings?"
-msgstr ""
-
-#: src/prefsModules/about.js:49
-msgid "About Eye on Cursor"
-msgstr ""
-
-#: src/prefsModules/about.js:73
-msgctxt "(USER)NAME EMAIL"
-msgid "translator_credits"
-msgstr ""
-
-#: src/prefsModules/about.js:79
-msgid "Extension Page"
-msgstr ""
-
-#: src/prefsModules/about.js:84
-msgid "Forked from"
 msgstr ""
 
 #: src/prefsModules/eyeSettings.js:42
@@ -397,4 +386,21 @@ msgstr ""
 
 #: src/prefsModules/trackerSettings.js:262
 msgid "Information"
+msgstr ""
+
+#: src/prefsModules/about.js:50
+msgid "About Eye on Cursor"
+msgstr ""
+
+#: src/prefsModules/about.js:74
+msgctxt "(USER)NAME EMAIL"
+msgid "translator_credits"
+msgstr ""
+
+#: src/prefsModules/about.js:80
+msgid "Extension Page"
+msgstr ""
+
+#: src/prefsModules/about.js:85
+msgid "Forked from"
 msgstr ""
