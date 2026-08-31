@@ -30,6 +30,7 @@ bash tools/make_version_tag.sh
 
 ### Added
 
+- GNOME 51 Support
 - Blink duration setting
 
 ## [3.0.3]

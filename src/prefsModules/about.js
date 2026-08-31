@@ -28,10 +28,11 @@ const issueUrl = 'https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/issues';
 // The string for `release_notes` supports paragraphs <p>, emphasis (italics) <em>, code <code>,
 // and ordered <ol> and unordered <ul> lists with <li> list items.
 const releaseNotes = `
-<p>Fixed</p>
-<ul>
-    <li>Use Adwaita Slate as fallback color</li>
-</ul>
+<p>Added:</p>
+    <ul>
+        <li>GNOME 51 Support</li>
+        <li>Blink duration setting</li>
+    </ul>
 `;
 const supportUrl = '';
 //#endregion
