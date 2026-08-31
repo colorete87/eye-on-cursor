@@ -83,9 +83,8 @@ export function showReleaseNotification(extension) {
 
     const notification = new MessageTray.Notification({
         source,
-        title: _('Version 3.0 — What’s New'),
-        body: _('Eyes are now individually configurable, ' +
-            'with new blink modes and broader theme color support.'),
+        title: _('Version 3.1 — What’s New'),
+        body: _('Blink duration is now configurable.'),
         iconName: 'software-update-available-symbolic',
         urgency: MessageTray.Urgency.NORMAL,
     });
