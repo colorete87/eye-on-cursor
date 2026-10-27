@@ -11,7 +11,7 @@ import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {EyeResetRow} from './prefsWidgets.js';
+import {EyeResetRow} from './widgets.js';
 //#endregion
 
 /**

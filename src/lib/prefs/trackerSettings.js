@@ -11,8 +11,7 @@ import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {EyeAboutRow} from './about.js';
-import {EyeColorPicker, EyeKeybindingRow, EyeResetRow} from './prefsWidgets.js';
+import {EyeAboutRow, EyeColorPicker, EyeKeybindingRow, EyeResetRow} from './widgets.js';
 //#endregion
 
 /**

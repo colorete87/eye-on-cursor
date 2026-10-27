@@ -12,7 +12,7 @@ import {
     pgettext,
 } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {EyeColorPicker, EyeResetRow} from './prefsWidgets.js';
+import {EyeColorPicker, EyeResetRow} from './widgets.js';
 //#endregion
 
 //#region Eye Group

@@ -6,10 +6,10 @@ import St from 'gi://St';
 
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {BlinkController} from './extensionModules/blinkController.js';
-import {getThemeColor, showReleaseNotification} from './extensionModules/utils.js';
-import {spawnEyes, destroyEyes} from './extensionModules/eye.js';
-import {TrackerManager} from './extensionModules/trackerManager.js';
+import {BlinkController} from './lib/shell/blinkController.js';
+import {getThemeColor, showReleaseNotification} from './lib/shell/utils.js';
+import {spawnEyes, destroyEyes} from './lib/shell/eye.js';
+import {TrackerManager} from './lib/shell/trackerManager.js';
 //#endregion
 
 /**

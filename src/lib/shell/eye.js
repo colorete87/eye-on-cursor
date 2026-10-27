@@ -131,7 +131,7 @@ class Eye extends PanelMenu.Button {
 
         // Add popups
         const trackerIconPath =
-            GLib.build_filenamev([extension.path, 'assets', 'mouse-click-symbolic.svg']);
+            GLib.build_filenamev([extension.path, 'assets', 'hicolor', 'scalable', 'actions', 'mouse-click-symbolic.svg']);
 
         this.#menuItems = [
             this.#createPopupMenuItem(

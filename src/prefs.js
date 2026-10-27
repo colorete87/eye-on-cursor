@@ -8,9 +8,9 @@ import Gtk from 'gi://Gtk';
 
 import {ExtensionPreferences} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {EyeGlobalPage} from './prefsModules/eyeGlobalSettings.js';
-import {EyesPage} from './prefsModules/eyeSettings.js';
-import {TrackerPage} from './prefsModules/trackerSettings.js';
+import {EyeGlobalPage} from './lib/prefs/eyeGlobalSettings.js';
+import {EyesPage} from './lib/prefs/eyeSettings.js';
+import {TrackerPage} from './lib/prefs/trackerSettings.js';
 //#endregion
 
 /**

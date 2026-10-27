@@ -67,7 +67,7 @@ export function getThemeColor() {
  * @returns {MessageTray.Source} The source of notifications for the extension.
  */
 export function showReleaseNotification(extension) {
-    const logoPath = GLib.build_filenamev([extension.path, 'assets', 'eye-on-cursor-logo.svg']);
+    const logoPath = GLib.build_filenamev([extension.path, 'assets', 'hicolor', 'scalable', 'apps', 'eye-on-cursor-logo.svg']);
 
     let source = new MessageTray.Source({
         title: extension.metadata.name,
