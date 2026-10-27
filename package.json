@@ -16,16 +16,19 @@
   "license": "GPL-3.0-or-later",
   "author": "Djinn Alexio",
   "type": "module",
-  "main": "src/extension.js",
+  "private": true,
   "scripts": {
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "test": "make test"
+    "format": "prettier --check .",
+    "format:fix": "prettier --write ."
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^5.10.0",
-    "eslint": "^10.3.0",
-    "eslint-config-gnome": "git+https://gitlab.gnome.org/World/javascript/eslint-config-gnome.git#c479d059e8d9ea99c3b53c2ea43abf7fdb05eb51",
-    "eslint-formatter-junit": "^9.0.0"
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.13.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-formatter-gitlab": "^7.2.0",
+    "eslint-plugin-jsdoc": "^65.4.2",
+    "prettier": "^3.9.10"
   }
 }

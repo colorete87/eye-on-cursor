@@ -29,8 +29,7 @@ fi
 version=$(echo "$header" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
 tag="v${version}"
 
-# Extract the body: everything after the header line up to (not including)
-# the next ## section or end of file.
+# Extract the body: everything after the header line up to but not including the next ## section.
 body=$(awk "
   /^\s*## \[${version}\]/ { found=1; next }
   found && /^\s*## /      { exit }
@@ -42,18 +41,24 @@ if [[ -z "$body" ]]; then
   exit 1
 fi
 
-# Extract shell-version array from metadata.json
-shell_versions=$(awk '
-  /"shell-version"/ { in_arr=1; next }
-  in_arr && /\]/    { exit }
-  in_arr && /"/     { gsub(/[^0-9]/, ""); printf "%s**%s**", sep, $0; sep=", " }
-' "$METADATA")
+# Extract the shell-version array from metadata.json. Works for both single-line and multi-line
+# arrays.
+# Output: **49**, **50**
+shell_versions=$(
+  tr -d '\n' < "$METADATA" \
+    | grep -oE '"shell-version"[[:space:]]*:[[:space:]]*\[[^]]*\]' \
+    | grep -oE '"[0-9]+(\.[0-9]+)*"' \
+    | tr -d '"' \
+    | sed 's/.*/**&**/' \
+    | paste -sd, - \
+    | sed 's/,/, /g' \
+    || true
+)
 
 if [[ -z "$shell_versions" ]]; then
   echo "Error: No shell-version found in '$METADATA'." >&2
   exit 1
 fi
-
 
 full_body="Supported GNOME Versions: ${shell_versions}
 

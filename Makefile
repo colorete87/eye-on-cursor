@@ -1,93 +1,143 @@
 # SPDX-FileCopyrightText: 2024-2026 Djinn Alexio
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-EXTENSION_NAME := $(shell jq -r '.["gettext-domain"]' src/metadata.json)
-EXTENSION_UUID := $(shell jq -r '.uuid' src/metadata.json)
-EXTENSION_VERSION := $(shell jq -r '.["version-name"]' src/metadata.json)
-PACK_NAME = $(EXTENSION_UUID).shell-extension.zip
-COPYRIGHT_HOLDER = 'Djinn Alexio'
-ISSUES_URL = https://gitlab.gnome.org/DjinnAlexio/$(EXTENSION_NAME)/-/issues
+.PHONY: check clean disable enable fix format format-fix info install lint lint-fix logs \
+		logs-prefs pack po-check po-stats po-update pot prefs reset schemas shexli test \
+		test-legacy test-settings uninstall
 
-.PHONY: pack install uninstall enable disable prefs reset pot lint test	test-prefs test-settings \
-	shexli usage
+DOMAIN := $(shell jq -r '.["gettext-domain"]' src/metadata.json)
+UUID := $(shell jq -r '.uuid' src/metadata.json)
+ZIP := dist/$(DOMAIN)-extension.zip
+POT := $(DOMAIN).pot
+DCONF_DIR := /org/gnome/shell/extensions/$(DOMAIN)/
 
-.DEFAULT_GOAL := usage
+VERSION := $(shell jq -r '.["version-name"]' src/metadata.json)
+COPYRIGHT_HOLDER := Djinn Alexio
+ISSUES_URL := https://gitlab.gnome.org/DjinnAlexio/$(DOMAIN)/-/issues
+
+NODE_MODULES_STAMP := node_modules/.install-stamp
+
+# ---- Build ---------------------------------------------------------------
 
 pack:
-	# Packing extension into ./$(PACK_NAME)...
-	gnome-extensions pack ./src -f --extra-source="../LICENSE" --extra-source="./assets" \
-		--extra-source="./extensionModules" --extra-source="./prefsModules"
+	@mkdir -p dist
+	gnome-extensions pack ./src --force --extra-source=../LICENSE --extra-source=assets \
+		--extra-source=lib --out-dir=dist
+	@mv -f dist/$(UUID).shell-extension.zip $(ZIP)
+	@echo '✓ Extension bundle: $(ZIP)'
+
+clean:
+	rm -rf dist
+	@echo '✓ Removed dist/.'
+
+# ---- Install / run -------------------------------------------------------
 
 install: pack
-	# Installing extension...
-	gnome-extensions install $(PACK_NAME) -f
-	# Log out of the session, then back in to use the extension. Enable it if it isn't already.
+	gnome-extensions install --force $(ZIP)
+	@echo '✓ Installed the extension. Log out and back in to load the new version.'
 
-uninstall:
-	# Uninstalling extension...
-	gnome-extensions uninstall $(EXTENSION_UUID)
+uninstall: disable
+	gnome-extensions uninstall $(UUID)
+	@echo '✓ Uninstalled the extension.'
 
 enable:
-	# Enabling extension...
-	gnome-extensions enable $(EXTENSION_UUID)
+	gnome-extensions enable $(UUID)
+	@echo '✓ Enabled the extension.'
 
 disable:
-	# Disabling extension...
-	gnome-extensions disable $(EXTENSION_UUID)
+	gnome-extensions disable $(UUID)
+	@echo '✓ Disabled the extension.'
 
-prefs:
-	# Opening the Preferences dialog...
-	gnome-extensions prefs $(EXTENSION_UUID)
+info:
+	gnome-extensions info $(UUID)
+
+prefs: install
+	gnome-extensions prefs $(UUID)
+	@echo '✓ Opened the preferences window.'
 
 reset:
-	# Resetting extension dconf settings...
-	rm -rf ~/.cache/$(EXTENSION_NAME)/
-	dconf reset -f /org/gnome/shell/extensions/$(EXTENSION_NAME)/
+	dconf reset -f $(DCONF_DIR)
+	@echo '✓ Reset extension settings.'
 
-pot:
-	# Updating POT file...
-	find src -iname "*.js" | xargs xgettext \
-		--output=src/po/$(EXTENSION_NAME).pot \
-		--from-code=UTF-8 \
-		--package-name=$(EXTENSION_NAME)  \
-		--package-version=$(EXTENSION_VERSION)  \
-		--copyright-holder=$(COPYRIGHT_HOLDER) \
-		--msgid-bugs-address=$(ISSUES_URL)
+# ---- Testing -------------------------------------------------------------
 
-lint:
-	# Running ESLint...
+# requires the mutter-devkit package
+test: install
+	@echo 'Launching nested shell...'
+	G_MESSAGES_DEBUG='GNOME Shell' dbus-run-session -- gnome-shell --devkit
+
+test-legacy: install
+	@echo 'Launching nested shell (GNOME <49)...'
+	G_MESSAGES_DEBUG='GNOME Shell' dbus-run-session -- gnome-shell --nested
+
+test-settings: prefs
+	@echo 'Watching settings changes for the extension...'
+	dconf watch $(DCONF_DIR)
+
+logs:
+	journalctl -f -n 50 -o cat /usr/bin/gnome-shell
+
+logs-prefs: prefs
+	journalctl -f -n 50 -o cat /usr/bin/gjs
+
+# ---- Quality -------------------------------------------------------------
+
+$(NODE_MODULES_STAMP): package.json package-lock.json
+	npm ci
+	@touch $@
+
+lint: $(NODE_MODULES_STAMP)
+	npm run lint
+
+lint-fix: $(NODE_MODULES_STAMP)
 	npm run lint:fix
 
-test: install
-	# Launching a nested instance of GNOME Shell...
-	bash ./tools/run_nested_shell.sh
+format: $(NODE_MODULES_STAMP)
+	npm run format
 
-test-prefs: install prefs
-	# Monitoring Preferences window:
-	journalctl -f -o cat /usr/bin/gjs
+format-fix: $(NODE_MODULES_STAMP)
+	npm run format:fix
 
-test-settings: install prefs
-	# Monitoring dconf value changes:
-	dconf watch /org/gnome/shell/extensions/$(EXTENSION_NAME)/
+schemas:
+	glib-compile-schemas --strict --dry-run src/schemas
+
+check: lint format schemas po-check
+	@echo '✓ All file checks done.'
+
+fix: lint-fix format-fix
 
 shexli: pack
-	# submitting extension to Shexli reviewer:
-	shexli $(PACK_NAME)
+	@echo 'Running the Shexli static analyzer...'
+	shexli $(ZIP)
 
-usage:
-	# Usage : make <command>
-	#
-	# Commands:
-	#   pack                    Pack the extension into a zip file
-	#   install                 Pack and install the extension (default)
-	#   uninstall               Uninstall the extension
-	#   enable                  Enable the extension
-	#   disable                 Disable the extension
-	#   prefs                   Open the Preferences dialog
-	#   reset                   Reset extension dconf settings
-	#   pot                     Update the POT translation file
-	#   lint                    Run ESLint
-	#   test                    Install and launch a nested GNOME Shell instance
-	#   test-prefs              Install, open Prefs, and monitor the window
-	#   test-settings           Install, open Prefs, and monitor dconf value changes
-	#   shexli                  Pack and run the Shexli analyzer
+# ---- Translations --------------------------------------------------------
+
+pot:
+	@mkdir -p src/po
+	@find src -name '*.js' | sort | xgettext --files-from=- --sort-by-file \
+		--output='src/po/$(POT)' \
+		--from-code=UTF-8 \
+		--package-name='$(DOMAIN)' \
+		--package-version='$(VERSION)' \
+		--copyright-holder='$(COPYRIGHT_HOLDER)' \
+		--msgid-bugs-address='$(ISSUES_URL)' \
+		--add-comments=Translators:
+	@echo "✓ Updated '$(POT)' for translations."
+
+po-update: pot
+	@for po in src/po/*.po; do \
+		msgmerge --update --backup=none "$$po" 'src/po/$(POT)' || exit 1; \
+	done
+	@echo "✓ Merged new strings into '.po' files."
+
+po-check:
+	@for po in src/po/*.po; do \
+		msgfmt --check -o /dev/null "$$po" || exit 1; \
+	done
+	@echo "✓ Verified '.po' files."
+
+po-stats:
+	@for po in src/po/*.po; do \
+		printf '%s: ' "$$(basename "$$po" .po)"; \
+		msgfmt --check --statistics -o /dev/null "$$po" 2>&1 || exit 1; \
+	done

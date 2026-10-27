@@ -15,11 +15,12 @@ venv/
 
 # Swap / temporary files
 *.sw?
+*~
 
 # Build artifacts
+*.compiled
 *.mo
-*.shell-extension.zip
-*gschemas.compiled
-
-# Generated localization files
+*.zip
 **/locale/
+build/
+dist/
