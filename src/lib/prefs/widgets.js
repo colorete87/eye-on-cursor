@@ -54,26 +54,27 @@ class EyeAboutRow extends Adw.ActionRow {
         this.add_prefix(new Gtk.Image({icon_name: 'help-about-symbolic'}));
         this.add_suffix(new Gtk.Image({icon_name: 'go-next-symbolic'}));
 
-        //#region About dialog
-        const aboutWindow = new Adw.AboutDialog({
-            application_icon: 'eye-on-cursor-logo',
-            application_name: metadata.name,
-            artists,
-            comments: metadata.description,
-            copyright,
-            designers,
-            developer_name: developerName,
-            developers,
-            documenters,
-            issue_url: issueUrl,
-            license_type: Gtk.License.GPL_3_0,
-            release_notes: releaseNotes,
-            release_notes_version: metadata['version-name'],
-            support_url: supportUrl,
-            translator_credits: _('(USER)NAME EMAIL', 'translator_credits'),
-            version: metadata['version-name'],
-            website: metadata.url,
-        });
+            //#region About dialog
+            const AboutClass = Adw.AboutDialog ?? Adw.AboutWindow; // 'Adw.AboutDialog' available since GNOME 46
+            const aboutWindow = new AboutClass({
+                application_icon: 'eye-on-cursor-logo',
+                application_name: metadata.name,
+                artists,
+                comments: metadata.description,
+                copyright,
+                designers,
+                developer_name: developerName,
+                developers,
+                documenters,
+                issue_url: issueUrl,
+                license_type: Gtk.License.GPL_3_0,
+                release_notes: releaseNotes,
+                release_notes_version: metadata['version-name'],
+                support_url: supportUrl,
+                translator_credits: _('(USER)NAME EMAIL', 'translator_credits'),
+                version: metadata['version-name'],
+                website: metadata.url,
+            });
 
         aboutWindow.add_link(
             _('Extension Page'),
