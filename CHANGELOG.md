@@ -17,7 +17,7 @@ Types of changes:
 
 The 'release' and 'deploy' stages in `.gitlab-ci.yml` are triggered by pushing a version tag.
 'release' creates a gitlab release and 'deploy' submits the extension zip file to
-extensions.gnome.org (requires confirmation on gitlab).
+extensions.gnome.org.
 The release description is pulled from the tag message. When ready, use the following command
 to create the release version tag with the information from this file.
 

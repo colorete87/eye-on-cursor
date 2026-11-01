@@ -6,12 +6,23 @@
 
 1.
 2.
+3.
 
-## Expected Behavior
+## Expected Behavior (for bugs)
 
-## Actual Behavior
+<!-- What did you expect to happen? -->
 
-## Environment
+## Actual Behavior (for bugs)
 
-- GNOME version:
-- Extension version:
+<!-- What happened instead? Screenshots or screen recordings are welcome. -->
+
+## Environment (for bugs)
+
+<!--
+Open the extension's Preferences window, click "About Display Rotate", then
+click "Troubleshooting" and paste the debug information below.
+-->
+
+```
+Paste debug information here
+```

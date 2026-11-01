@@ -1,13 +1,14 @@
 ## Summary
 
-<!-- What does this MR do? -->
+<!-- What does this MR do and why? -->
 
 ## Related Issue
 
-Closes issue #
+<!-- Closes #XX, or "Related to #XX", or N/A -->
 
 ## Checklist
 
-- [ ] Tested on GNOME XX
-- [ ] Code follows the project's style (`make lint`)
-- [ ] Translations updated (`make pot`) if user-facing strings were added or changed
+- [ ] Tested on GNOME <!-- version(s) -->
+- [ ] `make check` passes (eslint, prettier, schemas, po files)
+- [ ] POT file regenerated (`make pot`) if user-facing strings were added or changed
+- [ ] GSettings schema changes are backwards compatible (if `gschema.xml` was touched)
