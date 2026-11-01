@@ -82,7 +82,7 @@ export default defineConfig([
             //#endregion
             //#region JSDoc
             // See https://github.com/gajus/eslint-plugin-jsdoc#rules
-            'jsdoc/no-undefined-types': ['warn', { definedTypes: ['ExtensionMetadata'] }],
+            'jsdoc/no-undefined-types': 'warn',
             'jsdoc/require-description': 'warn',
             'jsdoc/require-jsdoc': [
                 'error',

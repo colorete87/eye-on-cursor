@@ -6,16 +6,14 @@ import Gdk from 'gi://Gdk';
 import GLib from 'gi://GLib';
 import Gtk from 'gi://Gtk';
 
-import {ExtensionPreferences} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
+import { ExtensionPreferences } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {EyeGlobalPage} from './lib/prefs/eyeGlobalSettings.js';
-import {EyesPage} from './lib/prefs/eyeSettings.js';
-import {TrackerPage} from './lib/prefs/trackerSettings.js';
+import { EyeGlobalPage } from './lib/prefs/eyeGlobalSettings.js';
+import { EyesPage } from './lib/prefs/eyeSettings.js';
+import { TrackerPage } from './lib/prefs/trackerSettings.js';
 //#endregion
 
-/**
- * The preferences window for the **Eye on Cursor** GNOME Shell extension.
- */
+/** The preferences window for the **Eye on Cursor** GNOME Shell extension. */
 export default class EyeOnCursorPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
         window.default_width = 480;

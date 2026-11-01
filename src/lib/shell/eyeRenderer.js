@@ -3,6 +3,34 @@
 // SPDX-FileCopyrightText: 2024-2026 Djinn Alexio
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+/** @typedef {import('gi://Cairo')} Cairo */
+/** @typedef {import('gi://St')} St */
+/**
+ * A color with components in the 0-1 range, as expected by Cairo.
+ * @typedef {object} CairoColor
+ * @property {number} red - Red component (0-1).
+ * @property {number} green - Green component (0-1).
+ * @property {number} blue - Blue component (0-1).
+ */
+/**
+ * Options passed to the eye drawing functions.
+ * @typedef {object} EyeDrawOptions
+ * @property {string} shape - The eye shape to draw.
+ * @property {number} mouseX - Horizontal position of the cursor in stage coordinates.
+ * @property {number} mouseY - Vertical position of the cursor in stage coordinates.
+ * @property {number} originX - Horizontal position of the drawing area's top-left corner in stage
+ * coordinates.
+ * @property {number} originY - Vertical position of the drawing area's top-left corner in stage
+ * coordinates.
+ * @property {number} lineWidth - Width of the outline stroke.
+ * @property {string} lineMode - How the outline is drawn.
+ * @property {CairoColor} scleraColor - Color of the sclera.
+ * @property {CairoColor} irisColor - Color of the iris.
+ * @property {CairoColor} pupilColor - Color of the pupil.
+ * @property {number} eyelidLevel - How far the eyelid is closed.
+ * @property {CairoColor} eyelidColor - Color of the eyelid.
+ */
+
 //#region Constants
 const IRIS_SCALE = 0.5;
 const PUPIL_SCALE = 0.4;
@@ -16,9 +44,8 @@ const COMIC_EYE_SCALE_Y = 1;
 //#region Main drawing function
 /**
  * Draws the eye based on current parameters.
- *
  * @param {St.DrawingArea} area - The drawing area where the eye will be rendered.
- * @param {object} options - The drawing options.
+ * @param {EyeDrawOptions} options - The drawing options.
  */
 export function drawEye(area, options) {
     switch (options.shape) {
@@ -39,30 +66,30 @@ export function drawEye(area, options) {
 //#region Natural eye
 /**
  * Draws a natural-looking eye on the drawing area.
- *
  * @param {St.DrawingArea} area - The drawing area where the eye will be rendered.
- * @param {object} options - The drawing options.
+ * @param {EyeDrawOptions} options - The drawing options.
  */
 function drawNaturalEye(area, options) {
     let [mouseX, mouseY] = [options.mouseX, options.mouseY];
     const [areaWidth, areaHeight] = area.get_surface_size();
-    const [areaCenterX, areaCenterY] =
-        [options.originX + (areaWidth / 2), options.originY + (areaHeight / 2)];
+    const [areaCenterX, areaCenterY] = [
+        options.originX + areaWidth / 2,
+        options.originY + areaHeight / 2,
+    ];
 
     mouseX -= areaCenterX;
     mouseY -= areaCenterY;
 
     const mouseAngle = Math.atan2(mouseY, mouseX);
-    let mouseRadius = Math.sqrt((mouseX * mouseX) + (mouseY * mouseY));
+    let mouseRadius = Math.sqrt(mouseX * mouseX + mouseY * mouseY);
 
     const eyeRadius = areaHeight / 2;
     const irisRadius = eyeRadius * IRIS_SCALE;
     const pupilRadius = irisRadius * PUPIL_SCALE;
 
-    const maxRadius = eyeRadius * ((Math.pow(Math.cos(mouseAngle), 4) * 0.5) + 0.25);
+    const maxRadius = eyeRadius * (Math.pow(Math.cos(mouseAngle), 4) * 0.5 + 0.25);
 
-    if (mouseRadius > maxRadius)
-        mouseRadius = maxRadius;
+    if (mouseRadius > maxRadius) mouseRadius = maxRadius;
 
     const irisArc = Math.asin(irisRadius / eyeRadius);
     const irisX = eyeRadius * Math.cos(irisArc);
@@ -80,18 +107,18 @@ function drawNaturalEye(area, options) {
         cr.moveTo(-eyeRadius, 0);
         cr.curveTo(
             offsetX - irisRadius,
-            offsetY + (eyeRadius * TOP_LID_SCALE),
+            offsetY + eyeRadius * TOP_LID_SCALE,
             offsetX + irisRadius,
-            offsetY + (eyeRadius * TOP_LID_SCALE),
+            offsetY + eyeRadius * TOP_LID_SCALE,
             eyeRadius,
             0
         );
 
         cr.curveTo(
             offsetX + irisRadius,
-            offsetY - (eyeRadius * BOTTOM_LID_SCALE),
+            offsetY - eyeRadius * BOTTOM_LID_SCALE,
             offsetX - irisRadius,
-            offsetY - (eyeRadius * BOTTOM_LID_SCALE),
+            offsetY - eyeRadius * BOTTOM_LID_SCALE,
             -eyeRadius,
             0
         );
@@ -128,8 +155,7 @@ function drawNaturalEye(area, options) {
         cr.translate(eyeRadius * Math.sin(eyeAngle), 0);
         cr.scale(pupilRadius * Math.cos(eyeAngle), pupilRadius);
 
-        if (!options.lineMode)
-            setColor(cr, options.pupilColor);
+        if (!options.lineMode) setColor(cr, options.pupilColor);
 
         cr.arc(0, 0, 1.0, 0, 2 * Math.PI);
         cr.fill();
@@ -158,33 +184,32 @@ function drawNaturalEye(area, options) {
 //#region Round/Comic eye
 /**
  * Draws a round eye on the drawing area, with optional scaling to modify its shape.
- *
  * @param {St.DrawingArea} area - The drawing area where the eye will be rendered.
- * @param {object} options - The drawing options.
- * @param {number} [scaleX=1] - The scaling factor for the horizontal axis.
- * @param {number} [scaleY=1] - The scaling factor for the vertical axis.
+ * @param {EyeDrawOptions} options - The drawing options.
+ * @param {number} scaleX - The scaling factor for the horizontal axis.
+ * @param {number} scaleY - The scaling factor for the vertical axis.
  */
 function drawRoundEye(area, options, scaleX = 1, scaleY = 1) {
     let [mouseX, mouseY] = [options.mouseX, options.mouseY];
     const [areaWidth, areaHeight] = area.get_surface_size();
-    const [areaCenterX, areaCenterY] =
-        [options.originX + (areaWidth / 2), options.originY + (areaHeight / 2)];
+    const [areaCenterX, areaCenterY] = [
+        options.originX + areaWidth / 2,
+        options.originY + areaHeight / 2,
+    ];
 
     mouseX -= areaCenterX;
     mouseY -= areaCenterY;
 
     const mouseAngle = Math.atan2(mouseY, mouseX);
-    let mouseRadius = Math.sqrt((mouseX * mouseX) + (mouseY * mouseY));
+    let mouseRadius = Math.sqrt(mouseX * mouseX + mouseY * mouseY);
 
     const eyeRadius = areaHeight / 2.5;
     const irisRadius = eyeRadius * IRIS_SCALE * 1.3;
     const pupilRadius = irisRadius * PUPIL_SCALE;
 
-    const maxRadius =
-        (eyeRadius * Math.cos(Math.asin(irisRadius / eyeRadius))) - options.lineWidth;
+    const maxRadius = eyeRadius * Math.cos(Math.asin(irisRadius / eyeRadius)) - options.lineWidth;
 
-    if (mouseRadius > maxRadius)
-        mouseRadius = maxRadius;
+    if (mouseRadius > maxRadius) mouseRadius = maxRadius;
 
     const irisArc = Math.asin(irisRadius / eyeRadius);
     const irisX = eyeRadius * Math.cos(irisArc);
@@ -194,7 +219,7 @@ function drawRoundEye(area, options, scaleX = 1, scaleY = 1) {
     const cr = area.get_context();
 
     try {
-    // Drawing the base of the eye
+        // Drawing the base of the eye
         cr.translate(areaWidth * 0.5, areaHeight * 0.5);
         cr.scale(scaleX, scaleY);
 
@@ -225,8 +250,7 @@ function drawRoundEye(area, options, scaleX = 1, scaleY = 1) {
         cr.translate(eyeRadius * Math.sin(eyeAngle), 0);
         cr.scale(pupilRadius * Math.cos(eyeAngle), pupilRadius);
 
-        if (!options.lineMode)
-            setColor(cr, options.pupilColor);
+        if (!options.lineMode) setColor(cr, options.pupilColor);
 
         cr.arc(0, 0, 1.0, 0, 2 * Math.PI);
         cr.fill();
@@ -255,9 +279,8 @@ function drawRoundEye(area, options, scaleX = 1, scaleY = 1) {
 //#region Helper functions
 /**
  * Sets the color of the Cairo context using an RGB color object.
- *
- * @param {cairo.Context} cr - The Cairo graphics context where the color will be applied.
- * @param {object} color - The color to apply.
+ * @param {Cairo.Context} cr - The Cairo graphics context where the color will be applied.
+ * @param {CairoColor} color - The color to apply.
  */
 function setColor(cr, color) {
     cr.setSourceRGB(color.red, color.green, color.blue);

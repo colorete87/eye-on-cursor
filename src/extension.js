@@ -4,31 +4,22 @@
 //#region Imports
 import St from 'gi://St';
 
-import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
+import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {BlinkController} from './lib/shell/blinkController.js';
-import {getThemeColor, showReleaseNotification} from './lib/shell/utils.js';
-import {spawnEyes, destroyEyes} from './lib/shell/eye.js';
-import {TrackerManager} from './lib/shell/trackerManager.js';
+import { BlinkController } from './lib/shell/blinkController.js';
+import { getThemeColor, showReleaseNotification } from './lib/shell/utils.js';
+import { spawnEyes, destroyEyes } from './lib/shell/eye.js';
+import { TrackerManager } from './lib/shell/trackerManager.js';
 //#endregion
 
-/**
- * The **Eye on Cursor** GNOME Shell extension.
- */
+/** The **Eye on Cursor** GNOME Shell extension. */
 export default class EyeOnCursorExtension extends Extension {
     #blinkController;
     #notificationSource;
     #themeContext;
 
-    // DO NOT create objects, connect signals or add main loop sources here
-    // constructor(metadata) {
-    //     super(metadata);
-    // }
-
     //#region Enable
-    /**
-     * Enables the extension.
-     */
+    /** Enables the extension. */
     enable() {
         this.settings = this.getSettings();
         this.#themeContext = St.ThemeContext.get_for_stage(global.stage);
@@ -42,8 +33,11 @@ export default class EyeOnCursorExtension extends Extension {
         spawnEyes(this);
 
         // Create the Blink controller
-        this.#blinkController =
-            new BlinkController(this.settings, this.eyeArray, this.mouseTracker);
+        this.#blinkController = new BlinkController(
+            this.settings,
+            this.eyeArray,
+            this.mouseTracker
+        );
 
         // Connect eye placement settings
         ['eye-enabled', 'eye-count'].forEach((key) =>
@@ -71,9 +65,7 @@ export default class EyeOnCursorExtension extends Extension {
     //#endregion
 
     //#region Disable
-    /**
-     * Disables the extension.
-     */
+    /** Disables the extension. */
     disable() {
         this.#blinkController?.destroy();
         this.#blinkController = null;

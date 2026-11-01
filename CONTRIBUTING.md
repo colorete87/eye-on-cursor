@@ -16,8 +16,8 @@ Localization is handled by editing the `.po` files in `src/po/`, either manually
 
 #### How to help
 
-* Check the `po/` folder for your language's file (e.g., `fr.po`).
-* If it doesn't exist, you can initialize a new one from the `eye-on-cursor.pot` template.
+- Check the `po/` folder for your language's file (e.g., `fr.po`).
+- If it doesn't exist, you can initialize a new one from the `eye-on-cursor.pot` template.
 
 #### Testing
 
@@ -31,12 +31,12 @@ If you are working on this project for the first time, here are steps to set up 
 
 The `Makefile` contains commands for packaging, installing and testing the extension. To use them, install the following dependencies:
 
-* `make`
-* `gettext` to update the `pot` file
-* `npm` to install and run `ESLint`
-* for running tests on GNOME 49+:
-  * `mutter-devkit` on Fedora-based systems
-  * `mutter-dev-bin` on Debian-based systems
+- `make`
+- `gettext` to update the `pot` file
+- `npm` to install and run `ESLint`
+- for running tests on GNOME 49+:
+  - `mutter-devkit` on Fedora-based systems
+  - `mutter-dev-bin` on Debian-based systems
 
 You can list the commands from the `Makefile` with `make usage`.
 
@@ -78,9 +78,9 @@ If you have contributed in any way, feel free to add yourself to the correspondi
 
 ## Resources
 
-* [GNOME Shell Extensions Guide][extensions-guide]
-* [GNOME Developer Documentation][dev-doc]
-* [GNOME Shell Repository][shell-repo]
+- [GNOME Shell Extensions Guide][extensions-guide]
+- [GNOME Developer Documentation][dev-doc]
+- [GNOME Shell Repository][shell-repo]
 
 [issues]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/issues
 [merge-requests]: https://gitlab.gnome.org/DjinnAlexio/eye-on-cursor/-/merge_requests

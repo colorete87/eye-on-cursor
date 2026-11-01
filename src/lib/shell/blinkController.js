@@ -6,11 +6,10 @@ const EYE_ARRAY_SETTINGS = ['eye-enabled', 'eye-count', 'eye-blink-mode'];
 
 /**
  * An object that controls blinking actions for the Eye instances.
- *
- * @param {EyeOnCursorExtension} extension - The extension instance.
- * @param {Eye[]} eyeArray - The array that stores created Eye instances.
- * @param {TrackerManager} mouseTracker - The object that controls an icon that follows and reacts
- * to the cursor.
+ * @param {import('gi://Gio').Settings} settings - The settings object for this extension.
+ * @param {import('./eye.js').Eye[]} eyeArray - The array that stores created Eye instances.
+ * @param {import('./trackerManager.js').TrackerManager} mouseTracker - The object that controls an
+ * icon that follows and reacts to the cursor.
  */
 export class BlinkController {
     #settings;
@@ -41,9 +40,8 @@ export class BlinkController {
             this.#settings.connectObject(
                 `changed::${key}`,
                 () => {
-                // Delay reset so that the blink routine gets updated after the eye array
-                    if (this.#blinkChangeDelay)
-                        clearTimeout(this.#blinkChangeDelay);
+                    // Delay reset so that the blink routine gets updated after the eye array
+                    if (this.#blinkChangeDelay) clearTimeout(this.#blinkChangeDelay);
                     this.#blinkChangeDelay = setTimeout(
                         this.#startBlinkMode.bind(this),
                         BLINK_CHANGE_DELAY
@@ -80,8 +78,9 @@ export class BlinkController {
         if (range.length === 2 && range[0] < range[1]) {
             return range;
         } else {
-            console.warn('Eye on Cursor: Invalid blink interval range (min >= max), ' +
-                'using default.');
+            console.warn(
+                'Eye on Cursor: Invalid blink interval range (min >= max), ' + 'using default.'
+            );
             return this.#settings.get_default_value('eye-blink-interval-range').deep_unpack();
         }
     }
@@ -89,18 +88,16 @@ export class BlinkController {
 
     //#region Blink methods
     #blinkAll() {
-        if (this.#eyeArray.length > 0)
-            this.#eyeArray.forEach((eye) => eye.blink());
+        if (this.#eyeArray.length > 0) this.#eyeArray.forEach((eye) => eye.blink());
     }
 
     #scheduleNextBlink(eye) {
         // Calculate a random interval to next blink
         const interval =
             this.#blinkIntervalRange[0] +
-            ((this.#blinkIntervalRange[1] - this.#blinkIntervalRange[0]) * Math.random());
+            (this.#blinkIntervalRange[1] - this.#blinkIntervalRange[0]) * Math.random();
 
-        if (eye.randomBlinkTimeout)
-            clearTimeout(eye.randomBlinkTimeout);
+        if (eye.randomBlinkTimeout) clearTimeout(eye.randomBlinkTimeout);
         eye.randomBlinkTimeout = setTimeout(() => {
             eye.blink();
             this.#scheduleNextBlink(eye);
@@ -111,10 +108,9 @@ export class BlinkController {
         // Calculate a random interval to next blink
         const interval =
             this.#blinkIntervalRange[0] +
-        ((this.#blinkIntervalRange[1] - this.#blinkIntervalRange[0]) * Math.random());
+            (this.#blinkIntervalRange[1] - this.#blinkIntervalRange[0]) * Math.random();
 
-        if (this.#randomTimeout)
-            clearTimeout(this.#randomTimeout);
+        if (this.#randomTimeout) clearTimeout(this.#randomTimeout);
         this.#randomTimeout = setTimeout(() => {
             this.#blinkAll();
             this.#scheduleNextSyncBlink();
@@ -187,14 +183,12 @@ export class BlinkController {
 
     //#region Fixed mode
     #startFixedBlink() {
-        if (this.#fixedRoutine)
-            clearInterval(this.#fixedRoutine);
+        if (this.#fixedRoutine) clearInterval(this.#fixedRoutine);
         this.#fixedRoutine = setInterval(this.#blinkAll.bind(this), 1000 * this.#blinkInterval);
     }
 
     #stopFixedBlink() {
-        if (this.#fixedRoutine)
-            clearInterval(this.#fixedRoutine);
+        if (this.#fixedRoutine) clearInterval(this.#fixedRoutine);
     }
     //#endregion
 
@@ -204,8 +198,7 @@ export class BlinkController {
     }
 
     #stopRandomBlink() {
-        if (this.#randomTimeout)
-            clearTimeout(this.#randomTimeout);
+        if (this.#randomTimeout) clearTimeout(this.#randomTimeout);
     }
     //#endregion
 
@@ -216,8 +209,7 @@ export class BlinkController {
 
     #stopUnsyncedBlink() {
         this.#eyeArray.forEach((eye) => {
-            if (eye.randomBlinkTimeout)
-                clearTimeout(eye.randomBlinkTimeout);
+            if (eye.randomBlinkTimeout) clearTimeout(eye.randomBlinkTimeout);
         });
     }
     //#endregion
@@ -229,8 +221,7 @@ export class BlinkController {
         this.#stopFixedBlink();
         this.#stopRandomBlink();
         this.#stopUnsyncedBlink();
-        if (this.#blinkChangeDelay)
-            clearTimeout(this.#blinkChangeDelay);
+        if (this.#blinkChangeDelay) clearTimeout(this.#blinkChangeDelay);
 
         // Disconnect tracker
         this.#stopClickBlink();
