@@ -20,6 +20,12 @@ const CACHE_DIR_PERMISSIONS = 0o755; // 'rwx' permissions for user, 'r_x' for gr
 const CLICK_MIN_DEBOUNCE = 100; // Min highlighting duration after receiving BUTTON RELEASED signal
 const CLICK_MAX_DEBOUNCE = 5000; // Max highlighting duration after receiving BUTTON PRESSED signal
 const CLICK_RIPPLE_SCALE = 2; // Ripple animation expands to this multiple of the tracker size
+const BUTTON_POLL_RATE = 60; // Times per second the seat button state is polled on Wayland
+const BUTTON_MASKS = { // Mouse button number -> Clutter modifier mask
+    1: Clutter.ModifierType.BUTTON1_MASK,
+    2: Clutter.ModifierType.BUTTON2_MASK,
+    3: Clutter.ModifierType.BUTTON3_MASK,
+};
 const TRACKER_RAISE_DELAY = 20; // Delay before raising tracker above UI elements triggered by the click
 const TRACKER_SETTINGS = [
     'tracker-shape',
@@ -81,7 +87,8 @@ class TrackerManager extends GObject.Object {
     #tracker;
     #cacheDir;
 
-    #capturedEvent;
+    #buttonPoller;
+    #buttonState = 0;
     #mouseListener;
 
     //#region Constructor
@@ -159,9 +166,9 @@ class TrackerManager extends GObject.Object {
 
         // Connect mouse click events
         if (isWayland) {
-            this.#capturedEvent = global.stage.connect(
-                'captured-event',
-                this.#onStageMouseEvent.bind(this)
+            this.#buttonPoller = setInterval(
+                this.#pollButtonState.bind(this),
+                1000 / BUTTON_POLL_RATE
             );
         } else {
             Atspi.init();
@@ -322,15 +329,29 @@ class TrackerManager extends GObject.Object {
         }
     }
 
-    // Using `global.stage` to monitor mouse clicks on Wayland (doesn't work on applications)
-    #onStageMouseEvent(actor, event) {
-        if (event.type() === Clutter.EventType.BUTTON_PRESS) {
-            const button = event.get_button();
-            this.#handleMouseButtonPress(button);
-        } else if (event.type() === Clutter.EventType.BUTTON_RELEASE) {
-            const button = event.get_button();
-            this.#handleClickRelease(button);
+    // Polling the seat button state to monitor mouse clicks on Wayland.
+    // Stage events are not an option: Mutter delivers pointer events to Wayland client
+    // surfaces before they reach `global.stage`, so only clicks on the Shell would be seen.
+    // `global.get_pointer()` reports the seat state regardless of which surface is under the cursor.
+    #pollButtonState() {
+        const [x_, y_, modifiers] = global.get_pointer();
+        const newState = modifiers & (
+            Clutter.ModifierType.BUTTON1_MASK |
+            Clutter.ModifierType.BUTTON2_MASK |
+            Clutter.ModifierType.BUTTON3_MASK
+        );
+        if (newState === this.#buttonState)
+            return;
+
+        for (const [button, mask] of Object.entries(BUTTON_MASKS)) {
+            const wasPressed = (this.#buttonState & mask) !== 0;
+            const isPressed = (newState & mask) !== 0;
+            if (isPressed && !wasPressed)
+                this.#handleMouseButtonPress(parseInt(button, 10));
+            else if (!isPressed && wasPressed)
+                this.#handleClickRelease(parseInt(button, 10));
         }
+        this.#buttonState = newState;
     }
 
     // Using `Atspi.EventListener` to monitor clicks on X11 (middle click is not registered)
@@ -508,9 +529,9 @@ class TrackerManager extends GObject.Object {
         this.#disableTracker();
 
         // Disconnect mouse click events
-        if (this.#capturedEvent) {
-            global.stage.disconnect(this.#capturedEvent);
-            this.#capturedEvent = null;
+        if (this.#buttonPoller) {
+            clearInterval(this.#buttonPoller);
+            this.#buttonPoller = null;
         }
         if (this.#mouseListener) {
             this.#mouseListener.deregister('mouse');
